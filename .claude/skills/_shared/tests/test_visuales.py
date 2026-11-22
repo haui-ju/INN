@@ -146,6 +146,41 @@ class TestConProyecto(unittest.TestCase):
                 VI.main(["construir", "--visual", "foda", "--run", run, "--carpeta", str(Path(d) / "visuales"), "--raiz", str(self.root)])
             self.assertNotIn("--tema-defecto:", (Path(d) / "visuales" / "foda.html").read_text(encoding="utf-8"))
 
+    def test_cambiar_el_diseno_reviste_las_figuras_ya_construidas(self):
+        import os
+        run = self.runs["04-make-strategic-analysis"]
+        antes = (run / "visuales" / "foda.html").read_text(encoding="utf-8")
+        datos = (run / "visuales" / "foda.json").read_text(encoding="utf-8")
+        self.assertNotIn("--tema-defecto:", antes)
+        carpeta = self.root / "project" / "02-design-system" / "r2"
+        carpeta.mkdir(parents=True)
+        tk = {**H.cargar_tokens(None, "base"), "tema-defecto": "oscuro"}
+        tk["color"]["oscuro"]["acento"] = "#F2C811"
+        (carpeta / "tokens.json").write_text(json.dumps(tk), encoding="utf-8")
+        (carpeta / "DESIGN.md").write_text("# Sistema\n", encoding="utf-8")
+        previo = os.environ.get("PROJECT_ROOT")
+        os.environ["PROJECT_ROOT"] = str(self.root)
+        try:
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                P.main(["set-diseno", "--value", "project/02-design-system/r2/DESIGN.md"])
+        finally:
+            if previo is None:
+                os.environ.pop("PROJECT_ROOT", None)
+            else:
+                os.environ["PROJECT_ROOT"] = previo
+        self.assertIn("figura(s) actualizadas con el nuevo sistema de diseño", buf.getvalue())
+        despues = (run / "visuales" / "foda.html").read_text(encoding="utf-8")
+        self.assertIn("--tema-defecto: oscuro;", despues)
+        self.assertIn("#F2C811", despues)
+        self.assertEqual((run / "visuales" / "foda.json").read_text(encoding="utf-8"), datos)
+        self.assertEqual(VI.aplicar_diseno(self.root), [])
+        cfg = P.load(self.root)
+        cfg["diseno"] = None
+        P.save(cfg, self.root)
+        VI.aplicar_diseno(self.root)
+        self.assertNotIn("--tema-defecto:", (run / "visuales" / "foda.html").read_text(encoding="utf-8"))
+
     def test_cli(self):
         buf = io.StringIO()
         with redirect_stdout(buf):

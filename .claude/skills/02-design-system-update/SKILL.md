@@ -41,7 +41,7 @@ Con `references/dependencias.md`: lista los archivos que se tocarán y los efect
 `python3 .claude/skills/_shared/validate_run.py <fork>` hasta que no haya incidencias. Comprueba con `diff -rq <base> <fork>` que solo cambian los archivos del plan, `preview.html` y `README.md`.
 
 ### 7. Registrar
-- **Sin incidencias:** `projectcfg.py register --step 02-design-system --run <fork>` y `projectcfg.py set-diseno --value project/02-design-system/<fork>/DESIGN.md`.
+- **Sin incidencias:** `projectcfg.py register --step 02-design-system --run <fork>` y `projectcfg.py set-diseno --value project/02-design-system/<fork>/DESIGN.md`. Esto re-viste las figuras ya construidas con el nuevo diseño y dice cuántas actualizó.
 - **Con incidencias que no puedas resolver (por ejemplo un contraste que el usuario insiste en mantener):** conserva el fork, registra con `--no-mover`, no cambies `diseno` e informa cada incidencia (archivo y causa).
 
 ### 8. Informe

@@ -527,7 +527,13 @@ def main(argv=None):
                 kw["entrega"] = _fecha_arg(a.entrega)
             print(json.dumps(set_nucleo(a.tema, **kw), ensure_ascii=False))
         elif a.cmd == "set-diseno":
-            print("diseno actualizado" if set_diseno(a.value) else f"el paso {DISENO} está fijado: diseno no cambia")
+            if set_diseno(a.value):
+                print("diseno actualizado")
+                import visuales  # las figuras ya construidas toman el nuevo sistema de diseño
+                n = len(visuales.aplicar_diseno(repo_root()))
+                print(f"{n} figura(s) actualizadas con el nuevo sistema de diseño")
+            else:
+                print(f"el paso {DISENO} está fijado: diseno no cambia")
         elif a.cmd == "current":
             print(current_run(a.step) or "")
     except ConfigError as e:

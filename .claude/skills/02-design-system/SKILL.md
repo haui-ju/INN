@@ -44,5 +44,5 @@ Crea la identidad visual única del proyecto. Las demás skills (los visuales de
 7. **Registrar.**
    - `python3 .claude/skills/_shared/projectcfg.py register --step 02-design-system --run <carpeta>`
    - `python3 .claude/skills/_shared/projectcfg.py set-diseno --value project/02-design-system/<carpeta>/DESIGN.md`
-   Si la salida dice que el paso está fijado o `"movido": false`, díselo al usuario: `diseno` no cambió y puede editar el config a mano.
+   Si la salida dice que el paso está fijado o `"movido": false`, díselo al usuario: `diseno` no cambió y puede editar el config a mano. `set-diseno` también vuelve a vestir con el nuevo sistema las figuras ya construidas en las corridas (no cambia su contenido) y dice cuántas actualizó; si el usuario edita `diseno` a mano, corre `python3 .claude/skills/_shared/visuales.py aplicar-diseno`.
 8. **Cierre.** Entrega la ruta de la corrida, un resumen de la paleta y los componentes, el resultado del validador, cómo abrir `preview.html` y los supuestos que tomaste para que el usuario los corrija.

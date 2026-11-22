@@ -5,6 +5,7 @@
   python3 .claude/skills/_shared/visuales.py extraer --visual <visual> [--run CORRIDA] [--raiz .] [--salida datos.json]
   python3 .claude/skills/_shared/visuales.py construir --visual <visual> --run CORRIDA --carpeta <corrida>/visuales [--diseno tokens.json] [--raiz .]
    (sin --diseno usa el sistema de diseño vigente del config, o los tokens base si no hay)
+  python3 .claude/skills/_shared/visuales.py aplicar-diseno [--raiz .]       (re-viste con el diseño vigente las figuras ya construidas)
   python3 .claude/skills/_shared/visuales.py origen --visual <visual>            (skill, archivo y -update que lo cambian)
 
 El markdown de las skills de origen es la fuente de verdad: aquí solo se lee. Cada visual tiene su plantilla en
@@ -468,10 +469,35 @@ def construir(visual, raiz, carpeta, tokens, run=None):
     return datos
 
 
+def aplicar_diseno(raiz, tokens=None):
+    """Vuelve a vestir con el sistema de diseño vigente (o `tokens`) todos los visuales ya construidos en las corridas del proyecto.
+
+    No vuelve a leer el markdown: usa los datos de `visuales/<visual>.json` de cada corrida, así que el contenido no cambia.
+    Devuelve la lista de HTML reescritos (solo los que cambian)."""
+    raiz = Path(raiz)
+    tokens = tokens if tokens is not None else H.tokens_del_proyecto(raiz)
+    cambiados = []
+    for visual, (plantilla, _paso, carpeta) in VISUALES.items():
+        base = raiz / "project" / carpeta
+        if not base.is_dir():
+            continue
+        for js in sorted(base.glob(f"*/visuales/{visual}.json")):
+            try:
+                datos = json.loads(js.read_text(encoding="utf-8"))
+            except ValueError:
+                continue
+            html = js.with_suffix(".html")
+            nuevo = H.copiar_texto(plantilla, datos, tokens)
+            if not html.is_file() or html.read_text(encoding="utf-8") != nuevo:
+                html.write_text(nuevo, encoding="utf-8")
+                cambiados.append(html)
+    return cambiados
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for n in ("disponibles", "extraer", "construir", "origen"):
+    for n in ("disponibles", "extraer", "construir", "origen", "aplicar-diseno"):
         s = sub.add_parser(n)
         s.add_argument("--raiz", default=".")
         s.add_argument("--run")
@@ -488,6 +514,12 @@ def main(argv=None):
         if a.cmd == "disponibles":
             for v, motivo in disponibles(raiz, a.run).items():
                 print(f"{v}: {'disponible' if motivo is None else 'falta fuente — ' + motivo}")
+            return 0
+        if a.cmd == "aplicar-diseno":
+            cambiados = aplicar_diseno(raiz)
+            print(f"{len(cambiados)} figura(s) actualizadas con el sistema de diseño vigente")
+            for c in cambiados:
+                print(f"  {c.relative_to(raiz)}")
             return 0
         if a.cmd == "origen":
             o = origen(a.visual)
