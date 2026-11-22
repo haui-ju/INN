@@ -1,0 +1,101 @@
+# Config del proyecto. Lo leen y actualizan las skills 00-init, 00-init-update y las numeradas.
+# Puedes editar los valores a mano. Los comentarios explicativos de cada campo se regeneran al guardar;
+# los comentarios propios que agregues se pierden cuando una skill escribe este archivo.
+
+schema: 3  # versión del formato (no cambiar)
+proyecto:  # datos generales del proyecto
+  nombre: Mejora del margen por canal y reducción de la merma con Power BI para Pollerías y Parrilladas San Martín  # nombre corto del proyecto
+  tema: ""  # problema y solución de BI en una frase (copia del brief; lo define 01-make-project-brief)
+  tipo: empresa  # empresa = se aplica a una empresa (requiere ruc) · propio = proyecto o solución propia, sin empresa
+  ruc: "20537751950"  # RUC de 11 dígitos (solo si tipo es empresa; con él se buscan sus datos en domain.md) · null si es propio
+  rubro: restaurantes (pollerías)  # sector o giro (por ejemplo: restaurantes, retail, salud)
+equipo:  # integrantes del equipo
+  - nombre: Salim Felix Escovedo  # nombre del integrante
+    rol: null  # responsabilidad en el proyecto, texto libre (por ejemplo: Analista de datos) · null si aún no tiene
+  - nombre: Luis Fernando Melgar Pizarro  # nombre del integrante
+    rol: null  # responsabilidad en el proyecto, texto libre (por ejemplo: Analista de datos) · null si aún no tiene
+calendario:  # fechas del proyecto (una sola entrega; copia del brief)
+  inicio: null  # inicio del proyecto DD-MM-AAAA · null si aún no se conoce (lo define 01-make-project-brief)
+  entrega: null  # fecha de entrega y exposición DD-MM-AAAA · null si aún no se conoce (lo define 01-make-project-brief)
+modo_datos: generado  # generado = datos generados para el proyecto · real = datos abiertos o autorizados por la empresa
+diseno: null  # DESIGN.md vigente dentro de project/ · null hasta crear el sistema de diseño (02-design-system)
+dominio: project/domain.md  # archivo con los datos de la empresa o de la solución
+informe:  # estado del informe: qué secciones ya tienen contenido
+  secciones:  # una entrada por punto del índice; la marca cada skill al registrar su corrida (12-make-report usa solo las disponibles)
+    1.1:
+      skill: 03-make-business-diagnosis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.2:
+      skill: 03-make-business-diagnosis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.3:
+      skill: 03-make-business-diagnosis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.4:
+      skill: 03-make-business-diagnosis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.5:
+      skill: 04-make-strategic-analysis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.6:
+      skill: 04-make-strategic-analysis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.7:
+      skill: 04-make-strategic-analysis  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.8:
+      skill: 05-make-problem-objectives  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.9:
+      skill: 05-make-problem-objectives  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    1.10:
+      skill: 05-make-problem-objectives  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    2.1:
+      skill: 06-make-bi-solution  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    2.2:
+      skill: 06-make-bi-solution  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    2.3:
+      skill: 06-make-bi-solution  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    2.4:
+      skill: 07-make-data-model-kpi  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    2.5:
+      skill: 07-make-data-model-kpi  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    3.1:
+      skill: 08-make-etl  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    3.2:
+      skill: 09-make-dashboard  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    "4":
+      skill: 10-make-storytelling  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+    "5":
+      skill: 11-make-conclusions  # skill que produce esta sección (de pipeline.json)
+      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+pasos: {}  # corrida vigente de cada skill
