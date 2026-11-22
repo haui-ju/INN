@@ -23,7 +23,7 @@ import visuales as VI  # noqa: E402
 INDICE = HERE.parents[2] / "common" / "structure" / "model1.md"
 NEGOCIO, ESTRATEGICO, PROBLEMA = "03-make-business-diagnosis", "04-make-strategic-analysis", "05-make-problem-objectives"
 SOLUCION, MODELO = "06-make-bi-solution", "07-make-data-model-kpi"
-FIGURAS = {"1.4": "bmc", "1.5": "pestel", "1.6": "foda", "1.7": "ishikawa", "2.2": "arquitectura-bi", "2.4": "modelo-datos"}
+FIGURAS = {"1.4": ["bmc"], "1.5": ["pestel"], "1.6": ["foda"], "1.7": ["ishikawa"], "2.2": ["arquitectura-bi"], "2.4": ["modelo-datos"]}
 RE_FIGURA = re.compile(r"^<!-- figura: ([a-z0-9-]+) -->$")
 MARCADOR = re.compile(r"\((?:modelado por el agente|fuente:)[^)]*\)", re.I)
 PENDIENTE = "Pendiente"
@@ -331,8 +331,9 @@ def check_figuras(run, puntos):
         if comentarios:
             inc.append((_rel(p), f"comentario que no es una marca de figura: «{comentarios[0].strip()[:60]}» (el texto es final, sin notas)"))
         esperado = FIGURAS.get(p)
-        if esperado and marcas != [esperado]:
-            inc.append((_rel(p), f"debe marcar una sola vez la figura con la línea «<!-- figura: {esperado} -->»"))
+        if esperado and marcas != esperado:
+            lineas = " y ".join(f"«<!-- figura: {v} -->»" for v in esperado)
+            inc.append((_rel(p), f"debe marcar {'una sola vez la figura con la línea' if len(esperado) == 1 else 'en este orden, una vez cada una, las figuras con las líneas'} {lineas}"))
         if not esperado and marcas:
             inc.append((_rel(p), f"la sección {p} no lleva imagen y marca la figura {marcas[0]}"))
         for v in marcas:

@@ -10,7 +10,7 @@
 
 ## Instrucciones para el agente
 1. La primera línea es `## 1.5. Análisis PESTEL`.
-2. Un párrafo que presenta el análisis con su cita (Aguilar, 1967) y la marca `<!-- figura: pestel -->` en una línea sola.
+2. Un párrafo que presenta el análisis con su cita (Aguilar, 1967) y la marca `<!-- figura: pestel -->` en una línea sola. El HTML de la figura trae el PESTEL en dos láminas separadas (tres factores cada una) para que se puedan recortar y pegar en diapositivas.
 3. Tabla `Código | Factor | Hallazgo | Efecto en el negocio | Tipo | Fuente`, ordenada por factor (Político, Económico, Social, Tecnológico, Ecológico, Legal). El prefijo del código corresponde al factor (`AMB` es el ecológico).
 4. Al menos un hallazgo por factor. El **efecto** dice qué le pasa a esta empresa; el **tipo** es Oportunidad o Amenaza; la **fuente** lleva autor o institución y año (o una fuente interna con su año). Cada fuente externa va a `referencias.md`.
 5. Busca y verifica cada cifra externa antes de escribirla; si no la encuentras, reformula el hallazgo sin cifra.

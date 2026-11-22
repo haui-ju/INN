@@ -30,7 +30,7 @@ class TestIndice(unittest.TestCase):
         self.assertEqual(D.puntos_de(D.PROBLEMA), ["1.8", "1.9", "1.10"])
         self.assertEqual(D.puntos_de(D.SOLUCION), ["2.1", "2.2", "2.3"])
         self.assertEqual(D.puntos_de(D.MODELO), ["2.4", "2.5"])
-        self.assertEqual(D.FIGURAS, {"1.4": "bmc", "1.5": "pestel", "1.6": "foda", "1.7": "ishikawa", "2.2": "arquitectura-bi", "2.4": "modelo-datos"})
+        self.assertEqual(D.FIGURAS, {"1.4": ["bmc"], "1.5": ["pestel"], "1.6": ["foda"], "1.7": ["ishikawa"], "2.2": ["arquitectura-bi"], "2.4": ["modelo-datos"]})
 
 
 class TestUtilidades(unittest.TestCase):

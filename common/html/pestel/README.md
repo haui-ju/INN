@@ -1,6 +1,9 @@
 # Plantilla · PESTEL
 
-Seis paneles, uno por factor (político, económico, social, tecnológico, ecológico y legal), con cada hallazgo, su código, su efecto en el negocio, su tipo (Oportunidad en tono de éxito o Amenaza en tono de error, siempre con texto) y su fuente. Estilo en [`../DESIGN.md`](../DESIGN.md).
+Un panel por factor (político, económico, social, tecnológico, ecológico y legal), con cada hallazgo, su código, su efecto en el negocio, su tipo (Oportunidad en tono de éxito o Amenaza en tono de error, siempre con texto) y su fuente. Estilo en [`../DESIGN.md`](../DESIGN.md).
+
+## Dos láminas en un solo HTML
+El HTML trae el PESTEL en **dos láminas de tres factores** (política, económica y social; tecnológica, ecológica y legal), separadas por un espacio. Cada una tiene su título, su balance de oportunidades y amenazas y proporción de diapositiva (≥ 16 px de texto en 1700 px de ancho). Se copia la captura entera y se recorta la lámina que se necesite; con «Título en la imagen» apagado, el encabezado de cada lámina desaparece.
 
 ## Qué se cambia
 **Solo** el bloque de tokens y el bloque de datos. `python3 .claude/skills/_shared/html_tpl.py copiar --visual pestel …` lo hace; en una corrida, `visuales.py construir --visual pestel --run <corrida>`. **No se edita nada más** del HTML.

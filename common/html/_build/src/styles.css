@@ -54,3 +54,8 @@
     radial-gradient(50rem 30rem at 52% 112%, color-mix(in srgb, var(--c-serie-3) 20%, transparent), transparent 64%);
   border: 1px solid color-mix(in srgb, var(--c-acento) 18%, var(--c-borde));
 }
+
+/* Sin título: la imagen queda solo con el diagrama (para pegarla en una diapositiva que ya tiene título). */
+.sin-titulo [data-encabezado] { display: none; }
+.sin-titulo { padding-top: 2.5rem; }
+.sin-titulo [data-lamina] { padding-top: 2.5rem; }

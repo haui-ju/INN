@@ -10,7 +10,7 @@
 
 ## Instrucciones para el agente
 1. La primera línea es `## 1.6. Matriz FODA`.
-2. Un párrafo que presenta la matriz con su cita (Gürel & Tat, 2017) y la marca `<!-- figura: foda -->` en una línea sola.
+2. Un párrafo que presenta la matriz con su cita (Gürel & Tat, 2017) y la marca `<!-- figura: foda -->` en una línea sola. El HTML de la figura trae dos láminas (la matriz de cuatro cuadros y las estrategias cruzadas) para que se puedan recortar y pegar en diapositivas; la evidencia de cada ítem va en la tabla y no en la imagen.
 3. Cuatro tablas, en este orden: `Código | Fortaleza | Evidencia o fuente`, `Código | Debilidad | …`, `Código | Oportunidad | …` y `Código | Amenaza | …`. Referencia: de tres a cinco ítems por cuadro.
 4. Fortalezas y debilidades citan en su evidencia un hecho interno (Canvas, registros de la empresa con su año). Oportunidades y amenazas citan el código PESTEL del que salen o una fuente con su año.
 5. **Estrategias cruzadas.** Una frase y la tabla `Código | Tipo | Estrategia | Combina`, con al menos una estrategia FO, FA, DO y DA. El código lleva el tipo como prefijo; **Combina** lista los códigos de los dos cuadros que el tipo indica (FO: FOR y OPO; FA: FOR y AME; DO: DEB y OPO; DA: DEB y AME).

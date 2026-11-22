@@ -52,6 +52,12 @@ class TestBiblioteca(unittest.TestCase):
             self.assertIn("prefers-color-scheme", t)
             self.assertIn("<noscript>", t)
 
+    def test_pestel_y_foda_van_en_laminas_con_proporcion_de_diapositiva(self):
+        for v in ("pestel", "foda"):
+            h = (COMUN / v / "index.html").read_text(encoding="utf-8")
+            self.assertIn("data-lamina", h, v)
+            self.assertIn("sin-titulo", h, v)
+
     def test_cada_plantilla_tiene_los_dos_bloques_una_vez(self):
         for v in H.visuales():
             t = (COMUN / v / "index.html").read_text(encoding="utf-8")

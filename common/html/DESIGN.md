@@ -55,7 +55,27 @@ Todos los visuales usan estos componentes (estilo shadcn/ui, en `_build/src/ui/`
 | Avatar | normal | Iniciales del responsable en un círculo tintado de marca; siempre con el nombre al lado o en `title` |
 | Chip de prioridad | Debe, Debería, Podría | Con bandera: `Debe` relleno de acento, `Debería` con borde de acento, `Podría` neutro. Solo si el dato existe |
 
-## 6. Accesibilidad y adaptación
+## 6. Proporción de la imagen (diapositivas)
+Las imágenes se pegan en diapositivas. Cada visual tiene un **ancho de diseño fijo** y su proporción ancho : alto queda **entre 1,6 y 2,0** (la de una diapositiva 16:9 es 1,78): ni demasiado vertical ni demasiado ancha. La captura sale igual sin importar el tamaño de la ventana, porque los visuales no usan puntos de corte y se arma siempre al ancho de diseño.
+
+**Texto legible.** En una diapositiva de 13,3 pulgadas el texto de cuerpo debe quedar en 10 pt o más: en una imagen de 1600 a 1700 px eso es **16 px como mínimo** (17 px para lo principal y 13 a 14 px solo para fuentes y notas). Si el contenido no cabe sin apretar, no se reduce el texto: se reparte en **láminas**.
+
+**Láminas.** Un visual con mucho contenido (PESTEL, FODA) se dibuja en dos láminas dentro del **mismo HTML**, apiladas y separadas por un espacio del color de la página. Cada lámina es una diapositiva en sí misma: tiene su fondo, su título y la proporción de diapositiva. Se copia la captura entera y se recorta la que haga falta, sin abrir otros archivos. En el código, `Lamina` y `Laminas` (`_build/src/ui/lamina.jsx`) y `export const laminas = true` en el `modelo.js` del visual.
+
+| Visual | Ancho de diseño | Láminas | Proporción de cada una (con título) |
+|---|---|---|---|
+| Ishikawa (`ishikawa`) | 1640 px | 1 | 2,0 |
+| PESTEL (`pestel`) | 1700 px | 2 (tres factores cada una) | 2,0 |
+| Matriz FODA (`foda`) | 1700 px | 2 (matriz de cuatro cuadros y estrategias cruzadas) | 1,6 y 1,8 |
+| Business Model Canvas (`bmc`) | 1600 px | 1 | 1,8 |
+| Arquitectura de BI (`arquitectura-bi`) | 1600 px | 1 | 1,7 |
+| Modelo de datos (`modelo-datos`) | 1440 px | 1 | 1,6 |
+
+El interruptor **«Título en la imagen»** de la barra quita el encabezado de cada lámina; el ancho se mantiene y las proporciones suben a 1,9 o más.
+
+Reglas para un visual nuevo: define `anchoImagen` en su `modelo.js`; usa columnas fijas (`grid-cols-N`) y no `sm:` ni `lg:`; si el contenido es muy alto, divídelo en láminas o quita lo que ya dice la tabla del informe (la tabla de relaciones del modelo de datos, la evidencia de cada ítem del FODA); mide la proporción con datos reales.
+
+## 7. Accesibilidad y adaptación
 - Foco visible con `acento-fuerte` (2 px, desfase 2 px). Los íconos acompañan a un texto o llevan `aria-label`.
 - Sin desplazamiento horizontal de la página en 360 px: las tablas anchas y los tableros se desplazan dentro de su contenedor (`data-scroll`).
 - `role="status"` para los avisos de copiar y descargar; `<noscript>` avisa que el visual necesita JavaScript.

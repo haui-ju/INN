@@ -21,16 +21,22 @@ export function temaInicial() {
   } catch (e) { return "light"; }
 }
 
-export function App({ visual, datos, modelo, fecha, Vista, ancho = "fijo", anchoImagen = 0 }) {
+export function App({ visual, datos, modelo, fecha, Vista, ancho = "fijo", anchoImagen = 0, laminas = false }) {
   const m = useMemo(() => modelo(datos), [datos]);
   const [tema, setTema] = useState(temaInicial);
   const [escala, setEscala] = useState(escalaValida(leer("escala-imagen")));
   const [aviso, setAviso] = useState("");
+  const [conTitulo, setConTitulo] = useState(leer("titulo") !== "no");
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", tema);
     guardar("tema", tema);
   }, [tema]);
+
+  const cambiarTitulo = (v) => {
+    setConTitulo(v);
+    guardar("titulo", v ? "si" : "no");
+  };
 
   const cambiarEscala = (v) => {
     const n = escalaValida(v);
@@ -54,7 +60,7 @@ export function App({ visual, datos, modelo, fecha, Vista, ancho = "fijo", ancho
   }
 
   return (
-    <div className={`mx-auto w-full p-3 sm:p-6 ${ancho === "completo" ? "max-w-none sm:px-8" : "max-w-[1120px]"}`}>
+    <div className="mx-auto w-full p-3 sm:p-6" style={{ maxWidth: (anchoImagen || 1120) + 48 }}>
       <div data-no-captura className="mb-4 flex flex-wrap items-center gap-2">
         <label className="inline-flex items-center gap-2 text-sm text-muted-foreground">
           Escala
@@ -64,12 +70,16 @@ export function App({ visual, datos, modelo, fecha, Vista, ancho = "fijo", ancho
         </label>
         <Button onClick={() => accion("copiar")}><Copy aria-hidden="true" />Copiar imagen</Button>
         <Button variant="outline" onClick={() => accion("descargar")}><Download aria-hidden="true" />Descargar imagen</Button>
+        <label className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+          <input type="checkbox" checked={conTitulo} onChange={(e) => cambiarTitulo(e.target.checked)} className="size-4 accent-[var(--c-acento)]" />
+          Título en la imagen
+        </label>
         <Button variant="ghost" size="icon" onClick={() => setTema(tema === "dark" ? "light" : "dark")} aria-label="Alternar tema claro y oscuro" title="Tema">
           {tema === "dark" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </Button>
         <span role="status" aria-live="polite" className="text-sm text-muted-foreground">{aviso}</span>
       </div>
-      <main id="captura" data-captura className="lienzo rounded-[28px] p-5 sm:p-10">
+      <main id="captura" data-captura className={`${laminas ? "bg-background" : "lienzo rounded-[28px] p-10"} ${conTitulo ? "" : "sin-titulo"}`}>
         <Vista m={m} />
       </main>
     </div>

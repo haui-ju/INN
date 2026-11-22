@@ -130,5 +130,12 @@ class TestIshikawa(Base):
         self.assertIncidencia("visuales/ishikawa.html")
 
 
+class TestUnaFiguraPorSeccion(Base):
+    def test_cada_seccion_marca_una_sola_figura(self):
+        self.assertEqual(self.msgs(), [])
+        self.edita("1.6", "<!-- figura: foda -->", "<!-- figura: foda -->\n\n<!-- figura: foda -->")
+        self.assertIncidencia("debe marcar una sola vez la figura con la línea «<!-- figura: foda -->»")
+
+
 if __name__ == "__main__":
     unittest.main()

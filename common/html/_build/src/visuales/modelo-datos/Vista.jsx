@@ -1,7 +1,6 @@
 import { KeyRound, Layers, Table2 } from "lucide-react";
 import { Badge, Chip } from "../../ui/badge.jsx";
 import { Encabezado, SinDatos } from "../../ui/encabezado.jsx";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../ui/table.jsx";
 
 function Dimension({ d }) {
   return (
@@ -11,10 +10,10 @@ function Dimension({ d }) {
       className="absolute overflow-hidden rounded-3xl border border-[color-mix(in_srgb,var(--k)_45%,var(--c-borde))] bg-[linear-gradient(155deg,color-mix(in_srgb,var(--k)_20%,var(--c-superficie)),var(--c-superficie)_70%)] p-3.5 shadow-[0_18px_40px_-24px_var(--k)]"
     >
       <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-[var(--k)]" />
-      <header className="flex items-center gap-2"><Layers className="size-4 shrink-0 text-[var(--k)]" aria-hidden="true" /><h3 className="truncate text-base">{d.nombre}</h3></header>
-      <p className="mt-1.5 flex items-center gap-1.5 text-xs text-muted-foreground"><KeyRound className="size-3.5 shrink-0" aria-hidden="true" /><span className="truncate font-mono">{d.clave}</span></p>
-      <p className="mt-1.5 line-clamp-3 text-xs leading-snug text-muted-foreground">{d.atributos.join(" · ")}</p>
-      {d.jerarquias.length ? <p className="mt-1 truncate text-xs"><b className="font-semibold">Jerarquía:</b> {d.jerarquias.join("; ")}</p> : null}
+      <header className="flex items-center gap-2"><Layers className="size-4 shrink-0 text-[var(--k)]" aria-hidden="true" /><h3 className="truncate text-[17px]">{d.nombre}</h3></header>
+      <p className="mt-1.5 flex items-center gap-1.5 text-[13px] text-muted-foreground"><KeyRound className="size-3.5 shrink-0" aria-hidden="true" /><span className="truncate font-mono">{d.clave}</span></p>
+      <p className="mt-1.5 line-clamp-3 text-[13px] leading-snug text-muted-foreground">{d.atributos.join(" · ")}</p>
+      {d.jerarquias.length ? <p className="mt-1 truncate text-[13px]"><b className="font-semibold">Jerarquía:</b> {d.jerarquias.join("; ")}</p> : null}
     </section>
   );
 }
@@ -26,8 +25,8 @@ function Hecho({ h }) {
       style={{ left: h.x, top: h.y, width: h.w, height: h.h }}
       className="absolute overflow-hidden rounded-3xl border-2 border-[var(--c-acento)] bg-[linear-gradient(155deg,color-mix(in_srgb,var(--c-acento)_22%,var(--c-superficie)),var(--c-superficie)_72%)] p-4 shadow-[0_0_60px_-18px_var(--c-acento)]"
     >
-      <header className="flex items-center gap-2"><Table2 className="size-5 shrink-0 text-primary-strong" aria-hidden="true" /><h3 className="truncate text-lg">{h.nombre}</h3><Badge mono variant="brand" className="ml-auto">{h.codigo}</Badge></header>
-      <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">{h.granularidad}</p>
+      <header className="flex items-center gap-2"><Table2 className="size-5 shrink-0 text-primary-strong" aria-hidden="true" /><h3 className="truncate text-xl">{h.nombre}</h3><Badge mono variant="brand" className="ml-auto">{h.codigo}</Badge></header>
+      <p className="mt-1.5 line-clamp-2 text-[15px] text-muted-foreground">{h.granularidad}</p>
       <ul className="mt-2.5 flex flex-wrap gap-1.5">
         {h.medidas.map((x) => <li key={x.nombre}><Chip k="acento" mono>{x.nombre}{x.agregacion ? ` · ${x.agregacion}` : ""}</Chip></li>)}
       </ul>
@@ -59,18 +58,11 @@ export function Vista({ m }) {
           {m.hechos.map((h) => <Hecho key={h.codigo} h={h} />)}
         </div>
       </div>
-      <h2 className="mb-3 mt-8 text-2xl">Relaciones</h2>
-      <Table>
-        <TableHeader><TableRow><TableHead>Código</TableHead><TableHead>Desde</TableHead><TableHead>Hacia</TableHead><TableHead>Campo</TableHead><TableHead>Cardinalidad</TableHead><TableHead>Filtro</TableHead></TableRow></TableHeader>
-        <TableBody>
-          {m.relaciones.map((r) => (
-            <TableRow key={r.codigo} data-relacion={r.codigo}>
-              <TableCell><Badge mono>{r.codigo}</Badge></TableCell><TableCell className="font-semibold">{r.desde}</TableCell><TableCell className="font-semibold">{r.hacia}</TableCell>
-              <TableCell className="font-mono text-xs">{r.campos}</TableCell><TableCell className="font-mono">{r.cardinalidad}</TableCell><TableCell>{r.filtro}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <p className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-xs text-muted-foreground" data-leyenda>
+        <span><b className="text-foreground">1</b> = un registro de la dimensión</span>
+        <span><b className="text-foreground">∗</b> = varios registros del hecho</span>
+        <span>Cada línea es una relación (varios a uno) y filtra de la dimensión al hecho</span>
+      </p>
     </>
   );
 }

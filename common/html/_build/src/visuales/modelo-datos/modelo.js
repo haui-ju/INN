@@ -1,9 +1,9 @@
 export const visual = "modelo-datos";
 export const fecha = () => null;
 export const ancho = "completo";
-export const anchoImagen = 1360;
+export const anchoImagen = 1440;
 
-const ANCHO = 1160;
+const ANCHO = 1280;
 const ALTO_DIM = 152;
 const ALTO_HECHO_BASE = 124;
 const SEPARACION = 168;

@@ -6,13 +6,13 @@ const ICONOS = { gauge: Gauge, check: CheckCircle2, alerta: AlertTriangle, sprin
 // Encabezado del visual: título grande con una barra de acento y los colores de la serie como firma.
 export function Encabezado({ titulo, proyecto, corte, etiqueta = "Inteligencia de Negocios" }) {
   return (
-    <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <header data-encabezado className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
         <p className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary-strong">
           <span aria-hidden="true" className="flex gap-1">{[1, 2, 3, 5].map((i) => <i key={i} className="block h-1.5 w-5 rounded-full" style={{ background: `var(--c-serie-${i})` }} />)}</span>
           {etiqueta}
         </p>
-        <h1 className="text-4xl sm:text-5xl">{titulo}</h1>
+        <h1 className="text-4xl">{titulo}</h1>
         <span aria-hidden="true" className="mt-3 block h-1 w-24 rounded-full bg-[linear-gradient(90deg,var(--c-acento),var(--c-serie-1))]" />
         {proyecto ? <p className="mt-3 text-sm text-muted-foreground">{proyecto}</p> : null}
       </div>

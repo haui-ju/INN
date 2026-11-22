@@ -61,6 +61,7 @@ class TestConProyecto(unittest.TestCase):
         f = VI.extraer("foda", self.root)
         self.assertEqual(len(f["estrategias"]), 6)
         self.assertEqual(f["estrategias"][0]["combina"], ["FOR-01", "OPO-01"])
+        self.assertEqual(sorted(f["cuadrantes"]), ["amenazas", "debilidades", "fortalezas", "oportunidades"])
         i = VI.extraer("ishikawa", self.root)
         self.assertEqual(i["categorias"][0]["nombre"], "Método")
         self.assertFalse(i["efecto"].endswith("."))
@@ -108,6 +109,7 @@ class TestConProyecto(unittest.TestCase):
             self.assertIn(f"Figura X: {VI.TITULOS[v]}.", txt)
         txt = VI.leer_imagen("pestel", VI.extraer("pestel", self.root))
         self.assertIn("4 son oportunidades y 4 son amenazas", txt)
+        self.assertIn("de su cruce salen 6 estrategias", VI.leer_imagen("foda", VI.extraer("foda", self.root)))
 
     def test_explicacion_con_datos_minimos(self):
         for v in CAP1:

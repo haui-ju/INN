@@ -6,8 +6,8 @@ Visuales ya hechos, autónomos y con el estilo de [`DESIGN.md`](DESIGN.md). Una 
 |---|---|---|
 | [`vista-previa/`](vista-previa/) | Vista previa del sistema de diseño | proyecto y `tokens.json` |
 | [`bmc/`](bmc/) | Business Model Canvas de nueve bloques (1.4) | `secciones/1.4.md` de `03-make-business-diagnosis` |
-| [`pestel/`](pestel/) | PESTEL en seis factores, con efecto, tipo y fuente (1.5) | `secciones/1.5.md` de `04-make-strategic-analysis` |
-| [`foda/`](foda/) | Matriz FODA en cuatro cuadrantes y estrategias cruzadas (1.6) | `secciones/1.6.md` de `04-make-strategic-analysis` |
+| [`pestel/`](pestel/) | PESTEL en dos láminas de tres factores, con efecto, tipo y fuente (1.5) | `secciones/1.5.md` de `04-make-strategic-analysis` |
+| [`foda/`](foda/) | Matriz FODA en dos láminas: la matriz de cuatro cuadros y las estrategias cruzadas (1.6) | `secciones/1.6.md` de `04-make-strategic-analysis` |
 | [`ishikawa/`](ishikawa/) | Diagrama de Ishikawa: efecto y causas por categoría 6M (1.7) | `secciones/1.7.md` de `04-make-strategic-analysis` |
 | [`arquitectura-bi/`](arquitectura-bi/) | Arquitectura de BI en cuatro capas con sus componentes y herramientas (2.2) | `secciones/2.2.md` y `2.3.md` de `06-make-bi-solution` |
 | [`modelo-datos/`](modelo-datos/) | Modelo en estrella: dimensiones, hechos y relaciones (2.4) | `modelo.json` de `07-make-data-model-kpi` |

@@ -1,6 +1,6 @@
 # Plantilla · Modelo de datos en estrella
 
-Esquema en estrella: las dimensiones arriba (con su clave, atributos y jerarquías), las tablas de hechos debajo (con su granularidad, medidas con agregación y claves) y la tabla de relaciones con su cardinalidad y dirección de filtro. Estilo en [`../DESIGN.md`](../DESIGN.md).
+Esquema en estrella dibujado: las dimensiones arriba (con su clave, atributos y jerarquías), las tablas de hechos debajo (con su granularidad y sus medidas con agregación) y una línea curva por cada relación, con «1» en la dimensión y «∗» en el hecho. La tabla de relaciones no va en la imagen (ya está en la sección 2.4) para que la proporción quepa en una diapositiva. Ancho fijo de 1440 px. Estilo en [`../DESIGN.md`](../DESIGN.md).
 
 ## Qué se cambia
 **Solo** el bloque de tokens y el bloque de datos. `python3 .claude/skills/_shared/html_tpl.py copiar --visual modelo-datos …` lo hace; en una corrida, `visuales.py construir --visual modelo-datos --run <corrida>` lo hace con los datos extraídos de la fuente. **No se edita nada más** del HTML.

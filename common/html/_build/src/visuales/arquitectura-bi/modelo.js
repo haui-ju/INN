@@ -1,7 +1,7 @@
 export const visual = "arquitectura-bi";
 export const fecha = () => null;
 export const ancho = "completo";
-export const anchoImagen = 1560;
+export const anchoImagen = 1600;
 
 const CAPAS = {
   fuentes: { k: "serie-8", icono: "fuentes", subtitulo: "De dónde salen los datos" },
