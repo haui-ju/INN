@@ -200,7 +200,7 @@ class TestVisual(Base):
 
     def test_explicacion_y_construccion(self):
         d = VI.extraer("arquitectura-bi", self.root)
-        txt = VI.leer_imagen("arquitectura-bi", d)
+        txt = VI.leer_imagen("arquitectura-bi", d, F.INTERPRETACION)
         self.assertEqual(VI.validar_explicacion(txt, False), [])
         self.assertIn("3 fuentes", txt)
         self.assertIn("1 herramienta está pendiente de decidir", txt)

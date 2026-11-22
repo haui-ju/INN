@@ -258,7 +258,7 @@ class TestVisual(Base):
 
     def test_explicacion_y_construccion(self):
         d = VI.extraer("modelo-datos", self.root)
-        txt = VI.leer_imagen("modelo-datos", d)
+        txt = VI.leer_imagen("modelo-datos", d, F.INTERPRETACION)
         self.assertEqual(VI.validar_explicacion(txt, False), [])
         self.assertIn("3 tablas de hechos y 5 dimensiones unidas por 9 relaciones", txt)
         self.assertIn("Pollería Don Tito", (self.run / "visuales" / "modelo-datos.html").read_text(encoding="utf-8"))

@@ -96,11 +96,16 @@ def corrida(raiz, paso, registrar=True, visuales=True):
     return run
 
 
+INTERPRETACION = ("Lo que debes entender es el cruce de los datos del caso y no cada pieza por separado. "
+                  "La figura muestra dónde se pierde el margen y qué parte depende del negocio. "
+                  "Por eso las decisiones del proyecto parten de ella.")
+
+
 def construir(raiz, paso, run):
     tk = H.cargar_tokens(None, "base")
     for v, (_, origen, _) in VI.VISUALES.items():
         if origen == paso:
-            VI.construir(v, raiz, Path(run) / "visuales", tk, run=Path(run).name)
+            VI.construir(v, raiz, Path(run) / "visuales", tk, run=Path(run).name, interpretacion=INTERPRETACION)
 
 
 def crear(raiz, hasta="05-make-problem-objectives"):

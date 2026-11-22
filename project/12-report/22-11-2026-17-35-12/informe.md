@@ -81,21 +81,7 @@ El Business Model Canvas describe en nueve bloques cómo una organización crea,
 
 **Cómo copiarla.** Abrir [imagenes/bmc.html](imagenes/bmc.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
-**Cómo leer la figura.** Muestra en una sola vista cómo la empresa crea, entrega y captura valor. El modelo atiende 2 segmentos de clientes por 5 canales y sostiene 3 fuentes de ingresos frente a 4 partidas de costos.
-
-Tabla 4: Bloques del Business Model Canvas
-
-| Bloque | Contenido |
-|---|---|
-| Segmentos de clientes | Familias y trabajadores de Magdalena del Mar y distritos cercanos; clientes de delivery |
-| Propuesta de valor | Pollo a la brasa y parrilladas; atención rápida; precios justos; pedido en el local, para llevar o a domicilio |
-| Canales | Salón; para llevar; delivery propio por WhatsApp; Rappi; PedidosYa |
-| Relaciones con clientes | Atención personal en el local; pedidos por WhatsApp con clientes frecuentes; reseñas en las aplicaciones |
-| Fuentes de ingresos | Venta de pollos, parrilladas y combos; bebidas y adicionales; cargo por delivery propio |
-| Recursos clave | Cocina y hornos del local; marca y recetas; equipo de cocina, salón y reparto; sistema de caja |
-| Actividades clave | Compra y preparación del pollo; producción por turno; atención y despacho de pedidos |
-| Socios clave | Proveedores de pollo vivo y de insumos; Rappi y PedidosYa; proveedor del sistema de caja |
-| Estructura de costos | Pollo vivo y otros insumos; comisiones de 25 % a 30 % de las aplicaciones; planilla; alquiler y servicios del local |
+**Cómo leer la figura.** Muestra en una sola vista cómo la empresa crea, entrega y captura valor. Los nueve bloques se leen como una cadena: a quién se atiende, por qué canal le llega el pollo y cuánto queda después de los costos. El negocio crece por el canal que menos deja: las aplicaciones de delivery pasaron de 15 % a 35 % de las ventas, pero cobran de 25 % a 30 % de comisión y venden al mismo precio que el salón. Además, el jefe de cocina decide la producción de cada turno por experiencia y la merma llega a 7 %. Por eso la problemática del proyecto se concentra en tres bloques: canales, actividades clave y estructura de costos.
 
 **Lectura del modelo.** El crecimiento llega por el bloque de canales: las aplicaciones pasaron de 15 % a 35 % de las ventas. Sin embargo, suman a la estructura de costos una comisión de 25 % a 30 % que el precio no refleja, porque los precios son iguales en todos los canales. Además, el jefe de cocina decide la producción por turno, una actividad clave, según su experiencia, y la merma llega a 7 %. La problemática se ubica así entre canales, actividades clave y estructura de costos.
 
@@ -107,9 +93,9 @@ El análisis PESTEL examina los factores políticos, económicos, sociales, tecn
 
 **Cómo copiarla.** Abrir [imagenes/pestel.html](imagenes/pestel.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
-**Cómo leer la figura.** Resume los factores del entorno que favorecen o amenazan al negocio. De 9 hallazgos del entorno, 4 son oportunidades y 5 son amenazas, y las amenazas se concentran en el factor económico.
+**Cómo leer la figura.** Resume los factores del entorno que favorecen o amenazan al negocio. El entorno pesa más en contra que a favor: de nueve hallazgos, cinco son amenazas y cuatro, oportunidades. Las amenazas que más golpean el margen son el precio del pollo vivo, que subió de S/ 6.10 a S/ 6.90 por kilogramo en dos semanas, la inflación y las comisiones de las aplicaciones. A favor están la demanda de delivery, que lidera el pollo, y las herramientas de BI de costo bajo, como Power BI Desktop, que la empresa puede usar sin pagar licencia. Estos hallazgos pasan a la matriz FODA como oportunidades y amenazas.
 
-Tabla 5: Análisis PESTEL
+Tabla 4: Análisis PESTEL
 
 | Código | Factor | Hallazgo | Efecto en el negocio | Tipo | Fuente |
 |---|---|---|---|---|---|
@@ -133,9 +119,9 @@ La matriz FODA organiza en cuatro cuadros los factores internos y externos que f
 
 **Cómo copiarla.** Abrir [imagenes/foda.html](imagenes/foda.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
-**Cómo leer la figura.** Resume la situación de la empresa para decidir qué aprovechar y qué proteger. Por dentro fortalezas y debilidades se equilibran (4 frente a 4) y por fuera las amenazas superan a las oportunidades (3 frente a 5), y de su cruce salen 7 estrategias.
+**Cómo leer la figura.** Resume la situación de la empresa para decidir qué aprovechar y qué proteger. Lo importante es el cruce de los cuadros y no cada uno por separado. Por dentro, la pollería tiene con qué crecer: cuatro canales de venta, cocina propia, ventas que subieron 18 % y un registro digital de cada venta. Sus debilidades son de gestión: precios iguales en todos los canales, producción por experiencia con 7 % de merma, sistemas que no se cruzan y un costo del pollo que no se relaciona con el margen. Por fuera, las amenazas superan a las oportunidades, cinco frente a tres. Del cruce salen siete estrategias y cinco dependen de medir, integrar o pronosticar con datos, que es lo que la solución de BI hace posible.
 
-Tabla 6: Fortalezas
+Tabla 5: Fortalezas
 
 | Código | Fortaleza | Evidencia o fuente |
 |---|---|---|
@@ -144,7 +130,7 @@ Tabla 6: Fortalezas
 | FOR-03 | Ventas en crecimiento: 18 % más en el último año | Registro de caja de 2025 y 2026 |
 | FOR-04 | Comprobantes electrónicos desde 2018, que dejan un registro digital de las ventas | Padrón de contribuyentes, 2026 |
 
-Tabla 7: Debilidades
+Tabla 6: Debilidades
 
 | Código | Debilidad | Evidencia o fuente |
 |---|---|---|
@@ -153,7 +139,7 @@ Tabla 7: Debilidades
 | DEB-03 | Ventas de caja, aplicaciones y WhatsApp registradas en sistemas que no se cruzan | Revisión de las fuentes de datos de la empresa, 2026 |
 | DEB-04 | El costo del pollo vivo no se relaciona con el margen ni con los precios de venta | Registro de compras de la empresa, 2026 |
 
-Tabla 8: Oportunidades
+Tabla 7: Oportunidades
 
 | Código | Oportunidad | Evidencia o fuente |
 |---|---|---|
@@ -161,7 +147,7 @@ Tabla 8: Oportunidades
 | OPO-02 | Demanda de delivery de pollo en crecimiento | SOC-01 |
 | OPO-03 | Demanda concentrada en días y horas conocidos, que permite pronosticar la producción | SOC-02 |
 
-Tabla 9: Amenazas
+Tabla 8: Amenazas
 
 | Código | Amenaza | Evidencia o fuente |
 |---|---|---|
@@ -173,7 +159,7 @@ Tabla 9: Amenazas
 
 **Estrategias cruzadas.** Del cruce de los cuadros internos con los externos salen las estrategias que orientan el proyecto. Cinco de las siete dependen de medir, integrar o pronosticar con datos (FO-01, DO-01, DO-02, DA-01 y DA-02), y son las que la solución de BI hace posibles.
 
-Tabla 10: Estrategias cruzadas FO, FA, DO y DA
+Tabla 9: Estrategias cruzadas FO, FA, DO y DA
 
 | Código | Tipo | Estrategia | Combina |
 |---|---|---|---|
@@ -195,9 +181,9 @@ El diagrama de causa y efecto organiza por categorías las causas posibles de un
 
 **Cómo copiarla.** Abrir [imagenes/ishikawa.html](imagenes/ishikawa.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
-**Cómo leer la figura.** Ordena por categorías las causas que explican el problema central del negocio. El problema «Las ventas crecieron 18 % en el último año, pero el margen neto cayó de 14 % a 8 %» se explica por 8 causas en 6 categorías, con más peso en método y medio ambiente (2 causas cada una).
+**Cómo leer la figura.** Ordena por categorías las causas que explican el problema central del negocio. El problema no tiene una sola causa: las ocho se reparten en seis categorías, y las que más pesan nacen dentro del negocio. Dos son de método, porque los precios son iguales en todos los canales y se produce sin pronóstico de demanda. Dos son de medio ambiente, las comisiones de 25 % a 30 % de las aplicaciones y la inflación de 5.25 %, que el negocio no controla y solo puede compensar con mejores decisiones. Las otras cuatro, de mano de obra, materiales, maquinaria y medición, repiten la misma falta: no se mide el margen por canal ni la merma por turno, y los registros no se cruzan.
 
-Tabla 11: Causas del diagrama de Ishikawa
+Tabla 10: Causas del diagrama de Ishikawa
 
 | Código | Categoría | Causa | Evidencia |
 |---|---|---|---|
@@ -220,7 +206,7 @@ Tabla 11: Causas del diagrama de Ishikawa
 
 **Causas principales.** Del diagrama de Ishikawa se priorizan las cuatro causas que más pesan en el margen y que una solución de BI puede medir y corregir con datos.
 
-Tabla 12: Causas principales de la problemática
+Tabla 11: Causas principales de la problemática
 
 | Código | Causa principal | Categoría | Evidencia |
 |---|---|---|---|
@@ -238,7 +224,7 @@ Tabla 12: Causas principales de la problemática
 
 El objetivo general OG-01 responde a la problemática central: dar al dueño la información de rentabilidad por canal y de merma que hoy no tiene. Con ella podrá recuperar el margen neto de 8 % a 12 % mediante decisiones de precio y de producción.
 
-Tabla 13: Objetivo general del proyecto
+Tabla 12: Objetivo general del proyecto
 
 | Código | Objetivo | Métrica | Meta | Plazo | Indicador |
 |---|---|---|---|---|---|
@@ -248,7 +234,7 @@ Tabla 13: Objetivo general del proyecto
 
 Los objetivos específicos desagregan el objetivo general en cinco resultados medibles al cierre del proyecto.
 
-Tabla 14: Objetivos específicos
+Tabla 13: Objetivos específicos
 
 | Código | Objetivo | Métrica | Meta | Plazo | Aporta a | Indicador |
 |---|---|---|---|---|---|---|
@@ -260,7 +246,7 @@ Tabla 14: Objetivos específicos
 
 **Matriz de articulación.** Cada objetivo específico responde a causas del diagrama de Ishikawa (1.7), se apoya en el análisis PESTEL (1.5) y en la matriz FODA (1.6) y actúa sobre bloques concretos del modelo de negocio.
 
-Tabla 15: Matriz de articulación de los objetivos específicos
+Tabla 14: Matriz de articulación de los objetivos específicos
 
 | Objetivo | Causas (Ishikawa) | FODA | PESTEL | Canvas | Indicador |
 |---|---|---|---|---|---|
@@ -290,7 +276,7 @@ Este capítulo describe la solución de Inteligencia de Negocios que responde a 
 
 El dashboard responde a cada objetivo específico con componentes concretos de la arquitectura, que se describe en el punto siguiente.
 
-Tabla 16: Componentes de la solución que atienden cada objetivo específico
+Tabla 15: Componentes de la solución que atienden cada objetivo específico
 
 | Objetivo | Componentes | Cómo lo atiende |
 |---|---|---|
@@ -308,24 +294,7 @@ La arquitectura de la solución sigue las cuatro capas de un sistema de intelige
 
 **Cómo copiarla.** Abrir [imagenes/arquitectura-bi.html](imagenes/arquitectura-bi.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
-**Cómo leer la figura.** Muestra cómo viaja el dato desde las fuentes hasta el dashboard en cuatro capas. Los datos pasan de 6 fuentes por 2 componentes de ETL y 1 de almacenamiento hasta 3 componentes de visualización.
-
-Tabla 17: Componentes de la arquitectura de BI
-
-| Código | Capa | Componente | Función | Entrada y salida |
-|---|---|---|---|---|
-| CAP-01 | Fuentes | Sistema de caja, salón y para llevar (FUE-01) | Aporta las ventas por ticket, producto, canal y turno | Registro de caja → archivo de ventas |
-| CAP-02 | Fuentes | Reportes de Rappi (FUE-02) | Aporta los pedidos y la comisión de cada pedido | Reporte de la aplicación → archivo de pedidos |
-| CAP-03 | Fuentes | Reportes de PedidosYa (FUE-03) | Aporta los pedidos y la comisión de cada pedido | Reporte de la aplicación → archivo de pedidos |
-| CAP-04 | Fuentes | Pedidos por WhatsApp (FUE-04) | Aporta los pedidos del delivery propio | Registro de pedidos → archivo de pedidos |
-| CAP-05 | Fuentes | Control de producción por turno (FUE-05) | Aporta los pollos preparados, vendidos y la merma de cada turno | Registro de cocina → archivo de producción |
-| CAP-06 | Fuentes | Boletín de precios de aves del Ministerio de Desarrollo Agrario y Riego (FUE-06) | Aporta el precio diario del pollo vivo en Lima Metropolitana | Boletín en PDF → archivo de precios diarios |
-| CAP-07 | ETL | Extracción y transformación con Power Query | Combina los archivos de las seis fuentes, asigna tipos de dato, homologa productos y canales y calcula columnas | Archivos de las fuentes → tablas transformadas |
-| CAP-08 | ETL | Reglas de calidad y homologación | Quita duplicados, trata nulos, anonimiza los datos de clientes y cuenta los registros descartados | Tablas transformadas → tablas limpias |
-| CAP-09 | Almacenamiento | Modelo dimensional | Guarda los hechos y las dimensiones que consume el dashboard | Tablas limpias → modelo en estrella |
-| CAP-10 | Visualización | Dashboard de rentabilidad, merma y precio del insumo | Muestra los KPI, el margen por canal y producto, la merma por turno y el precio del pollo vivo | Modelo en estrella → páginas e indicadores |
-| CAP-11 | Visualización | Pronóstico de demanda por día y turno | Estima cuántos pollos preparar según el patrón de ventas | Modelo en estrella → serie con su pronóstico |
-| CAP-12 | Visualización | Publicación del dashboard | Pone el dashboard a disposición del dueño y del jefe de cocina en el navegador | Dashboard terminado → informe publicado |
+**Cómo leer la figura.** Muestra cómo viaja el dato desde las fuentes hasta el dashboard en cuatro capas. Hoy los datos están en seis lugares que no se cruzan: la caja, Rappi, PedidosYa, WhatsApp, el control de producción y el boletín de precios. La arquitectura los lleva en un solo sentido por cuatro capas: Power Query los extrae y depura, las reglas de calidad los homologan y todo queda en un único modelo dimensional (CAP-09). De ese modelo salen el dashboard, el pronóstico de demanda y su publicación, de modo que el margen, la merma y el precio del pollo se miden siempre con los mismos datos. Todo se construye con Power BI, sin servidor ni costo adicional, y el dueño y el jefe de cocina lo consultan desde el navegador.
 
 **Lectura de la arquitectura.** El dato viaja desde la caja (CAP-01), las aplicaciones (CAP-02 y CAP-03), WhatsApp (CAP-04), la cocina (CAP-05) y el boletín de precios (CAP-06) hasta un modelo único (CAP-09). De ahí pasa al dashboard (CAP-10), que el dueño consulta antes de decidir precios, producción y compras.
 
@@ -333,7 +302,7 @@ Tabla 17: Componentes de la arquitectura de BI
 
 Las herramientas (HER-01 a HER-04) se eligieron por su integración con Power BI, por su costo y por el tamaño de los datos del proyecto (Microsoft, s. f.). Todas forman parte del ecosistema de Power BI, de modo que el equipo trabaja con una sola plataforma de punta a punta.
 
-Tabla 18: Herramientas de la solución de BI
+Tabla 16: Herramientas de la solución de BI
 
 | Código | Herramienta | Capa | Función en el proyecto | Justificación | Alternativa descartada |
 |---|---|---|---|---|---|
@@ -350,11 +319,11 @@ El modelo sigue un esquema en estrella con varios hechos que comparten dimension
 
 **Cómo copiarla.** Abrir [imagenes/modelo-datos.html](imagenes/modelo-datos.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
-**Cómo leer la figura.** Muestra las tablas de hechos, las dimensiones y las relaciones sobre las que se calculan los indicadores. El modelo tiene 4 tablas de hechos y 5 dimensiones unidas por 9 relaciones, y fPedidos es el hecho con más ejes de análisis (4 claves).
+**Cómo leer la figura.** Muestra las tablas de hechos, las dimensiones y las relaciones sobre las que se calculan los indicadores. Las cuatro tablas de hechos no se unen entre sí: se cruzan a través de las dimensiones que comparten. dCalendario las une a las cuatro, así que un filtro por mes afecta a ventas, producción, precio del pollo y metas a la vez, y dTurno une pedidos con producción para comparar lo preparado con lo vendido. En cambio, canal y producto solo existen en fPedidos, por eso el margen por canal y producto se calcula únicamente desde los pedidos, con la comisión de 25 % a 30 % de las aplicaciones ya descontada. Cada hecho tiene su propio grano, por ejemplo un pedido por día frente a un KPI por mes, y sus medidas no se suman entre tablas distintas.
 
 **Tablas de hechos.** Cada hecho tiene un grano propio y sus medidas se suman, promedian o cuentan a ese nivel.
 
-Tabla 19: Tablas de hechos
+Tabla 17: Tablas de hechos
 
 | Código | Tabla de hechos | Granularidad | Medidas | Claves |
 |---|---|---|---|---|
@@ -365,7 +334,7 @@ Tabla 19: Tablas de hechos
 
 **Dimensiones.** Las dimensiones se comparten entre los hechos para que los filtros de una página afecten a todos los visuales.
 
-Tabla 20: Dimensiones
+Tabla 18: Dimensiones
 
 | Código | Dimensión | Clave | Atributos | Jerarquías |
 |---|---|---|---|---|
@@ -377,20 +346,6 @@ Tabla 20: Dimensiones
 
 **Relaciones.** Todas las relaciones son de varios a uno, desde el hecho hacia la dimensión, y filtran en un solo sentido.
 
-Tabla 21: Relaciones del modelo
-
-| Código | Desde | Hacia | Campos | Cardinalidad | Filtro |
-|---|---|---|---|---|---|
-| REL-01 | fPedidos | dCalendario | fecha_key | *:1 | Simple |
-| REL-02 | fPedidos | dProducto | producto_key | *:1 | Simple |
-| REL-03 | fPedidos | dCanal | canal_key | *:1 | Simple |
-| REL-04 | fPedidos | dTurno | turno_key | *:1 | Simple |
-| REL-05 | fProduccion | dCalendario | fecha_key | *:1 | Simple |
-| REL-06 | fProduccion | dTurno | turno_key | *:1 | Simple |
-| REL-07 | fPrecioInsumo | dCalendario | fecha_key | *:1 | Simple |
-| REL-08 | fMetaKpi | dKpi | kpi_key | *:1 | Simple |
-| REL-09 | fMetaKpi | dCalendario | fecha_key | *:1 | Simple |
-
 **Lectura del modelo.** Con este modelo se calcula el margen de cada canal y producto por mes, con la comisión de 25 % a 30 % de las aplicaciones ya descontada (FCT-01). Se compara lo preparado con lo vendido en cada turno (FCT-02). También se contrasta el precio del pollo vivo (FCT-03) con el margen de enero a octubre de 2026 y cada KPI con su meta (FCT-04).
 
 ## 2.5. Indicadores clave de rendimiento (KPI)
@@ -399,7 +354,7 @@ Los indicadores se eligieron con dos criterios: que midan el logro de un objetiv
 
 **Definición.** Cada indicador se define con su fórmula, la medida que lo calcula en Power BI y los campos del modelo de los que sale.
 
-Tabla 22: Definición de los KPI
+Tabla 19: Definición de los KPI
 
 | Código | KPI | Fórmula | Medida propuesta | Origen |
 |---|---|---|---|---|
@@ -413,7 +368,7 @@ Tabla 22: Definición de los KPI
 
 **Gestión.** Cada indicador tiene una meta, una frecuencia de revisión, el objetivo que mide y la decisión que apoya.
 
-Tabla 23: Meta, frecuencia y decisión de cada KPI
+Tabla 20: Meta, frecuencia y decisión de cada KPI
 
 | Código | Meta | Frecuencia | Objetivo | Decisión que apoya |
 |---|---|---|---|---|

@@ -19,7 +19,7 @@ Pregunta solo lo que falta: el grano de los hechos si el brief no lo deja claro,
 
 ### 0.3 Contrato de la corrida (lo lee `12-make-report`)
 - `secciones/2.4.md` y `2.5.md`: la primera línea es el encabezado exacto (`## 2.4. Diseño del modelado de datos: hechos, dimensiones y relaciones` y `## 2.5. Indicadores clave de rendimiento`); después, solo texto final del informe, sin notas de trabajo ni otros encabezados de nivel 1 o 2.
-- La sección 2.4 marca su figura en una línea sola: `<!-- figura: modelo-datos -->`. El HTML queda en `visuales/` y su explicación en `leer-imagen/`; los escribe `visuales.py construir --visual modelo-datos --run <corrida>` a partir de `modelo.json`. 2.5 no lleva figura.
+- La sección 2.4 marca su figura en una línea sola: `<!-- figura: modelo-datos -->`. El HTML queda en `visuales/` y su explicación en `leer-imagen/`; los escribe `visuales.py construir --visual modelo-datos --run <corrida>` a partir de `modelo.json`, que recibe el «Qué debes entender» que redacta la skill con `--interpretacion` (3 a 6 frases con los datos del caso: qué conclusión saca el lector, no cómo se ve). 2.5 no lleva figura.
 - `modelo.json`: el mismo modelo y los mismos KPI en datos (ver 0.5). Las secciones en Markdown son la fuente de verdad del texto y el archivo debe coincidir con ellas.
 - `referencias.md` si se cita (por ejemplo, Kimball y Ross, 2013) y `README.md` con la procedencia.
 - **Título de cada tabla.** Antes de cada tabla va una línea `Tabla N: título` (N empieza en 1 en cada sección).

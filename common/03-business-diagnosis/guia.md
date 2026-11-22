@@ -24,7 +24,7 @@ Pregunta solo lo que falta (por ejemplo, ventas anuales si `domain.md` no las tr
 
 ### 0.5 Contrato de la corrida (lo lee `12-make-report`)
 - `secciones/1.1.md` a `secciones/1.4.md`: la **primera línea** es el encabezado exacto `## <punto>. <título del índice>` (el título es el texto del punto en el índice sin los paréntesis finales; `python3 .claude/skills/_shared/diagnostico.py titulos` los lista). Después, solo texto final del informe: prosa académica y tablas, sin notas de trabajo ni otros encabezados de nivel 1 o 2.
-- En 1.4, la figura va en una línea sola: `<!-- figura: bmc -->`. El HTML queda en `visuales/bmc.html` y su explicación en `leer-imagen/bmc.md`; ambos los escribe `visuales.py construir`.
+- En 1.4, la figura va en una línea sola: `<!-- figura: bmc -->`. El HTML queda en `visuales/bmc.html` y su explicación en `leer-imagen/bmc.md`; ambos los escribe `visuales.py construir`, que recibe el «Qué debes entender» que redacta la skill con `--interpretacion` (3 a 6 frases con los datos del caso: qué conclusión saca el lector, no cómo se ve).
 - `referencias.md`: una referencia por línea en APA 7 ([`common/citation-style/APA7.md`](../citation-style/APA7.md)); cada cita del texto, (Autor, año) o Autor (año), tiene su línea.
 - `README.md`: procedencia (modo de datos, datos modelados, qué confirmó el usuario). Es el único archivo que puede decir que un dato es generado.
 - **Título de cada tabla.** Antes de cada tabla va una línea `Tabla N: título` (N empieza en 1 en cada sección); `12-make-report` renumera las tablas en todo el informe y avisa las que no tienen título.

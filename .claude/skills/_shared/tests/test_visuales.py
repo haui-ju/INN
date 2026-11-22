@@ -104,7 +104,7 @@ class TestConProyecto(unittest.TestCase):
     def test_explicaciones_validas(self):
         for v in CAP1:
             d = VI.extraer(v, self.root)
-            txt = VI.leer_imagen(v, d)
+            txt = VI.leer_imagen(v, d, F.INTERPRETACION)
             self.assertEqual(VI.validar_explicacion(txt, VI.resaltado(v, d)), [], v)
             self.assertIn(f"Figura X: {VI.TITULOS[v]}.", txt)
         txt = VI.leer_imagen("pestel", VI.extraer("pestel", self.root))
@@ -185,6 +185,18 @@ class TestConProyecto(unittest.TestCase):
         self.assertIn("--tema-defecto: oscuro;", vuelto)
         self.assertNotIn("#123456", vuelto)
 
+    def test_construir_conserva_la_interpretacion_y_la_reemplaza_si_llega_otra(self):
+        run = self.runs["04-make-strategic-analysis"].name
+        tk = H.cargar_tokens(None, "base")
+        with tempfile.TemporaryDirectory() as d:
+            carpeta, f = Path(d) / "visuales", Path(d) / "leer-imagen" / "pestel.md"
+            entiende = lambda: VI.leer_vinetas(f.read_text(encoding="utf-8"))[VI.ROTULO_ENTIENDE]
+            VI.construir("pestel", self.root, carpeta, tk, run, "Primera idea. Segunda idea. Tercera idea.")
+            VI.construir("pestel", self.root, carpeta, tk, run)
+            self.assertEqual(entiende(), "Primera idea. Segunda idea. Tercera idea.")
+            VI.construir("pestel", self.root, carpeta, tk, run, "Nueva uno. Nueva dos. Nueva tres.")
+            self.assertEqual(entiende(), "Nueva uno. Nueva dos. Nueva tres.")
+
     def test_cli(self):
         buf = io.StringIO()
         with redirect_stdout(buf):
@@ -198,6 +210,20 @@ class TestConProyecto(unittest.TestCase):
                 self.assertEqual(VI.main(["construir", "--visual", "pestel", "--run", run, "--carpeta", str(Path(d) / "visuales"), "--raiz", str(self.root)]), 0)
             self.assertTrue((Path(d) / "visuales" / "pestel.html").is_file())
             self.assertTrue((Path(d) / "leer-imagen" / "pestel.md").is_file())
+
+
+class TestQueDebesEntender(unittest.TestCase):
+    TXT = "Lo primero es la causa. Lo segundo es el efecto. Lo tercero es la decisión."
+
+    def test_se_exige_y_se_mide(self):
+        base = VI.armar_leer("T", "Sirve para algo.", "Dice algo.", None, "Figura X: T.")
+        self.assertTrue(any("qué debes entender" in c for c in VI.validar_explicacion(base, False)))
+        ok = VI.armar_leer("T", "Sirve para algo.", "Dice algo.", None, "Figura X: T.", self.TXT)
+        self.assertEqual(VI.validar_explicacion(ok, False), [])
+        corto = VI.armar_leer("T", "Sirve para algo.", "Dice algo.", None, "Figura X: T.", "Solo una frase.")
+        self.assertTrue(any("3 a 6 frases" in c for c in VI.validar_explicacion(corto, False)))
+        largo = VI.armar_leer("T", "Sirve para algo.", "Dice algo.", None, "Figura X: T.", self.TXT + " palabra" * 140 + ".")
+        self.assertTrue(any("palabras" in c for c in VI.validar_explicacion(largo, False)))
 
 
 if __name__ == "__main__":

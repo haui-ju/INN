@@ -54,7 +54,15 @@ MARCADOR = re.compile(r"^\(INCLUIR IMAGEN: Figura (\d+): (.+?)\. Archivo sugerid
 COMO_COPIAR = "**Cómo copiarla.**"
 COMO_LEER = "**Cómo leer la figura.**"
 PIE = "Pie de foto sugerido"
-ROTULOS_LECTURA = ("Para qué sirve", "Qué dice", "Por qué se resalta")
+ROTULOS_LECTURA = ("Para qué sirve", "Qué dice", "Por qué se resalta", "Qué debes entender")
+ENTIENDE, DICE = "Qué debes entender", "Qué dice"
+# Tablas que repiten por completo lo que ya muestra la figura: se quitan del informe armado cuando la figura está. Siguen en la
+# sección de origen, porque de ellas sale el dibujo. Las demás (FODA con su evidencia, causas del Ishikawa, hechos y dimensiones) traen datos que la imagen no muestra.
+TABLAS_EN_FIGURA = {
+    "Bloques del Business Model Canvas": "bmc",
+    "Componentes de la arquitectura de BI": "arquitectura-bi",
+    "Relaciones del modelo": "modelo-datos",
+}
 FORMATO = ("**Formato de entrega.** Word o PDF, letra Arial 11, interlineado 1.5 y márgenes estándar. Antes de entregar, "
            "cada marcador «(INCLUIR IMAGEN: …)» se reemplaza por su imagen; el dashboard se presenta en Power BI en la exposición.")
 
@@ -182,8 +190,10 @@ def leer_imagen(f):
 def como_leer(vinetas):
     """Párrafo «Cómo leer la figura.» con las viñetas de explicación (sin el pie); None si no hay ninguna."""
     partes = []
+    hay_entiende = any(r == ENTIENDE for r, _ in vinetas or [])
     for rotulo, texto in vinetas or []:
-        if rotulo == PIE:
+        # «Qué dice» cuenta lo que se ve; cuando la skill redactó qué debe entender el lector, esa conclusión lo reemplaza.
+        if rotulo == PIE or (hay_entiende and rotulo == DICE):
             continue
         partes.append(_frase(texto) if rotulo in ROTULOS_LECTURA else _frase(f"{rotulo}: {texto}"))
     return f"{COMO_LEER} " + " ".join(partes) if partes else None
@@ -350,8 +360,33 @@ def _bloque_figura(st, n, visual, ctx, prefijo, copiar):
     return out
 
 
+def _sin_tablas_de_la_figura(lineas, ctx):
+    """Quita, con su título, las tablas de TABLAS_EN_FIGURA cuya figura está en el bloque y tiene su HTML."""
+    vivas = fuera_de_codigo(lineas)
+    figuras = {m.group(1) for k in vivas if (m := RE_FIGURA.match(lineas[k]))}
+    quitar = set()
+    for k in sorted(vivas):
+        t = RE_TITULO_TABLA.match(lineas[k])
+        if not t:
+            continue
+        titulo = re.sub(r"^\**Tabla \d+[.:]\s*", "", lineas[k]).strip(" *")
+        visual = TABLAS_EN_FIGURA.get(titulo)
+        if visual not in figuras or not (ctx["dir"] / "visuales" / f"{visual}.html").is_file():
+            continue
+        j = k + 1
+        while j < len(lineas) and not lineas[j].strip():
+            j += 1
+        while j < len(lineas) and lineas[j].startswith("|"):
+            j += 1
+        quitar.update(range(k, j))
+        if j < len(lineas) and not lineas[j].strip():
+            quitar.add(j)
+    return [l for i, l in enumerate(lineas) if i not in quitar]
+
+
 def _procesar(st, lineas, ctx, prefijo="imagenes/", copiar=True):
     """Reemplaza las marcas de figura, renumera figuras y títulos de tabla y actualiza sus menciones en el bloque."""
+    lineas = _sin_tablas_de_la_figura(lineas, ctx)
     vivas = fuera_de_codigo(lineas)
     figs = [k for k in sorted(vivas) if RE_FIGURA.match(lineas[k])]
     tits = [k for k in sorted(vivas) if RE_TITULO_TABLA.match(lineas[k])]

@@ -40,7 +40,7 @@ Con `references/dependencias.md`: lista las filas que cambian (código, valor ac
 
 ### 5. Editar
 1. Edita solo las filas afectadas de `<fork>/secciones/2.1.md`, `2.2.md` o `2.3.md` y, si cambian las citas, `referencias.md`.
-2. Si cambió la tabla de 2.2 o la de 2.3, `python3 .claude/skills/_shared/visuales.py construir --visual arquitectura-bi --run <fork> --carpeta <fork>/visuales`.
+2. Si cambió la tabla de 2.2 o la de 2.3, `python3 .claude/skills/_shared/visuales.py construir --visual arquitectura-bi --run <fork> --carpeta <fork>/visuales`. Si lo cambiado altera lo que la figura dice, pasa un `--interpretacion "<texto>"` nuevo (reglas en el paso de 06); si no, se conserva el anterior.
 3. Actualiza el `README.md` del fork (lista de cambios y herramientas que siguen pendientes).
 
 ### 6. Revisar la redacción y validar

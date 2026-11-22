@@ -41,7 +41,7 @@ Con `references/dependencias.md`: lista las secciones y filas que cambian (valor
 ### 5. Editar
 1. Si el cambio toca misión, visión o datos generales, corrige primero `project/domain.md` (con confirmación).
 2. Edita solo las secciones afectadas de `<fork>/secciones/` y, si cambian las citas, `referencias.md`.
-3. Si cambió `secciones/1.4.md` (o el nombre comercial de 1.1), `python3 .claude/skills/_shared/visuales.py construir --visual bmc --run <fork> --carpeta <fork>/visuales`.
+3. Si cambió `secciones/1.4.md` (o el nombre comercial de 1.1), `python3 .claude/skills/_shared/visuales.py construir --visual bmc --run <fork> --carpeta <fork>/visuales`. Si lo cambiado altera lo que la figura dice, pasa un `--interpretacion "<texto>"` nuevo (reglas en el paso de 03); si no, se conserva el anterior.
 4. Actualiza el `README.md` del fork (lista de cambios).
 
 ### 6. Revisar la redacción y validar

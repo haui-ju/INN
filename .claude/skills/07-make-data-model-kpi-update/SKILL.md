@@ -41,7 +41,7 @@ Con `references/dependencias.md`: lista las filas que cambian (código, valor ac
 ### 5. Editar
 1. Edita solo las filas afectadas de `<fork>/secciones/2.4.md` o `2.5.md` y, si cambian las citas, `referencias.md`.
 2. Repite el mismo cambio en `<fork>/modelo.json`.
-3. Si cambió el modelo (tablas, medidas, claves, relaciones), `python3 .claude/skills/_shared/visuales.py construir --visual modelo-datos --run <fork> --carpeta <fork>/visuales`.
+3. Si cambió el modelo (tablas, medidas, claves, relaciones), `python3 .claude/skills/_shared/visuales.py construir --visual modelo-datos --run <fork> --carpeta <fork>/visuales`. Si lo cambiado altera lo que la figura dice, pasa un `--interpretacion "<texto>"` nuevo (reglas en el paso de 07); si no, se conserva el anterior.
 4. Actualiza el `README.md` del fork (lista de cambios y metas que siguen pendientes).
 
 ### 6. Revisar la redacción y validar

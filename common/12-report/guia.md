@@ -24,7 +24,7 @@ Cada corrida de una skill que aporta secciones contiene:
 | `secciones/<punto>.md` | Texto final de una sección. Abre con `## <punto>. <título del índice>`; los capítulos 4 y 5 usan `secciones/4.md` y `secciones/5.md` con `## 4. …` y `## 5. …` | Se copia bajo el encabezado del índice; el encabezado propio se reemplaza |
 | `<!-- figura: <visual> -->` | Línea sola donde va una figura | Se reemplaza por el marcador de imagen (sección 3) |
 | `visuales/<visual>.html` | HTML autónomo de la figura | Se copia a `imagenes/<visual>.html` |
-| `leer-imagen/<visual>.md` | Viñetas «Para qué sirve», «Qué dice», opcional «Por qué se resalta» y «Pie de foto sugerido» | Da el pie y el párrafo «Cómo leer la figura» |
+| `leer-imagen/<visual>.md` | Viñetas «Para qué sirve», «Qué dice», opcional «Por qué se resalta», «Qué debes entender» (lo redacta la skill) y «Pie de foto sugerido» | Da el pie y el párrafo «Cómo leer la figura»: lo que sirve más lo que debes entender (sin «Qué dice»; si falta «Qué debes entender», usa «Qué dice») |
 | `referencias.md` | Opcional: una entrada APA 7 por línea | Se combina en las referencias |
 | `anexos/<letra>.md` | Contenido de un anexo (A a D), en la corrida de la skill de su sección de origen | Se agrega como anexo (sección 6) |
 | `README.md` | Procedencia de la corrida | **No se copia nada** al informe |
@@ -54,6 +54,7 @@ Cada `<!-- figura: <visual> -->` pasa a:
 - El **pie** es la viñeta «Pie de foto sugerido»; sin ella, el título del punto.
 - **Sin HTML:** queda el marcador y «Cómo copiarla» pide ejecutar el `-update` de la skill o insertar una captura propia.
 - **Sin explicación:** queda el marcador sin «Cómo leer la figura».
+- **Tablas que repite la figura:** cuando la figura de la sección está con su HTML, el informe no incluye la tabla «Bloques del Business Model Canvas» (1.4), «Componentes de la arquitectura de BI» (2.2) ni «Relaciones del modelo» (2.4), porque la imagen muestra todo su contenido. Siguen en la sección de origen, de donde sale el dibujo. Las tablas con datos que la imagen no trae (evidencia del FODA, causas del Ishikawa, granularidad y medidas de los hechos, atributos de las dimensiones) se mantienen. Si falta el HTML, la tabla se queda.
 - En ambos casos el armado lo avisa y lo lista en la tabla «Figuras incompletas» de `faltantes.md`.
 - Las figuras se **numeran de forma consecutiva** en todo el informe (anexos incluidos) y los HTML se copian a `imagenes/` con su `imagenes/INDICE.md` (archivo, figura, dónde va y skill de origen).
 - Un punto con «(incluye imagen)» en el índice debe traer al menos una figura; si no, se avisa y la validación lo informa con el `-update` que lo corrige.

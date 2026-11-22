@@ -1,13 +1,13 @@
 # Procedencia del informe
 
-- Armado el 22-11-2026 a las 15:26 con `12-make-report` (`report.py construir`).
+- Armado el 22-11-2026 a las 17:35 con `12-make-report` (`report.py construir`).
 - Modo de datos del config: generado.
 - Sistema de diseño: project/02-design-system/22-11-2026-13-33-06-fork/DESIGN.md.
 - Brief: corrida vigente de 01-make-project-brief.
 - Curso: Pendiente. Docente: Pendiente.
 - Secciones incluidas: 15 de 19; pendientes: 4 (ver `faltantes.md`).
 - Anexos incluidos: ninguno.
-- Figuras: 6; tablas con título: 23.
+- Figuras: 6; tablas con título: 20.
 
 ## Corridas usadas
 

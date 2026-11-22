@@ -297,5 +297,38 @@ class TestRender(Base):
         self.assertIn("INCLUIR IMAGEN: Figura 1", h)
 
 
+class TestFiguraSinTablasRepetidas(unittest.TestCase):
+    TABLA = ["Tabla 1: Relaciones del modelo", "", "| Código | Desde |", "|---|---|", "| REL-01 | fPedidos |", "", "Después."]
+
+    def lineas(self, visual="modelo-datos"):
+        return ["Antes.", "", f"<!-- figura: {visual} -->", ""] + self.TABLA + ["", "Tabla 2: Otra", "", "| a |", "|---|", "| b |"]
+
+    def ctx(self, con_html):
+        d = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, d, True)
+        if con_html:
+            (d / "visuales").mkdir()
+            (d / "visuales" / "modelo-datos.html").write_text("<html></html>", encoding="utf-8")
+        return {"dir": d}
+
+    def test_quita_la_tabla_repetida_si_la_figura_esta(self):
+        out = "\n".join(R._sin_tablas_de_la_figura(self.lineas(), self.ctx(True)))
+        self.assertNotIn("Relaciones del modelo", out)
+        self.assertNotIn("REL-01", out)
+        self.assertIn("Después.", out)
+        self.assertIn("Tabla 2: Otra", out)
+
+    def test_la_conserva_si_falta_el_html_o_la_figura(self):
+        self.assertIn("REL-01", "\n".join(R._sin_tablas_de_la_figura(self.lineas(), self.ctx(False))))
+        self.assertIn("REL-01", "\n".join(R._sin_tablas_de_la_figura(self.lineas("bmc"), self.ctx(True))))
+
+    def test_como_leer_usa_lo_que_debes_entender_en_lugar_de_lo_que_dice(self):
+        v = [("Para qué sirve", "Sirve para decidir."), ("Qué dice", "Hay 4 hechos."), ("Qué debes entender", "Los hechos se cruzan por fecha."), ("Pie de foto sugerido", "Figura X: T.")]
+        t = R.como_leer(v)
+        self.assertIn("Sirve para decidir. Los hechos se cruzan por fecha.", t)
+        self.assertNotIn("Hay 4 hechos", t)
+        self.assertIn("Hay 4 hechos", R.como_leer(v[:2]))
+
+
 if __name__ == "__main__":
     unittest.main()

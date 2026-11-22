@@ -3,7 +3,7 @@
 
   python3 .claude/skills/_shared/visuales.py disponibles [--raiz .]
   python3 .claude/skills/_shared/visuales.py extraer --visual <visual> [--run CORRIDA] [--raiz .] [--salida datos.json]
-  python3 .claude/skills/_shared/visuales.py construir --visual <visual> --run CORRIDA --carpeta <corrida>/visuales [--diseno tokens.json] [--raiz .]
+  python3 .claude/skills/_shared/visuales.py construir --visual <visual> --run CORRIDA --carpeta <corrida>/visuales [--diseno tokens.json] [--interpretacion "texto"] [--raiz .]
    (sin --diseno usa el sistema de diseño vigente del config, o los tokens base si no hay)
   python3 .claude/skills/_shared/visuales.py aplicar-diseno [--raiz .]       (re-viste con el diseño vigente las figuras ya construidas)
   python3 .claude/skills/_shared/visuales.py origen --visual <visual>            (skill, archivo y -update que lo cambian)
@@ -318,19 +318,25 @@ def _fecha_txt(d):
 
 
 ROTULO_SIRVE, ROTULO_DICE, ROTULO_RESALTA, ROTULO_PIE = "Para qué sirve", "Qué dice", "Por qué se resalta", "Pie de foto sugerido"
+# «Qué debes entender» lo redacta la skill con los datos del caso: la conclusión que el lector debe sacar de la figura, no cómo se ve.
+ROTULO_ENTIENDE = "Qué debes entender"
 MAX_FRASES = 3
 MAX_PALABRAS = 70
+MIN_FRASES_ENTIENDE, MAX_FRASES_ENTIENDE = 3, 6
+MAX_PALABRAS_ENTIENDE = 130
 
 
 class SinProposito(KeyError):
     """The visual has no entry in PROPOSITOS."""
 
 
-def armar_leer(titulo, sirve, dice, resalta, pie):
-    """Text of a `leer-imagen/*.md` file: purpose, conclusion, optional reason for the highlight, and the suggested caption."""
+def armar_leer(titulo, sirve, dice, resalta, pie, entiende=None):
+    """Text of a `leer-imagen/*.md` file: purpose, conclusion, optional reason for the highlight, what to understand and the suggested caption."""
     puntos = [(ROTULO_SIRVE, sirve), (ROTULO_DICE, dice)]
     if resalta:
         puntos.append((ROTULO_RESALTA, resalta))
+    if entiende:
+        puntos.append((ROTULO_ENTIENDE, " ".join(entiende.split())))
     puntos.append((ROTULO_PIE, pie))
     return f"# Leer la imagen · {titulo}\n\n" + "\n".join(f"- **{r}.** {t}" for r, t in puntos) + "\n"
 
@@ -339,13 +345,19 @@ def _frases(texto):
     return len(re.findall(r"[.!?](?=\s+[A-ZÁÉÍÓÚÑ¿¡«0-9]|\s*$)", texto.strip()))
 
 
-def validar_explicacion(texto, resaltado):
-    """Causes (empty when valid) for a `leer-imagen` text: labels, highlight reason iff `resaltado`, sentence and word caps."""
+def leer_vinetas(texto):
+    """{rótulo: texto} de las viñetas «- **Rótulo.** texto» de un `leer-imagen`."""
     pts = {}
     for l in texto.splitlines():
         m = re.match(r"^- \*\*([^*]+?)\.\*\*\s*(.*)$", l)
         if m:
             pts[m.group(1)] = m.group(2).strip()
+    return pts
+
+
+def validar_explicacion(texto, resaltado):
+    """Causes (empty when valid) for a `leer-imagen` text: labels, highlight reason iff `resaltado`, what to understand, sentence and word caps."""
+    pts = leer_vinetas(texto)
     causas = []
     for r in (ROTULO_SIRVE, ROTULO_DICE):
         if not pts.get(r):
@@ -359,6 +371,15 @@ def validar_explicacion(texto, resaltado):
         causas.append(f"pasa de {MAX_FRASES} frases (una por función)")
     if sum(len(t.split()) for t in cuerpo) > MAX_PALABRAS:
         causas.append(f"pasa de {MAX_PALABRAS} palabras")
+    ent = pts.get(ROTULO_ENTIENDE, "")
+    if not ent:
+        causas.append(f"falta «{ROTULO_ENTIENDE.lower()}»: la conclusión que el lector debe sacar de la figura, con los datos del caso (visuales.py construir --interpretacion)")
+    else:
+        n = _frases(ent)
+        if n < MIN_FRASES_ENTIENDE or n > MAX_FRASES_ENTIENDE:
+            causas.append(f"«{ROTULO_ENTIENDE.lower()}» tiene {n} frases y debe tener de {MIN_FRASES_ENTIENDE} a {MAX_FRASES_ENTIENDE} frases")
+        if len(ent.split()) > MAX_PALABRAS_ENTIENDE:
+            causas.append(f"«{ROTULO_ENTIENDE.lower()}» pasa de {MAX_PALABRAS_ENTIENDE} palabras")
     if not pts.get(ROTULO_PIE):
         causas.append("falta el pie de foto sugerido")
     return causas
@@ -429,12 +450,13 @@ def resaltado(visual, datos):
     return EXPLICACION[visual](datos)[1] is not None
 
 
-def leer_imagen(visual, datos):
-    """Texto de `leer-imagen/<visual>.md`: para qué sirve la imagen, qué dice y por qué resalta algo, derivado de los datos."""
+def leer_imagen(visual, datos, entiende=None):
+    """Texto de `leer-imagen/<visual>.md`: para qué sirve la imagen, qué dice y por qué resalta algo (derivados de los datos) y,
+    si la skill lo redactó, qué debe entender el lector."""
     if visual not in PROPOSITOS:
         raise SinProposito(visual)
     dice, resalta = EXPLICACION[visual](datos)
-    return armar_leer(TITULOS[visual], PROPOSITOS[visual], dice, resalta, f"Figura X: {TITULOS[visual]}.")
+    return armar_leer(TITULOS[visual], PROPOSITOS[visual], dice, resalta, f"Figura X: {TITULOS[visual]}.", entiende)
 
 
 # visual -> (skill de origen, archivo de la corrida)
@@ -456,8 +478,10 @@ def origen(visual):
     return paso, archivo, f"{paso}-update"
 
 
-def construir(visual, raiz, carpeta, tokens, run=None):
-    """Escribe <carpeta>/<visual>.json y <carpeta>/<visual>.html; devuelve los datos."""
+def construir(visual, raiz, carpeta, tokens, run=None, interpretacion=None):
+    """Escribe <carpeta>/<visual>.json y <carpeta>/<visual>.html; devuelve los datos.
+
+    `interpretacion` es el «Qué debes entender» que redacta la skill. Si no se pasa, se conserva el del leer-imagen ya escrito."""
     datos = extraer(visual, raiz, run)
     carpeta = Path(carpeta)
     carpeta.mkdir(parents=True, exist_ok=True)
@@ -465,7 +489,10 @@ def construir(visual, raiz, carpeta, tokens, run=None):
     (carpeta / f"{visual}.html").write_text(H.copiar_texto(VISUALES[visual][0], datos, tokens), encoding="utf-8")
     leer = carpeta.parent / "leer-imagen"
     leer.mkdir(exist_ok=True)
-    (leer / f"{visual}.md").write_text(leer_imagen(visual, datos), encoding="utf-8")
+    previo = leer / f"{visual}.md"
+    if interpretacion is None and previo.is_file():
+        interpretacion = leer_vinetas(previo.read_text(encoding="utf-8")).get(ROTULO_ENTIENDE)
+    previo.write_text(leer_imagen(visual, datos, interpretacion), encoding="utf-8")
     return datos
 
 
@@ -508,6 +535,7 @@ def main(argv=None):
         if n == "construir":
             s.add_argument("--carpeta", required=True)
             s.add_argument("--diseno")
+            s.add_argument("--interpretacion", help="«Qué debes entender»: 3 a 6 frases con los datos del caso (si falta, se conserva el ya escrito)")
     a = ap.parse_args(argv)
     raiz = Path(a.raiz).resolve()
     try:
@@ -533,7 +561,7 @@ def main(argv=None):
                 print(txt, end="")
             return 0
         tokens = H.cargar_tokens(raiz, a.diseno) if a.diseno else H.tokens_del_proyecto(raiz)
-        construir(a.visual, raiz, a.carpeta, tokens, a.run)
+        construir(a.visual, raiz, a.carpeta, tokens, a.run, a.interpretacion)
         print(Path(a.carpeta) / f"{a.visual}.html")
         return 0
     except SinFuente as e:

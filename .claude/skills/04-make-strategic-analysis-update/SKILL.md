@@ -40,7 +40,7 @@ Con `references/dependencias.md`: lista las filas que cambian (código, valor ac
 
 ### 5. Editar
 1. Edita solo las filas afectadas de `<fork>/secciones/1.5.md`, `1.6.md` o `1.7.md` y, si cambian las fuentes, `referencias.md`. Verifica toda fuente nueva.
-2. Por cada sección cambiada, `python3 .claude/skills/_shared/visuales.py construir --visual <visual> --run <fork> --carpeta <fork>/visuales`.
+2. Por cada sección cambiada, `python3 .claude/skills/_shared/visuales.py construir --visual <visual> --run <fork> --carpeta <fork>/visuales`. Si lo cambiado altera lo que la figura dice, pasa un `--interpretacion "<texto>"` nuevo (reglas en el paso de 04); si no, se conserva el anterior.
 3. Actualiza el `README.md` del fork (lista de cambios).
 
 ### 6. Revisar la redacción y validar

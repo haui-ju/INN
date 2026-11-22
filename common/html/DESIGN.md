@@ -90,7 +90,7 @@ Mínimo: transiciones de 150 ms en color y sombra de los botones. Sin animacione
 
 ## 8. Captura de imagen
 - El área capturada es `[data-captura]`; lo marcado con `[data-no-captura]` (botones, filtros) queda fuera. Lo que se desplaza se marca con `[data-scroll]` para que la imagen salga completa.
-- La explicación que acompaña a la imagen en el informe (`leer-imagen/<visual>.md`) tiene 2 a 3 frases: para qué sirve la figura, qué dice y, solo si resalta algo, por qué se resalta (cuadrante sombreado, etapa en rojo, columna sobre su límite). Se deriva de los datos y no se redacta a mano.
+- La explicación que acompaña a la imagen en el informe (`leer-imagen/<visual>.md`) tiene cuatro apartados. Tres se derivan de los datos y no se redactan a mano, con una frase cada uno: para qué sirve la figura, qué dice (conteos) y, solo si resalta algo, por qué se resalta (cuadrante sombreado, etapa en rojo, columna sobre su límite). El cuarto, «Qué debes entender», lo redacta la skill con los datos del caso: 3 a 6 frases y hasta 130 palabras con la conclusión que el lector debe sacar de la figura y por qué importa, sin describir cómo se ve. En el informe, «Cómo leer la figura» une lo que sirve con lo que debes entender y deja fuera los conteos de «Qué dice».
 - La imagen lleva el encabezado con la fecha de corte; el nombre del archivo es `<visual>-<fecha>.png`.
 
 ## 9. Qué evitar

@@ -19,7 +19,7 @@ Pregunta solo lo que el brief no trae: qué herramienta usará el equipo para el
 
 ### 0.3 Contrato de la corrida (lo lee `12-make-report`)
 - `secciones/2.1.md`, `2.2.md` y `2.3.md`: la primera línea es el encabezado exacto (`## 2.1. Propuesta de solución en BI`, `## 2.2. Arquitectura de Inteligencia de Negocios`, `## 2.3. Herramientas utilizadas`); después, solo texto final del informe (prosa académica y tablas), sin notas de trabajo ni otros encabezados de nivel 1 o 2.
-- La sección 2.2 marca su figura en una línea sola: `<!-- figura: arquitectura-bi -->`. El HTML queda en `visuales/` y su explicación en `leer-imagen/`; los escribe `visuales.py construir --visual arquitectura-bi --run <corrida>`. 2.1 y 2.3 no llevan figura.
+- La sección 2.2 marca su figura en una línea sola: `<!-- figura: arquitectura-bi -->`. El HTML queda en `visuales/` y su explicación en `leer-imagen/`; los escribe `visuales.py construir --visual arquitectura-bi --run <corrida>`, que recibe el «Qué debes entender» que redacta la skill con `--interpretacion` (3 a 6 frases con los datos del caso: qué conclusión saca el lector, no cómo se ve). 2.1 y 2.3 no llevan figura.
 - `referencias.md` (una referencia por línea, APA 7) si se cita algo, y `README.md` (procedencia; único archivo que puede decir que un dato es generado).
 - **Título de cada tabla.** Antes de cada tabla va una línea `Tabla N: título` (N empieza en 1 en cada sección); `12-make-report` renumera las tablas en todo el informe y avisa las que no tienen título.
 
