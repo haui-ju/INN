@@ -51,7 +51,9 @@
   function leer(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function guardar(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } }
   var doc = document.documentElement;
-  var tema = leer('tema') === 'dark' ? 'dark' : 'light';
+  var guardado = leer('tema');
+  var defecto = (function () { try { return getComputedStyle(doc).getPropertyValue('--tema-defecto').trim() === 'oscuro' ? 'dark' : 'light'; } catch (e) { return 'light'; } })();
+  var tema = guardado === 'dark' || guardado === 'light' ? guardado : defecto;
   function aplicarTema() {
     doc.setAttribute('data-theme', tema);
     document.getElementById('icono-tema').outerHTML = tema === 'dark' ? SOL.replace('<svg', '<svg id="icono-tema"') : LUNA.replace('<svg', '<svg id="icono-tema"');

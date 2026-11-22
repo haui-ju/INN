@@ -150,6 +150,17 @@ class TestCopiar(unittest.TestCase):
         for v in ("--fuente:", "--fuente-titulos:", "--fuente-mono:", "--c-acento-fuerte:", 'data-theme="dark"', "prefers-color-scheme"):
             self.assertIn(v, css)
 
+    def test_tema_defecto_solo_si_los_tokens_lo_declaran(self):
+        self.assertNotIn("--tema-defecto", H.tokens_css(self.base))
+        self.assertIn("--tema-defecto: oscuro;", H.tokens_css({**self.base, "tema-defecto": "oscuro"}))
+        self.assertNotIn("--tema-defecto", H.tokens_css({**self.base, "tema-defecto": "otro"}))
+
+    def test_las_plantillas_fijan_el_tema_antes_de_pintar(self):
+        for v in H.visuales():
+            t = (COMUN / v / "index.html").read_text(encoding="utf-8")
+            self.assertIn("--tema-defecto", t, v)
+            self.assertIn('localStorage.getItem("tema")', t, v)
+
     def test_cli_copiar_y_comprobar(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "data.json"

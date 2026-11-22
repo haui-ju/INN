@@ -18,7 +18,7 @@ El estilo base es cálido y editorial, de la familia de Claude: marfil, tinta ca
 |---|---|---|
 | Cálido | Neutros con matiz cálido (marfil, arena, carbón cálido) y **un solo** color de acento, sin degradados ni adornos | Grises azulados, más de un acento, fondos con textura, íconos decorativos |
 | Editorial | Titulares y cifras en serif, texto en sans, códigos en monoespaciada; radio medio a generoso (6 a 16 px), sombras suaves y mucho aire | Bordes duros, sombras pesadas, mayúsculas en titulares, fuentes ornamentales |
-| Profesional | Colores de estado solo para estados; contraste AA; tema claro por defecto | Colores saturados de juego, emojis en la interfaz, estados comunicados solo por color |
+| Profesional | Colores de estado solo para estados; contraste AA; tema por defecto definido en `tema-defecto` (claro si no existe) | Colores saturados de juego, emojis en la interfaz, estados comunicados solo por color |
 
 ### 0.3 Preguntar y confirmar
 La skill lee el config y `project/domain.md`, y pregunta solo lo que falta (ficha `ds-0-brief`). Propone un sistema completo y **espera la confirmación** antes de escribir archivos. Si el usuario cambia algo, actualiza la propuesta y la muestra de nuevo.
@@ -35,6 +35,9 @@ Son referencias, no normas: 10 a 12 tokens de color por tema, una escala tipogr�
 ---
 
 ## 1. Color
+
+### 1.0 Tema por defecto
+`tokens.json` puede declarar `"tema-defecto": "claro"` o `"oscuro"` (opcional; sin él, claro). Es una decisión de tono del usuario (por ejemplo, un sistema oscuro tipo Power BI); ambos temas se definen y validan igual.
 
 ### 1.1 Roles semánticos (obligatorios en claro y oscuro)
 | Token | Uso |
@@ -101,7 +104,7 @@ Cada componente declara **estados**, **tokens** y una **regla de uso**.
 
 - Un único archivo; **sin recursos externos** (ni scripts, ni hojas de estilo, ni fuentes por URL).
 - Los tokens son variables CSS (`--c-fondo`, `--c-acento`, …, `--espacio-4`, `--radio-md`).
-- Tema **claro por defecto** (`data-theme="light"` en la raíz), oscuro con `data-theme="dark"` (botón de tema) y `prefers-color-scheme: dark` como respaldo sin JavaScript.
+- Tema por defecto según `tema-defecto` de `tokens.json` (`claro` si no existe; llega al HTML como la variable CSS `--tema-defecto`), con `data-theme="light"` o `data-theme="dark"` en la raíz (botón de tema) y `prefers-color-scheme: dark` como respaldo sin JavaScript.
 - Todo HTML parte de una plantilla de `common/html/` (React, Tailwind y componentes al estilo shadcn/ui, compilados a un archivo): solo se sustituyen el bloque de tokens y el de datos.
 - `<meta name="viewport" content="width=device-width, initial-scale=1">`; sin desplazamiento horizontal de página en 360 px de ancho.
 - Fondo explícito en `body` y títulos con jerarquía clara.

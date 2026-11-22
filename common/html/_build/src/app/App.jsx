@@ -12,9 +12,18 @@ function guardar(clave, valor) {
   try { localStorage.setItem(clave, valor); } catch (e) { /* sin almacenamiento */ }
 }
 
+// Tema inicial: el elegido antes con el botón; si no, el `tema-defecto` de los tokens (variable CSS); si no, claro.
+export function temaInicial() {
+  const guardado = leer("tema");
+  if (guardado === "dark" || guardado === "light") return guardado;
+  try {
+    return getComputedStyle(document.documentElement).getPropertyValue("--tema-defecto").trim() === "oscuro" ? "dark" : "light";
+  } catch (e) { return "light"; }
+}
+
 export function App({ visual, datos, modelo, fecha, Vista, ancho = "fijo", anchoImagen = 0 }) {
   const m = useMemo(() => modelo(datos), [datos]);
-  const [tema, setTema] = useState(leer("tema") === "dark" ? "dark" : "light");
+  const [tema, setTema] = useState(temaInicial);
   const [escala, setEscala] = useState(escalaValida(leer("escala-imagen")));
   const [aviso, setAviso] = useState("");
 

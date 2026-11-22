@@ -4,6 +4,7 @@
   python3 .claude/skills/_shared/visuales.py disponibles [--raiz .]
   python3 .claude/skills/_shared/visuales.py extraer --visual <visual> [--run CORRIDA] [--raiz .] [--salida datos.json]
   python3 .claude/skills/_shared/visuales.py construir --visual <visual> --run CORRIDA --carpeta <corrida>/visuales [--diseno tokens.json] [--raiz .]
+   (sin --diseno usa el sistema de diseño vigente del config, o los tokens base si no hay)
   python3 .claude/skills/_shared/visuales.py origen --visual <visual>            (skill, archivo y -update que lo cambian)
 
 El markdown de las skills de origen es la fuente de verdad: aquí solo se lee. Cada visual tiene su plantilla en
@@ -499,7 +500,7 @@ def main(argv=None):
             else:
                 print(txt, end="")
             return 0
-        tokens = H.cargar_tokens(raiz, a.diseno)
+        tokens = H.cargar_tokens(raiz, a.diseno) if a.diseno else H.tokens_del_proyecto(raiz)
         construir(a.visual, raiz, a.carpeta, tokens, a.run)
         print(Path(a.carpeta) / f"{a.visual}.html")
         return 0

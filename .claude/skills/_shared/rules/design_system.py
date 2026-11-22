@@ -77,6 +77,8 @@ def check_tokens(t):
         for k, v in col[tema].items():
             if not (isinstance(v, str) and HEX.match(v)):
                 inc.append(("tokens.json", f"color.{tema}.{k}: «{v}» no es #RRGGBB"))
+    if "tema-defecto" in t and t["tema-defecto"] not in TEMAS:
+        inc.append(("tokens.json", f"tema-defecto debe ser {' o '.join(TEMAS)} (está «{t['tema-defecto']}»)"))
     for g in ("tipografia", "espacio", "radio", "sombra"):
         if not t.get(g):
             inc.append(("tokens.json", f"falta el grupo {g}"))

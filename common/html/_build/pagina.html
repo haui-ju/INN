@@ -8,6 +8,13 @@
 /*tokens:inicio*/
 /*tokens:fin*/
 </style>
+<script>
+try {
+  var g = localStorage.getItem("tema");
+  var d = getComputedStyle(document.documentElement).getPropertyValue("--tema-defecto").trim() === "oscuro" ? "dark" : "light";
+  document.documentElement.setAttribute("data-theme", g === "dark" || g === "light" ? g : d);
+} catch (e) {}
+</script>
 <style id="estilos">
 {{estilos}}
 </style>

@@ -88,6 +88,23 @@ class TestIncidencias(Base):
         self.save(t)
         self.assertTrue(any("mismas claves" in m for m in self.msgs()))
 
+    def test_tema_por_defecto_oscuro_llega_al_preview(self):
+        t = self.tokens()
+        t["tema-defecto"] = "oscuro"
+        self.save(t)
+        self.render()
+        self.assertEqual(self.msgs(), [])
+        self.assertIn("--tema-defecto: oscuro;", (self.run / "preview.html").read_text(encoding="utf-8"))
+
+    def test_sin_tema_por_defecto_no_define_la_variable(self):
+        self.assertNotIn("--tema-defecto:", (self.run / "preview.html").read_text(encoding="utf-8"))
+
+    def test_tema_por_defecto_invalido(self):
+        t = self.tokens()
+        t["tema-defecto"] = "azul"
+        self.save(t)
+        self.assertTrue(any("tema-defecto debe ser claro o oscuro" in m for m in self.msgs()), self.msgs())
+
     def test_token_inexistente_en_design_md(self):
         p = self.run / "DESIGN.md"
         p.write_text(p.read_text(encoding="utf-8") + "\nUsa `color.claro.acento-suave`.\n", encoding="utf-8")

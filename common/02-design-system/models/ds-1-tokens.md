@@ -13,12 +13,14 @@
 3. Declara en `pares` las combinaciones a validar. Cada par usa claves que existen y un `tipo`: `normal` (4,5:1), `grande` (3:1) o `interfaz` (3:1).
 4. Si cambias un color, recalcula el contraste de sus pares en ambos temas antes de proponerlo; si no cumple AA, ajusta la luminosidad hasta que cumpla.
 5. El tema oscuro no es el claro invertido (guía, 1.2).
+6. Si el usuario quiere abrir en oscuro (u otro tema por defecto), declara `tema-defecto` (guía, 1.0).
 
 ## Formato
 
 ```json
 {
   "schema": 1,
+  "tema-defecto": "claro u oscuro (opcional; sin él, claro)",
   "color": {
     "claro":  {"fondo": "#...", "superficie": "#...", "texto": "#...", "texto-secundario": "#...", "borde": "#...", "acento": "#...", "acento-texto": "#...", "exito": "#...", "alerta": "#...", "error": "#..."},
     "oscuro": {"...": "mismas claves que claro"}

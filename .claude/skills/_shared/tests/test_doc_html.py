@@ -48,5 +48,12 @@ class TestDocHtml(unittest.TestCase):
         self.assertIn(("dos.html", "no coincide con lo que se genera desde su Markdown"), inc)
 
 
+class TestTemaPorDefecto(unittest.TestCase):
+    def test_la_plantilla_lee_el_tema_defecto_de_los_tokens(self):
+        t = (Path(__file__).resolve().parents[4] / "common" / "document-html" / "plantilla.html").read_text(encoding="utf-8")
+        self.assertIn("--tema-defecto", t)
+        self.assertIn("guardado === 'dark' || guardado === 'light' ? guardado : defecto", t)
+
+
 if __name__ == "__main__":
     unittest.main()

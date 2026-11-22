@@ -12,6 +12,7 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import diagnostico_fixtures as F  # noqa: E402
 import html_tpl as H  # noqa: E402
+import projectcfg as P  # noqa: E402
 import visuales as VI  # noqa: E402
 
 COMUN = HERE.parents[2] / "common" / "html"
@@ -122,6 +123,28 @@ class TestConProyecto(unittest.TestCase):
         html = (run / "visuales" / "bmc.html").read_text(encoding="utf-8")
         self.assertIn("Pollería Don Tito", html)
         self.assertEqual(json.loads((run / "visuales" / "bmc.json").read_text(encoding="utf-8")), VI.extraer("bmc", self.root))
+
+    def test_sin_diseno_usa_el_sistema_de_diseno_vigente(self):
+        import shutil
+        carpeta = self.root / "project" / "02-design-system" / "r1"
+        carpeta.mkdir(parents=True)
+        tk = H.cargar_tokens(None, "base")
+        (carpeta / "tokens.json").write_text(json.dumps({**tk, "tema-defecto": "oscuro"}), encoding="utf-8")
+        (carpeta / "DESIGN.md").write_text("# Sistema\n", encoding="utf-8")
+        cfg = P.load(self.root)
+        cfg["diseno"] = "project/02-design-system/r1/DESIGN.md"
+        P.save(cfg, self.root)
+        with tempfile.TemporaryDirectory() as d:
+            run = self.runs["04-make-strategic-analysis"].name
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(VI.main(["construir", "--visual", "foda", "--run", run, "--carpeta", str(Path(d) / "visuales"), "--raiz", str(self.root)]), 0)
+            self.assertIn("--tema-defecto: oscuro;", (Path(d) / "visuales" / "foda.html").read_text(encoding="utf-8"))
+        cfg["diseno"] = None
+        P.save(cfg, self.root)
+        with tempfile.TemporaryDirectory() as d:
+            with redirect_stdout(io.StringIO()):
+                VI.main(["construir", "--visual", "foda", "--run", run, "--carpeta", str(Path(d) / "visuales"), "--raiz", str(self.root)])
+            self.assertNotIn("--tema-defecto:", (Path(d) / "visuales" / "foda.html").read_text(encoding="utf-8"))
 
     def test_cli(self):
         buf = io.StringIO()

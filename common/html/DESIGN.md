@@ -8,7 +8,7 @@ Reglas de las plantillas de `common/html/`. Los valores salen de `tokens.json` d
 3. **Editorial.** Titulares y cifras grandes en serif; el texto de apoyo, en sans; los códigos, en monoespaciada.
 4. **Aire antes que adorno.** Espacio generoso, bordes finos, sombras muy suaves; sin degradados, sin ilustraciones, sin íconos decorativos.
 5. **El color de estado es solo para estados.** Éxito, alerta y error nunca se usan como decoración, y el estado nunca depende solo del color (siempre hay texto).
-6. **Claro por defecto.** El tema oscuro es opcional, no es el claro invertido y se activa con el botón.
+6. **Tema por defecto según los tokens.** Sin `tema-defecto` abre en claro; con `tema-defecto: "oscuro"` abre en oscuro. El otro tema es opcional, no es el invertido y se activa con el botón; la elección se recuerda.
 
 ## 2. Color (roles)
 | Token | Uso |

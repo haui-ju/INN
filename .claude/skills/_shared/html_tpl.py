@@ -33,12 +33,25 @@ def cargar_tokens(raiz, diseno):
     return json.loads(Path(ruta).read_text(encoding="utf-8"))
 
 
+def tokens_del_proyecto(raiz):
+    """tokens.json junto al DESIGN.md vigente (`diseno` del config); los tokens base si no hay sistema de diseño."""
+    import projectcfg as P
+    raiz = Path(raiz or ".")
+    try:
+        d = P.load(raiz).get("diseno")
+    except P.ConfigError:
+        d = None
+    ruta = (raiz / d).with_name("tokens.json") if d else None
+    return cargar_tokens(raiz, str(ruta.relative_to(raiz))) if ruta and ruta.is_file() else cargar_tokens(raiz, "base")
+
+
 def tokens_css(tk):
     """Variables CSS del sistema de diseño (claro por defecto; oscuro con prefers-color-scheme y data-theme)."""
     def bloque(c, ind):
         return "\n".join(f"{ind}--c-{k}: {v};" for k, v in c.items())
     tip = tk["tipografia"]
-    comunes = [f"    --fuente: {tip['familia']};"]
+    comunes = [f"    --tema-defecto: {tk['tema-defecto']};"] if tk.get("tema-defecto") in ("claro", "oscuro") else []
+    comunes.append(f"    --fuente: {tip['familia']};")
     comunes.append(f"    --fuente-titulos: {tip.get('familia-titulos', tip['familia'])};")
     if "familia-mono" in tip:
         comunes.append(f"    --fuente-mono: {tip['familia-mono']};")

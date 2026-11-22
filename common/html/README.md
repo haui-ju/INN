@@ -23,7 +23,7 @@ Cada carpeta tiene `index.html` (la plantilla), `README.md` (qué se cambia, esq
 2. **Dos bloques sustituibles, nada más:**
    - **Tokens:** `/*tokens:inicio*/ … /*tokens:fin*/` dentro de `<style id="tokens">`: variables CSS de color claro y oscuro, tipografía, espacio, radio y sombra. Los componentes las leen a través del tema de Tailwind, así que cambiar de sistema de diseño es cambiar este bloque.
    - **Datos:** `<script type="application/json" id="datos">…</script>`.
-3. **Tema claro por defecto**; el oscuro se activa con el botón y se recuerda.
+3. **Tema por defecto según `tema-defecto` de los tokens** (claro si no existe); el otro se activa con el botón y se recuerda.
 4. **Botones de imagen:** «Copiar imagen» y «Descargar imagen», con selector ×2, ×3 y ×4. El PNG se llama `<visual>.png` (o `<visual>-<fecha>.png` si el visual tiene fecha de corte). Los botones no salen en la imagen. Si el navegador no permite copiar, descarga y lo avisa.
 5. **Fecha visible** dentro del área de captura cuando el visual muestra datos a una fecha.
 6. **Los indicadores son los de `calculado`:** el visual da formato, nunca recalcula.
