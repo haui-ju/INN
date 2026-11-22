@@ -8,7 +8,7 @@
 
 ## Instrucciones para el agente
 1. Recorre las secciones **en orden**, una por una; en cada una pregunta lo mínimo necesario, propón una redacción a partir de lo que el usuario cuenta y ajústala con él hasta que la confirme (guía, sección 1).
-2. Los títulos de nivel 2 y 3 son exactos (la validación los lee).
+2. Los títulos de nivel 2 y 3 son exactos (la validación los lee). La justificación es un solo rótulo de uno o dos párrafos.
 3. Lo que el usuario no sabe queda **«Pendiente»** (en una celda o como texto de la sección); nunca lo redactes como hecho. Con `modo_datos: real` usa solo lo que el usuario informa.
 4. Los plazos de los objetivos son `Entrega (DD-MM-AAAA)` y esa fecha es la entrega de la sección 7 (o `Entrega (Pendiente)` si aún no hay fecha).
 5. Cada objetivo dice en la columna **Indicador** con qué KPI del dashboard o indicador del negocio se medirá; los KPI se definen después en `07-make-data-model-kpi` y deben poder medirlo.
@@ -53,11 +53,7 @@
 
 ## 4. Justificación y alcance
 
-**Justificación práctica.** [qué decisión mejora y para quién]
-
-**Justificación económica.** [qué impacto en ventas, costos o margen]
-
-**Justificación metodológica.** [por qué una solución de BI: datos, ETL, modelo y dashboard]
+**Justificación.** [Uno o dos párrafos: qué decisión mejora y para quién, qué impacto tiene en ventas, costos o margen y por qué una solución de BI (datos, ETL, modelo y dashboard).]
 
 ### 4.1. Alcance
 
@@ -140,11 +136,9 @@ Un dashboard en Power BI para que la gerencia de una pollería vea cuánto deja 
 
 ## 4. Justificación y alcance
 
-**Justificación práctica.** La gerencia podrá fijar precios por canal y ajustar la producción por turno con cifras y no por intuición.
+**Justificación.** La gerencia podrá fijar precios por canal y ajustar la producción por turno con cifras y no por intuición. Recuperar parte del margen perdido en las apps y reducir la merma tiene un efecto directo en la utilidad del negocio.
 
-**Justificación económica.** Recuperar parte del margen perdido en las apps y reducir la merma tiene un efecto directo en la utilidad del negocio.
-
-**Justificación metodológica.** Una solución de BI integra fuentes dispersas con un proceso ETL, las ordena en un modelo dimensional y las presenta en un dashboard interactivo orientado a la decisión.
+Una solución de BI integra fuentes dispersas con un proceso ETL, las ordena en un modelo dimensional y las presenta en un dashboard interactivo orientado a la decisión.
 
 ### 4.1. Alcance
 

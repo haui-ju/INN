@@ -60,9 +60,10 @@ def check_contenido(d):
         inc.append((A, "la problemática no tiene «Evidencia.» (usa una viñeta con «Pendiente» si aún no hay)"))
     if not d["decisiones"]:
         inc.append((A, "faltan las «Decisiones que apoyará el dashboard» (al menos una viñeta, o «Pendiente»)"))
-    for k, v in d["justificacion"].items():
-        if _vacio(v):
-            inc.append((A, f"falta la justificación {k}"))
+    if _vacio(d["justificacion"]):
+        inc.append((A, "falta la «**Justificación.**» (uno o dos párrafos: qué decisión mejora, qué impacto tiene y por qué una solución de BI)"))
+    elif d["justificacion_parrafos"] > 2:
+        inc.append((A, f"la justificación tiene {d['justificacion_parrafos']} párrafos; debe ser uno o dos"))
     for nombre, filas in (("alcance", d["alcance"]), ("limitaciones", d["limitaciones"])):
         if not filas:
             inc.append((A, f"falta la tabla de {nombre}"))

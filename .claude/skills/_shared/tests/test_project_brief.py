@@ -109,6 +109,20 @@ class TestValidacion(Base):
         self.assertIn("brief.md: OE-02: falta la metrica", m)
         self.assertIn("brief.md: OE-02: falta la meta", m)
 
+    def test_justificacion_en_un_rotulo_de_uno_o_dos_parrafos(self):
+        d = BR.vigente(self.root)
+        self.assertEqual(d["justificacion_parrafos"], 2)
+        self.assertIn("fijar precios por canal", d["justificacion"])
+        self.assertEqual(self.msgs(), [])
+
+    def test_justificacion_con_tres_parrafos(self):
+        self.edita("Una solución de BI integra fuentes dispersas", "Un tercer párrafo cualquiera.\n\nUna solución de BI integra fuentes dispersas")
+        self.assertTrue(any("la justificación tiene 3 párrafos; debe ser uno o dos" in m for m in self.msgs()), self.msgs())
+
+    def test_sin_justificacion(self):
+        self.edita("**Justificación.**", "**Motivo.**")
+        self.assertTrue(any("falta la «**Justificación.**»" in m for m in self.msgs()), self.msgs())
+
     def test_objetivo_sin_indicador(self):
         self.edita(FILA_OE2, FILA_OE2.replace("| Margen neto por canal |", "|  |"))
         self.assertIn("brief.md: OE-02: falta el indicador", self.msgs())

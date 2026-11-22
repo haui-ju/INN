@@ -68,6 +68,14 @@ def _vinetas(txt, rotulo):
     return [_norm(x.strip()[2:]) for x in m.group(1).strip().splitlines()] if m else []
 
 
+def _parrafos_justificacion(txt):
+    """Párrafos del rótulo «**Justificación.**» (hasta el siguiente encabezado), sin el rótulo."""
+    m = re.search(r"\*\*Justificación[.:]?\*\*\s*(.*?)(?=\n#{2,3}\s|\Z)", txt, re.S)
+    if not m:
+        return []
+    return [_norm(p) for p in re.split(r"\n\s*\n", m.group(1).strip()) if _norm(p)]
+
+
 def leer(txt):
     """Datos estructurados de un brief.md (los campos que no están salen vacíos)."""
     sec = VI.secciones(txt)
@@ -98,7 +106,7 @@ def leer(txt):
         "problematica": {"problema": VI.campo(prob, "Problema principal"), "afectados": VI.campo(prob, "Quién lo sufre"), "situacion": VI.campo(prob, "Situación actual"),
                          "evidencia": _vinetas(prob, "Evidencia")},
         "og": _objetivos(gen), "oe": _objetivos(esp),
-        "justificacion": {"practica": VI.campo(cuerpo(4), "Justificación práctica"), "economica": VI.campo(cuerpo(4), "Justificación económica"), "metodologica": VI.campo(cuerpo(4), "Justificación metodológica")},
+        "justificacion": " ".join(_parrafos_justificacion(cuerpo(4))), "justificacion_parrafos": len(_parrafos_justificacion(cuerpo(4))),
         "alcance": [{"alcance": f[0], "detalle": f[1]} for f in al if len(f) >= 2], "limitaciones": [{"limitacion": f[0], "detalle": f[1]} for f in li if len(f) >= 2],
         "usuarios": VI.campo(cuerpo(5), "Usuarios"),
         "decisiones": _vinetas(cuerpo(5), "Decisiones que apoyará el dashboard"),
