@@ -1,12 +1,12 @@
 {
-  "fuentes": "2612cd6f51ec39dbb70b5c78e49ae129fb5b0adf145d36ed53240e7141e7e5b4",
+  "fuentes": "f0bae725914dbc62585332f15c48c475b2bff1f54ab61640f0301392fdeeae62",
   "plantillas": {
-    "arquitectura-bi": "3bc04dca6c43e50a06e5a0d227f7b88fba0cfadaa9f939dbf8cc11c6b38fcddd",
-    "bmc": "3005c240dde5e82af2fe1e2385bd1d3dce0dff4dc4007c119b6c5f6c286ac757",
-    "foda": "0107cc415ffeb74cb35562dfc8f77422677b83a84e2ad9ff88b17d55e555c6cf",
-    "ishikawa": "73afd7492a7e840ca7f9d4f910f190b7cdd4eeb8c1b3d30d6843600bacc1c870",
-    "modelo-datos": "15300163a5309a81bd61e66fa4b9b87157a91d5c0725698eb701f9066fa84b17",
-    "pestel": "21f64301acff6722b2529a9d707d73ae34c3b2f7bc38421aa68e3454c92232d5",
-    "vista-previa": "ba8a7677cfcf17b03ee836a595520510cacd36d3fc81e3ed178b3bc5b5b6fbd9"
+    "arquitectura-bi": "9f84bef91b0cd87e3dce6a6888b895cefbd8cf8dbbf68a827b53b6b3c01366b4",
+    "bmc": "c536c3b982b9ef65e9d7e3c6dfb40234c44daad2ba3117a47580ce15cfed1ff5",
+    "foda": "2795f61ca293bbe09ba649d0db07c9a5c3cb46e4fd20eb69dd9f05b71454a88c",
+    "ishikawa": "1bb716ccc2520920d96a86c9b4bffd7350e9e8368fa4ff4634ee710b01bb3c16",
+    "modelo-datos": "f42b2f2fb948296ec564644a17d85c7d2f4f6782aebae6167c00b429f7e49474",
+    "pestel": "f01e7d9714a4d6ff3abad6305a196cb7a63d3259cd947a4b696e593b89733c99",
+    "vista-previa": "8fe8410e69cec22904204c204d322e8967455910894dbbc9859ebbab6ea10617"
   }
 }

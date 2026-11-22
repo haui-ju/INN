@@ -156,6 +156,18 @@ class TestCopiar(unittest.TestCase):
         for v in ("--fuente:", "--fuente-titulos:", "--fuente-mono:", "--c-acento-fuerte:", 'data-theme="dark"', "prefers-color-scheme"):
             self.assertIn(v, css)
 
+    def test_forzar_claro_trae_los_valores_del_tema_claro(self):
+        css = H.tokens_css(self.base)
+        self.assertIn(".forzar-claro {", css)
+        bloque = css.split(".forzar-claro {")[1]
+        self.assertIn(f"--c-fondo: {self.base['color']['claro']['fondo']};", bloque)
+        self.assertIn(f"--c-texto: {self.base['color']['claro']['texto']};", bloque)
+
+    def test_el_modelo_de_datos_se_dibuja_como_diagrama_de_base_de_datos(self):
+        h = (COMUN / "modelo-datos" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("forzar-claro", h)
+        self.assertIn("data-columna", h)
+
     def test_tema_defecto_solo_si_los_tokens_lo_declaran(self):
         sin = {k: v for k, v in self.base.items() if k != "tema-defecto"}
         self.assertNotIn("--tema-defecto", H.tokens_css(sin))

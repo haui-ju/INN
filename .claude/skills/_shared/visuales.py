@@ -244,7 +244,7 @@ def ex_modelo(raiz, run=None, **_):
     if not j or not j.get("hechos") or not j.get("dimensiones"):
         raise SinFuente("falta modelo.json con hechos y dimensiones en la corrida (lo escribe 07-make-data-model-kpi junto a las secciones)")
     hechos = [{"codigo": h["codigo"], "nombre": h["nombre"], "granularidad": h["granularidad"],
-               "medidas": [{"nombre": m["nombre"], "agregacion": m.get("agregacion", "")} for m in h.get("medidas", [])], "claves": h.get("claves", [])}
+               "medidas": [{"nombre": m["nombre"], "tipo": m.get("tipo", ""), "agregacion": m.get("agregacion", "")} for m in h.get("medidas", [])], "claves": h.get("claves", [])}
               for h in j["hechos"]]
     dims = [{"codigo": x["codigo"], "nombre": x["nombre"], "clave": x["clave"], "atributos": x.get("atributos", []), "jerarquias": x.get("jerarquias", [])}
             for x in j["dimensiones"]]

@@ -1,68 +1,76 @@
-import { KeyRound, Layers, Table2 } from "lucide-react";
-import { Badge, Chip } from "../../ui/badge.jsx";
+import { Key, Link2, Sigma, Table2 } from "lucide-react";
 import { Encabezado, SinDatos } from "../../ui/encabezado.jsx";
+import { Lamina } from "../../ui/lamina.jsx";
 
-function Dimension({ d }) {
+// Diagrama de base de datos de estilo estándar: tablas blancas con su cabecera gris, sus columnas con la llave primaria (PK),
+// las llaves foráneas (FK) y las medidas (Σ), y líneas grises de relación. Usa los valores del tema claro de los tokens
+// (clase `forzar-claro`) para verse como un diagrama de base de datos aunque el visual abra en oscuro.
+const ICONO = { PK: Key, FK: Link2, "Σ": Sigma };
+
+function Fila({ f }) {
+  const Icono = ICONO[f.rol];
   return (
-    <section
-      data-codigo={d.codigo} data-tabla={d.nombre}
-      style={{ left: d.x, top: d.y, width: d.w, height: d.h, "--k": `var(--c-${d.k})` }}
-      className="absolute overflow-hidden rounded-3xl border border-[color-mix(in_srgb,var(--k)_45%,var(--c-borde))] bg-[linear-gradient(155deg,color-mix(in_srgb,var(--k)_20%,var(--c-superficie)),var(--c-superficie)_70%)] p-3.5 shadow-[0_18px_40px_-24px_var(--k)]"
-    >
-      <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-[var(--k)]" />
-      <header className="flex items-center gap-2"><Layers className="size-4 shrink-0 text-[var(--k)]" aria-hidden="true" /><h3 className="truncate text-[17px]">{d.nombre}</h3></header>
-      <p className="mt-1.5 flex items-center gap-1.5 text-[13px] text-muted-foreground"><KeyRound className="size-3.5 shrink-0" aria-hidden="true" /><span className="truncate font-mono">{d.clave}</span></p>
-      <p className="mt-1.5 line-clamp-3 text-[13px] leading-snug text-muted-foreground">{d.atributos.join(" · ")}</p>
-      {d.jerarquias.length ? <p className="mt-1 truncate text-[13px]"><b className="font-semibold">Jerarquía:</b> {d.jerarquias.join("; ")}</p> : null}
-    </section>
+    <li className="flex h-[25px] items-center gap-2 border-t border-border px-3 text-[13px]" data-columna={f.nombre}>
+      <span className="inline-flex w-9 shrink-0 items-center gap-1 text-[11px] font-bold text-muted-foreground">{Icono ? <Icono className="size-3.5" aria-hidden="true" /> : null}{f.rol === "Σ" ? null : f.rol}</span>
+      <span className={`truncate font-mono ${f.rol === "PK" ? "font-bold" : ""}`}>{f.nombre}</span>
+      {f.detalle ? <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">{f.detalle}</span> : null}
+    </li>
   );
 }
 
-function Hecho({ h }) {
+function Tabla({ t, hecho }) {
   return (
     <section
-      data-codigo={h.codigo} data-tabla={h.nombre}
-      style={{ left: h.x, top: h.y, width: h.w, height: h.h }}
-      className="absolute overflow-hidden rounded-3xl border-2 border-[var(--c-acento)] bg-[linear-gradient(155deg,color-mix(in_srgb,var(--c-acento)_22%,var(--c-superficie)),var(--c-superficie)_72%)] p-4 shadow-[0_0_60px_-18px_var(--c-acento)]"
+      data-codigo={t.codigo} data-tabla={t.nombre}
+      style={{ left: t.x, top: t.y, width: t.w, height: t.h }}
+      className="absolute overflow-hidden rounded-md border border-[color-mix(in_srgb,var(--c-texto)_35%,var(--c-borde))] bg-card shadow-[0_2px_6px_rgba(17,22,58,0.12)]"
     >
-      <header className="flex items-center gap-2"><Table2 className="size-5 shrink-0 text-primary-strong" aria-hidden="true" /><h3 className="truncate text-xl">{h.nombre}</h3><Badge mono variant="brand" className="ml-auto">{h.codigo}</Badge></header>
-      <p className="mt-1.5 line-clamp-2 text-[15px] text-muted-foreground">{h.granularidad}</p>
-      <ul className="mt-2.5 flex flex-wrap gap-1.5">
-        {h.medidas.map((x) => <li key={x.nombre}><Chip k="acento" mono>{x.nombre}{x.agregacion ? ` · ${x.agregacion}` : ""}</Chip></li>)}
-      </ul>
+      <header className={`flex h-[50px] items-center gap-2 px-3 ${hecho ? "bg-[color-mix(in_srgb,var(--c-texto)_16%,var(--c-borde))]" : "bg-border"}`}>
+        <Table2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+        <div className="min-w-0">
+          <h3 className="truncate text-[16px] leading-tight">{t.nombre}</h3>
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{hecho ? "Tabla de hechos" : "Dimensión"} · {t.codigo}</p>
+        </div>
+      </header>
+      <ul>{t.filas.map((f, i) => <Fila key={`${f.nombre}-${i}`} f={f} />)}</ul>
+      {hecho && t.granularidad ? <p className="border-t border-border px-3 py-1.5 text-[12px] italic leading-snug text-muted-foreground">{t.granularidad}</p> : null}
+      {!hecho && t.jerarquia ? <p className="truncate border-t border-border px-3 py-1.5 text-[12px] italic text-muted-foreground">Jerarquía: {t.jerarquia}</p> : null}
     </section>
   );
 }
 
 export function Vista({ m }) {
-  if (m.vacio) return (<><Encabezado titulo={m.titulo} proyecto={m.proyecto} /><SinDatos /></>);
-  return (
-    <>
+  const cuerpo = (
+    <Lamina className="forzar-claro !bg-none !bg-[var(--c-superficie)] !border-border text-foreground">
       <Encabezado titulo={m.titulo} proyecto={m.proyecto} />
-      <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-muted-foreground"><Layers className="size-4" aria-hidden="true" />Dimensiones · ejes de análisis<span className="ml-auto flex items-center gap-2"><Table2 className="size-4 text-primary-strong" aria-hidden="true" />Hechos · lo que se mide</span></p>
-      <div data-scroll className="overflow-x-auto overflow-y-hidden py-6">
-        <div className="relative mx-auto" style={{ width: m.ancho, height: m.alto }}>
-          <svg aria-hidden="true" viewBox={`0 0 ${m.ancho} ${m.alto}`} width={m.ancho} height={m.alto} className="absolute inset-0">
-            {m.lineas.map((l) => (
-              <g key={`${l.codigo}`} data-relacion-linea={l.codigo}>
-                <path d={l.d} fill="none" stroke={`var(--c-${l.k})`} strokeOpacity="0.2" strokeWidth="9" strokeLinecap="round" />
-                <path d={l.d} fill="none" stroke={`var(--c-${l.k})`} strokeWidth="2.5" strokeLinecap="round" />
-                <circle cx={l.sx} cy={l.sy + 15} r="10" fill="var(--c-superficie)" stroke={`var(--c-${l.k})`} strokeWidth="2" />
-                <text x={l.sx} y={l.sy + 19} textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--c-texto)">{l.ladoHacia}</text>
-                <circle cx={l.ex} cy={l.ey - 15} r="10" fill="var(--c-superficie)" stroke={`var(--c-${l.k})`} strokeWidth="2" />
-                <text x={l.ex} y={l.ey - 10} textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--c-texto)">{l.ladoDesde === "*" ? "∗" : l.ladoDesde}</text>
-              </g>
-            ))}
-          </svg>
-          {m.dimensiones.map((d) => <Dimension key={d.codigo} d={d} />)}
-          {m.hechos.map((h) => <Hecho key={h.codigo} h={h} />)}
-        </div>
-      </div>
-      <p className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-xs text-muted-foreground" data-leyenda>
-        <span><b className="text-foreground">1</b> = un registro de la dimensión</span>
-        <span><b className="text-foreground">∗</b> = varios registros del hecho</span>
-        <span>Cada línea es una relación (varios a uno) y filtra de la dimensión al hecho</span>
-      </p>
-    </>
+      {m.vacio ? <SinDatos /> : (
+        <>
+          <div data-scroll className="overflow-x-auto overflow-y-hidden py-2">
+            <div className="relative mx-auto" style={{ width: m.ancho, height: m.alto }}>
+              <svg aria-hidden="true" viewBox={`0 0 ${m.ancho} ${m.alto}`} width={m.ancho} height={m.alto} className="absolute inset-0">
+                {m.lineas.map((l) => (
+                  <g key={l.codigo} data-relacion-linea={l.codigo}>
+                    <path d={l.d} fill="none" stroke="var(--c-texto-secundario)" strokeWidth="1.6" />
+                    <circle cx={l.sx} cy={l.sy + 14} r="9.5" fill="var(--c-superficie)" stroke="var(--c-texto-secundario)" strokeWidth="1.4" />
+                    <text x={l.sx} y={l.sy + 18} textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--c-texto)">{l.ladoHacia}</text>
+                    <circle cx={l.ex} cy={l.ey - 14} r="9.5" fill="var(--c-superficie)" stroke="var(--c-texto-secundario)" strokeWidth="1.4" />
+                    <text x={l.ex} y={l.ey - 10} textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--c-texto)">{l.ladoDesde === "*" ? "∗" : l.ladoDesde}</text>
+                  </g>
+                ))}
+              </svg>
+              {m.dimensiones.map((d) => <Tabla key={d.codigo} t={d} hecho={false} />)}
+              {m.hechos.map((h) => <Tabla key={h.codigo} t={h} hecho />)}
+            </div>
+          </div>
+          <p className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-[13px] text-muted-foreground" data-leyenda>
+            <span><b className="text-foreground">PK</b> llave primaria</span>
+            <span><b className="text-foreground">FK</b> llave foránea</span>
+            <span><b className="text-foreground">Σ</b> medida (tipo y agregación)</span>
+            <span><b className="text-foreground">1</b> uno · <b className="text-foreground">∗</b> varios: cada línea es una relación de varios a uno</span>
+          </p>
+        </>
+      )}
+    </Lamina>
   );
+  return cuerpo;
 }

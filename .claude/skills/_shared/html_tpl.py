@@ -74,6 +74,9 @@ def tokens_css(tk):
   }}
   :root[data-theme="light"] {{
 {bloque(tk['color']['claro'], '    ')}
+  }}
+  .forzar-claro {{
+{bloque(tk['color']['claro'], '    ')}
   }}"""
 
 

@@ -1,6 +1,6 @@
 # Plantilla · Modelo de datos en estrella
 
-Esquema en estrella dibujado: las dimensiones arriba (con su clave, atributos y jerarquías), las tablas de hechos debajo (con su granularidad y sus medidas con agregación) y una línea curva por cada relación, con «1» en la dimensión y «∗» en el hecho. La tabla de relaciones no va en la imagen (ya está en la sección 2.4) para que la proporción quepa en una diapositiva. Ancho fijo de 1440 px. Estilo en [`../DESIGN.md`](../DESIGN.md).
+Diagrama de base de datos estándar, en blanco: las dimensiones arriba y las tablas de hechos debajo, cada una con su cabecera gris, una fila por columna (llave primaria `PK`, llaves foráneas `FK` y medidas `Σ` con su tipo y agregación) y una línea gris por cada relación, con «1» en la dimensión y «∗» en el hecho. Usa los valores del tema claro (`forzar-claro`) aunque el visual abra en oscuro. La tabla de relaciones no va en la imagen (ya está en la sección 2.4) para que la proporción quepa en una diapositiva. Ancho fijo de 1600 px. Estilo en [`../DESIGN.md`](../DESIGN.md).
 
 ## Qué se cambia
 **Solo** el bloque de tokens y el bloque de datos. `python3 .claude/skills/_shared/html_tpl.py copiar --visual modelo-datos …` lo hace; en una corrida, `visuales.py construir --visual modelo-datos --run <corrida>` lo hace con los datos extraídos de la fuente. **No se edita nada más** del HTML.
@@ -10,7 +10,7 @@ De `modelo.json` de la corrida de `07-make-data-model-kpi` (la indicada con `--r
 
 ## Esquema de datos
 Siempre `schema` (1) y `proyecto`, y además:
-- `hechos`: cada uno con `codigo`, `nombre`, `granularidad`, `medidas` (`nombre` y `agregacion`) y `claves`.
+- `hechos`: cada uno con `codigo`, `nombre`, `granularidad`, `medidas` (`nombre`, `tipo` y `agregacion`) y `claves`.
 - `dimensiones`: cada una con `codigo`, `nombre`, `clave`, `atributos` y `jerarquias`.
 - `relaciones`: cada una con `codigo`, `desde` (hecho), `hacia` (dimensión), `campos`, `cardinalidad` y `filtro`.
 

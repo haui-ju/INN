@@ -9,27 +9,33 @@
       "medidas": [
         {
           "nombre": "cantidad",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "entero"
         },
         {
           "nombre": "venta_bruta",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "decimal"
         },
         {
           "nombre": "comision",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "decimal"
         },
         {
           "nombre": "costo_estimado",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "decimal"
         },
         {
           "nombre": "pollos_equivalentes",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "decimal"
         },
         {
           "nombre": "registro_valido",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "entero"
         }
       ],
       "claves": [
@@ -47,15 +53,18 @@
       "medidas": [
         {
           "nombre": "pollos_preparados",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "entero"
         },
         {
           "nombre": "pollos_vendidos",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "entero"
         },
         {
           "nombre": "pollos_merma",
-          "agregacion": "suma"
+          "agregacion": "suma",
+          "tipo": "entero"
         }
       ],
       "claves": [
@@ -71,7 +80,8 @@
       "medidas": [
         {
           "nombre": "precio_kg",
-          "agregacion": "promedio"
+          "agregacion": "promedio",
+          "tipo": "decimal"
         }
       ],
       "claves": [

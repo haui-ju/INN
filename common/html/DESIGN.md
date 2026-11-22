@@ -55,7 +55,10 @@ Todos los visuales usan estos componentes (estilo shadcn/ui, en `_build/src/ui/`
 | Avatar | normal | Iniciales del responsable en un círculo tintado de marca; siempre con el nombre al lado o en `title` |
 | Chip de prioridad | Debe, Debería, Podría | Con bandera: `Debe` relleno de acento, `Debería` con borde de acento, `Podría` neutro. Solo si el dato existe |
 
-## 6. Proporción de la imagen (diapositivas)
+## 6. Diagramas de base de datos (modelo de datos)
+El modelo de datos (`modelo-datos`) no usa las tarjetas de color del resto: se dibuja como un **diagrama de base de datos estándar**. Tablas blancas con cabecera gris (más oscura en las tablas de hechos), nombre de la tabla y su código, una fila por columna con su rol (llave primaria `PK`, llave foránea `FK` o medida `Σ` con su tipo y agregación) y líneas grises de relación con la cardinalidad (`1` y `∗`) en sus extremos. La lámina usa los valores del **tema claro** de los tokens aunque el visual abra en oscuro, con la clase `forzar-claro` (el kit la genera en el bloque de tokens), para que se vea como los diagramas de bases de datos de siempre y se lea bien sobre una diapositiva blanca.
+
+## 7. Proporción de la imagen (diapositivas)
 Las imágenes se pegan en diapositivas. Cada visual tiene un **ancho de diseño fijo** y su proporción ancho : alto queda **entre 1,6 y 2,0** (la de una diapositiva 16:9 es 1,78): ni demasiado vertical ni demasiado ancha. La captura sale igual sin importar el tamaño de la ventana, porque los visuales no usan puntos de corte y se arma siempre al ancho de diseño.
 
 **Texto legible.** En una diapositiva de 13,3 pulgadas el texto de cuerpo debe quedar en 10 pt o más: en una imagen de 1600 a 1700 px eso es **16 px como mínimo** (17 px para lo principal y 13 a 14 px solo para fuentes y notas). Si el contenido no cabe sin apretar, no se reduce el texto: se reparte en **láminas**.
@@ -69,13 +72,13 @@ Las imágenes se pegan en diapositivas. Cada visual tiene un **ancho de diseño 
 | Matriz FODA (`foda`) | 1700 px | 2 (matriz de cuatro cuadros y estrategias cruzadas) | 1,6 y 1,8 |
 | Business Model Canvas (`bmc`) | 1600 px | 1 | 1,8 |
 | Arquitectura de BI (`arquitectura-bi`) | 1600 px | 1 | 1,7 |
-| Modelo de datos (`modelo-datos`) | 1440 px | 1 | 1,6 |
+| Modelo de datos (`modelo-datos`) | 1600 px | 1 | 1,6 |
 
 El interruptor **«Título en la imagen»** de la barra quita el encabezado de cada lámina; el ancho se mantiene y las proporciones suben a 1,9 o más.
 
 Reglas para un visual nuevo: define `anchoImagen` en su `modelo.js`; usa columnas fijas (`grid-cols-N`) y no `sm:` ni `lg:`; si el contenido es muy alto, divídelo en láminas o quita lo que ya dice la tabla del informe (la tabla de relaciones del modelo de datos, la evidencia de cada ítem del FODA); mide la proporción con datos reales.
 
-## 7. Accesibilidad y adaptación
+## 8. Accesibilidad y adaptación
 - Foco visible con `acento-fuerte` (2 px, desfase 2 px). Los íconos acompañan a un texto o llevan `aria-label`.
 - Sin desplazamiento horizontal de la página en 360 px: las tablas anchas y los tableros se desplazan dentro de su contenedor (`data-scroll`).
 - `role="status"` para los avisos de copiar y descargar; `<noscript>` avisa que el visual necesita JavaScript.
