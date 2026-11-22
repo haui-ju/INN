@@ -1,14 +1,14 @@
 # DESIGN.md · Reglas visuales de la biblioteca HTML
 
-Reglas de las plantillas de `common/html/`. Los valores salen de `tokens.json` del sistema de diseño del proyecto (o de los tokens base de `02-design-system`); aquí se fija **cómo se usan**. Estilo: cálido, editorial y sobrio, inspirado en Claude: marfil, tinta casi negra, un único acento terracota y titulares en serif. Evita la apariencia genérica de interfaz «de plantilla»: poco borde, mucho aire, jerarquía clara y color con intención.
+Reglas de las plantillas de `common/html/`. Los valores salen de `tokens.json` del sistema de diseño del proyecto (o de los tokens base de `02-design-system`); aquí se fija **cómo se usan**. Estilo: noche viva, con color y con forma propia. Fondo azul violeta profundo con resplandores de color, un solo acento amarillo (el de Power BI) y ocho colores de serie para dar identidad a cada categoría; todo con tarjetas redondeadas y diagramas dibujados (el pez del Ishikawa, la estrella del modelo de datos), no con cajas grises.
 
 ## 1. Principios
-1. **Un solo acento.** El naranja terracota marca lo principal (botón primario, barras de avance, fecha de corte). Nada más lleva color de marca.
-2. **Calidez, no frialdad.** Neutros con matiz cálido (marfil, arena, carbón cálido); nunca grises azulados.
-3. **Editorial.** Titulares y cifras grandes en serif; el texto de apoyo, en sans; los códigos, en monoespaciada.
-4. **Aire antes que adorno.** Espacio generoso, bordes finos, sombras muy suaves; sin degradados, sin ilustraciones, sin íconos decorativos.
-5. **El color de estado es solo para estados.** Éxito, alerta y error nunca se usan como decoración, y el estado nunca depende solo del color (siempre hay texto).
-6. **Tema por defecto según los tokens.** Sin `tema-defecto` abre en claro; con `tema-defecto: "oscuro"` abre en oscuro. El otro tema es opcional, no es el invertido y se activa con el botón; la elección se recuerda.
+1. **Un solo acento.** El amarillo marca lo principal (botón primario, la cabeza del pez, los hechos del modelo, barras de avance). Nada más lleva color de marca.
+2. **Color con significado.** Cada categoría, factor, capa o cuadrante lleva un color de serie (`serie-1` a `serie-8`, en orden fijo). El color da identidad; el texto y el icono dan el significado, así que nunca se depende solo del color.
+3. **Forma propia.** Si el dato tiene una forma natural, se dibuja: un pez para las causas, una estrella para el modelo, capas conectadas para la arquitectura, un balance para el entorno. Se evita el simple listado de cajas.
+4. **Profundidad con luz, no con negro.** Resplandores de la propia serie, bordes teñidos y degradados suaves; sin sombras negras pesadas ni ilustraciones decorativas.
+5. **El color de estado es solo para estados.** Éxito, alerta y error nunca se usan como decoración, y el estado nunca depende solo del color (siempre hay texto o flecha).
+6. **Tema por defecto según los tokens.** Sin `tema-defecto` abre en claro; con `tema-defecto: "oscuro"` abre en oscuro (el caso del proyecto). El otro tema es opcional, no es el invertido y se activa con el botón; la elección se recuerda.
 
 ## 2. Color (roles)
 | Token | Uso |
@@ -20,31 +20,33 @@ Reglas de las plantillas de `common/html/`. Los valores salen de `tokens.json` d
 | `acento` + `acento-texto` | **Relleno** (botón primario, barras de progreso) con texto oscuro encima |
 | `acento-fuerte` | **Texto y líneas** de acento (fecha de corte, etiquetas de marca, línea de corte, hitos) |
 | `exito`, `alerta`, `error` | Estados: terminada, en riesgo, bloqueada o límite superado |
+| `serie-1` a `serie-8` | Identidad de categorías (turquesa, coral, azul, naranja, violeta, verde, magenta, cielo), en ese orden; validadas contra la superficie para visión normal y daltonismo |
 
 Todos los pares de texto cumplen AA (4,5 : 1) en claro y oscuro; los elementos de interfaz, 3 : 1. `acento` nunca se usa como color de texto.
 
 ## 3. Tipografía
 | Rol | Fuente | Uso |
 |---|---|---|
-| Titulares y cifras | Newsreader (serif, incrustada) | `h1` a `h4`, títulos de tarjeta, números grandes de los indicadores |
-| Texto | Instrument Sans (sans, incrustada) | Párrafos, tablas, botones, etiquetas |
-| Códigos | Monoespaciada del sistema | `TAR-05`, `HU-02`, `RF-01`, tokens |
+| Titulares, cifras y texto | Segoe UI (con respaldo del sistema) | `h1` a `h4`, títulos de tarjeta, párrafos, tablas, botones, etiquetas |
+| Códigos | Monoespaciada del sistema | `OE-01`, `CAU-04`, `fPedidos`, tokens |
 
-Escala: `xs` 12, `sm` 14, `base` 16, `lg` 20, `xl` 26, `2xl` 34 px. Titulares en peso 500 con interletrado ligeramente negativo; nunca en negrita pesada ni en mayúsculas gritadas. Etiquetas de columna en `xs`, mayúsculas con interletrado amplio, color secundario.
+Escala: `xs` 12, `sm` 14, `base` 16, `lg` 20, `xl` 26, `2xl` 34 px. El título principal en peso 750 y los demás titulares en 650, con interletrado ligeramente negativo; nunca en mayúsculas gritadas. Las etiquetas de sección van en `xs`, mayúsculas y con interletrado amplio. Una cifra con «%» usa espacio duro para no partirse en dos líneas.
 
 ## 4. Espacio, forma y elevación
-- **Espacio** (4 px de base): `1`=4, `2`=8, `3`=12, `4`=16, `6`=24, `8`=32. Entre bloques, `6`; dentro de tarjetas, `4`.
-- **Radio:** `sm` 6 px (barras, marcas), `md` 10 px (botones, campos, fichas), `lg` 16 px (tarjetas y paneles).
-- **Sombra:** `sm` en reposo, `md` solo al pasar el cursor. En el tema oscuro la jerarquía la dan el borde y la superficie.
+- **Espacio** (4 px de base): `1`=4, `2`=8, `3`=12, `4`=16, `6`=24, `8`=32. Entre bloques, `5` a `6` (20 a 24 px); dentro de tarjetas, `4` a `5`.
+- **Radio:** `sm` 8 px (marcas), `md` 12 px (campos y fichas), `lg` 20 px (tarjetas y paneles; los paneles grandes llegan a 24 px).
+- **Elevación:** brillo de la serie de cada tarjeta (`shadow` teñido con `--k`) y `sombra.md` amplia y suave solo en lo que flota. El lienzo de captura lleva tres resplandores radiales de las series.
 
 ## 5. Componentes
 Todos los visuales usan estos componentes (estilo shadcn/ui, en `_build/src/ui/`); un visual nuevo no crea otros equivalentes.
 
 | Componente | Estados | Regla de uso |
 |---|---|---|
-| Encabezado | normal | Título serif, subtítulo con el proyecto y, a la derecha, la fecha de corte («al DD-MM-AAAA» o «Línea base») como etiqueta de marca. Siempre dentro del área de captura |
-| Indicador | normal | Icono en un recuadro tintado, cifra grande en serif y rótulo pequeño. Muestra el valor de `calculado` tal cual; el tono del icono es de marca, de éxito (terminadas) o de error (atrasadas) |
+| Encabezado | normal | Etiqueta con la firma de series, título grande con barra de acento, subtítulo con el proyecto y, a la derecha, la fecha de corte («al DD-MM-AAAA» o «Línea base») como etiqueta de marca. Siempre dentro del área de captura |
+| Indicador | normal | Icono en un recuadro tintado, cifra grande y rótulo pequeño. Muestra el valor de `calculado` tal cual; el tono del icono es de marca, de éxito (terminadas) o de error (atrasadas) |
 | Tarjeta | normal | Agrupa un tema; sin tarjetas dentro de tarjetas |
+| Panel (`Panel`) | normal | Tarjeta con identidad de color: `k` es la serie (borde, fondo y brillo teñidos), icono en círculo sólido, contador y, opcional, una letra grande de marca de agua (`marca`) |
+| Etiqueta de serie (`Chip`) | normal | Código o categoría con punto del color de su serie; el texto va en tinta |
 | Tabla | normal, fila resaltada | Encabezado en mayúsculas pequeñas; en teléfono se desplaza dentro de su contenedor |
 | Etiqueta (`Badge`) | neutra, marca, éxito, alerta, error | Siempre con texto; fondo suave y texto de contraste AA. `mono` para códigos |
 | Barra de progreso | vacía, parcial, completa | Relleno `acento`, pista `borde`; con porcentaje o fracción visible |

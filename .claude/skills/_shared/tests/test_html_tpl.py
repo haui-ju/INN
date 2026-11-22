@@ -151,9 +151,10 @@ class TestCopiar(unittest.TestCase):
             self.assertIn(v, css)
 
     def test_tema_defecto_solo_si_los_tokens_lo_declaran(self):
-        self.assertNotIn("--tema-defecto", H.tokens_css(self.base))
-        self.assertIn("--tema-defecto: oscuro;", H.tokens_css({**self.base, "tema-defecto": "oscuro"}))
-        self.assertNotIn("--tema-defecto", H.tokens_css({**self.base, "tema-defecto": "otro"}))
+        sin = {k: v for k, v in self.base.items() if k != "tema-defecto"}
+        self.assertNotIn("--tema-defecto", H.tokens_css(sin))
+        self.assertIn("--tema-defecto: oscuro;", H.tokens_css({**sin, "tema-defecto": "oscuro"}))
+        self.assertNotIn("--tema-defecto", H.tokens_css({**sin, "tema-defecto": "otro"}))
 
     def test_las_plantillas_fijan_el_tema_antes_de_pintar(self):
         for v in H.visuales():

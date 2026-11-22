@@ -97,7 +97,18 @@ class TestIncidencias(Base):
         self.assertIn("--tema-defecto: oscuro;", (self.run / "preview.html").read_text(encoding="utf-8"))
 
     def test_sin_tema_por_defecto_no_define_la_variable(self):
+        t = self.tokens()
+        t.pop("tema-defecto", None)
+        self.save(t)
+        self.render()
+        self.assertEqual(self.msgs(), [])
         self.assertNotIn("--tema-defecto:", (self.run / "preview.html").read_text(encoding="utf-8"))
+
+    def test_los_tokens_base_abren_en_oscuro_y_traen_ocho_series(self):
+        t = self.tokens()
+        self.assertEqual(t["tema-defecto"], "oscuro")
+        for tema in ("claro", "oscuro"):
+            self.assertEqual([k for k in t["color"][tema] if k.startswith("serie-")], [f"serie-{i}" for i in range(1, 9)])
 
     def test_tema_por_defecto_invalido(self):
         t = self.tokens()
@@ -129,7 +140,7 @@ class TestIncidencias(Base):
 
     def test_preview_desalineado(self):
         p = self.run / "preview.html"
-        p.write_text(p.read_text(encoding="utf-8").replace("--c-acento: #D4704F;", "--c-acento: #FF0000;", 1), encoding="utf-8")
+        p.write_text(p.read_text(encoding="utf-8").replace("--c-acento: #A67C00;", "--c-acento: #FF0000;", 1), encoding="utf-8")
         self.assertTrue(any("--c-acento" in m for m in self.msgs()))
 
     def test_preview_modificado_a_mano(self):

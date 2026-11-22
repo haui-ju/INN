@@ -3,12 +3,18 @@ import { Badge } from "./badge.jsx";
 
 const ICONOS = { gauge: Gauge, check: CheckCircle2, alerta: AlertTriangle, sprint: CalendarRange, tiempo: Timer, ritmo: TrendingUp, equipo: Users };
 
-export function Encabezado({ titulo, proyecto, corte }) {
+// Encabezado del visual: título grande con una barra de acento y los colores de la serie como firma.
+export function Encabezado({ titulo, proyecto, corte, etiqueta = "Inteligencia de Negocios" }) {
   return (
-    <header className="mb-6 flex flex-wrap items-start justify-between gap-3">
+    <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-3xl sm:text-4xl">{titulo}</h1>
-        {proyecto ? <p className="mt-1 text-sm text-muted-foreground">{proyecto}</p> : null}
+        <p className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-primary-strong">
+          <span aria-hidden="true" className="flex gap-1">{[1, 2, 3, 5].map((i) => <i key={i} className="block h-1.5 w-5 rounded-full" style={{ background: `var(--c-serie-${i})` }} />)}</span>
+          {etiqueta}
+        </p>
+        <h1 className="text-4xl sm:text-5xl">{titulo}</h1>
+        <span aria-hidden="true" className="mt-3 block h-1 w-24 rounded-full bg-[linear-gradient(90deg,var(--c-acento),var(--c-serie-1))]" />
+        {proyecto ? <p className="mt-3 text-sm text-muted-foreground">{proyecto}</p> : null}
       </div>
       {corte ? <Badge variant="brand" className="px-3 py-1 text-sm" data-ind="corte">{corte}</Badge> : null}
     </header>
@@ -17,12 +23,12 @@ export function Encabezado({ titulo, proyecto, corte }) {
 
 export function Indicador({ clave, rotulo, texto, icono, tono = "marca" }) {
   const Icono = ICONOS[icono];
-  const colores = { marca: "bg-primary/12 text-primary-strong", exito: "bg-success/12 text-success", alerta: "bg-warning/14 text-warning", error: "bg-destructive/12 text-destructive" }[tono];
+  const colores = { marca: "bg-primary/15 text-primary-strong", exito: "bg-success/15 text-success", alerta: "bg-warning/15 text-warning", error: "bg-destructive/15 text-destructive" }[tono];
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 shadow-sm">
-      {Icono ? <span className={`mt-0.5 inline-flex size-9 shrink-0 items-center justify-center rounded-lg ${colores}`}><Icono className="size-[18px]" aria-hidden="true" /></span> : null}
+    <div className="flex items-start gap-3 rounded-3xl border border-border bg-card p-4 shadow-sm">
+      {Icono ? <span className={`mt-0.5 inline-flex size-10 shrink-0 items-center justify-center rounded-2xl ${colores}`}><Icono className="size-5" aria-hidden="true" /></span> : null}
       <div className="min-w-0">
-        <div className="font-serif text-3xl leading-none text-foreground" data-ind={clave}>{texto}</div>
+        <div className="text-3xl font-bold leading-none text-foreground" data-ind={clave}>{texto}</div>
         <div className="mt-2 text-xs leading-snug text-muted-foreground">{rotulo}</div>
       </div>
     </div>
@@ -37,5 +43,5 @@ export function Avatar({ nombre, className = "" }) {
 }
 
 export function SinDatos() {
-  return <p className="rounded-xl border border-dashed border-border px-4 py-12 text-center text-muted-foreground">Sin datos</p>;
+  return <p className="rounded-3xl border border-dashed border-border px-4 py-12 text-center text-muted-foreground">Sin datos</p>;
 }

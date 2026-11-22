@@ -36,7 +36,10 @@ Son referencias, no normas: 10 a 12 tokens de color por tema, una escala tipogr�
 
 ## 1. Color
 
-### 1.0 Tema por defecto
+### 1.0 Series de color
+Además de los roles, el sistema puede traer ocho colores de serie (`serie-1` a `serie-8`, iguales en estructura en claro y oscuro) para dar identidad a categorías, factores, capas y cuadrantes. Se asignan en orden fijo, se validan contra la superficie con la rutina de color (luminosidad, croma y separación para daltonismo) y acompañan siempre a un texto o un icono. El sistema base los trae con la paleta de Power BI como referencia.
+
+### 1.0b Tema por defecto
 `tokens.json` puede declarar `"tema-defecto": "claro"` o `"oscuro"` (opcional; sin él, claro). Es una decisión de tono del usuario (por ejemplo, un sistema oscuro tipo Power BI); ambos temas se definen y validan igual.
 
 ### 1.1 Roles semánticos (obligatorios en claro y oscuro)

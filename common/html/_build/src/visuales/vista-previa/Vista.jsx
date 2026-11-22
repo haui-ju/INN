@@ -22,7 +22,7 @@ export function Vista({ m }) {
       <Seccion titulo="Color">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-3">
           {m.colores.map((k) => (
-            <div key={k} className="overflow-hidden rounded-lg border border-border bg-card text-xs">
+            <div key={k} className="overflow-hidden rounded-2xl border border-border bg-card text-xs">
               <i className="block h-12" style={{ background: `var(--c-${k})` }} />
               <b className="block px-2 pt-1 font-medium">{k}</b>
               <span className="block px-2 pb-1 font-mono text-muted-foreground">var(--c-{k})</span>
@@ -32,14 +32,14 @@ export function Vista({ m }) {
       </Seccion>
       <Seccion titulo="Tipografía">
         <div className="grid gap-4 sm:grid-cols-3">
-          <Card><CardHeader><CardDescription>Titulares · serif</CardDescription></CardHeader><CardContent><p className="font-serif text-3xl">Margen neto por canal</p></CardContent></Card>
-          <Card><CardHeader><CardDescription>Texto · sans</CardDescription></CardHeader><CardContent><p className="text-base">Comparar la rentabilidad de cada canal para decidir precios y producción.</p></CardContent></Card>
+          <Card><CardHeader><CardDescription>Titulares · Segoe UI</CardDescription></CardHeader><CardContent><p className="text-3xl font-bold">Margen neto por canal</p></CardContent></Card>
+          <Card><CardHeader><CardDescription>Texto · Segoe UI</CardDescription></CardHeader><CardContent><p className="text-base">Comparar la rentabilidad de cada canal para decidir precios y producción.</p></CardContent></Card>
           <Card><CardHeader><CardDescription>Códigos · monoespaciada</CardDescription></CardHeader><CardContent><p className="font-mono text-base">OE-02 · CAU-04</p></CardContent></Card>
         </div>
         <div className="mt-4 grid gap-2">
           {m.escala.map((e) => (
             <div key={e.clave} className="flex items-baseline gap-4">
-              <span className="font-serif" style={{ fontSize: `var(--t-${e.clave})` }}>Aa Margen neto por canal</span>
+              <span className="font-semibold" style={{ fontSize: `var(--t-${e.clave})` }}>Aa Margen neto por canal</span>
               <code className="text-xs text-muted-foreground">{e.clave} · {e.valor}</code>
             </div>
           ))}

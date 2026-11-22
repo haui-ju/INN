@@ -69,7 +69,7 @@ export function App({ visual, datos, modelo, fecha, Vista, ancho = "fijo", ancho
         </Button>
         <span role="status" aria-live="polite" className="text-sm text-muted-foreground">{aviso}</span>
       </div>
-      <main id="captura" data-captura className="rounded-xl bg-background p-4 sm:p-8">
+      <main id="captura" data-captura className="lienzo rounded-[28px] p-5 sm:p-10">
         <Vista m={m} />
       </main>
     </div>

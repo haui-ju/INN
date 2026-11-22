@@ -4,10 +4,10 @@ export const ancho = "fijo";
 export const anchoImagen = 1120;
 
 const CUADRANTES = [
-  { clave: "fortalezas", nombre: "Fortalezas", grupo: "Interno", signo: "Favorable", tono: "exito", icono: "fuerza" },
-  { clave: "debilidades", nombre: "Debilidades", grupo: "Interno", signo: "Desfavorable", tono: "alerta", icono: "debil" },
-  { clave: "oportunidades", nombre: "Oportunidades", grupo: "Externo", signo: "Favorable", tono: "marca", icono: "oportunidad" },
-  { clave: "amenazas", nombre: "Amenazas", grupo: "Externo", signo: "Desfavorable", tono: "error", icono: "amenaza" },
+  { clave: "fortalezas", nombre: "Fortalezas", grupo: "Interno", signo: "Favorable", k: "serie-1", letra: "F", icono: "fuerza" },
+  { clave: "debilidades", nombre: "Debilidades", grupo: "Interno", signo: "Desfavorable", k: "serie-4", letra: "D", icono: "debil" },
+  { clave: "oportunidades", nombre: "Oportunidades", grupo: "Externo", signo: "Favorable", k: "serie-3", letra: "O", icono: "oportunidad" },
+  { clave: "amenazas", nombre: "Amenazas", grupo: "Externo", signo: "Desfavorable", k: "serie-2", letra: "A", icono: "amenaza" },
 ];
 
 const ESTRATEGIAS = [
@@ -26,7 +26,7 @@ export function modelo(datos) {
   const lista = datos.estrategias || [];
   const estrategias = ESTRATEGIAS.map((e) => ({
     ...e,
-    items: lista.filter((x) => x.tipo === e.tipo).map((x) => ({ codigo: x.codigo, texto: x.texto, combina: (x.combina || []).join(" · ") })),
+    items: lista.filter((x) => x.tipo === e.tipo).map((x) => ({ codigo: x.codigo, texto: x.texto, combina: (x.combina || []).join(" · "), combinaLista: x.combina || [] })),
   }));
   const conEstrategias = estrategias.some((e) => e.items.length > 0);
   return { ...base, vacio: total === 0, total, cuadrantes, estrategias, conEstrategias };

@@ -3,32 +3,49 @@
   "proyecto": "Inventario digital y fichas de tallaje",
   "tokens": {
     "schema": 1,
+    "tema-defecto": "oscuro",
     "color": {
       "claro": {
-        "fondo": "#FAF9F5",
+        "fondo": "#F4F6FD",
         "superficie": "#FFFFFF",
-        "texto": "#141413",
-        "texto-secundario": "#6B675C",
-        "borde": "#E3E0D5",
-        "acento": "#D4704F",
-        "acento-texto": "#1F1B16",
-        "acento-fuerte": "#B1472A",
-        "exito": "#2F6B45",
-        "alerta": "#8A5A00",
-        "error": "#B3261E"
+        "texto": "#11163A",
+        "texto-secundario": "#4A5280",
+        "borde": "#D8DDF0",
+        "acento": "#A67C00",
+        "acento-texto": "#14121A",
+        "acento-fuerte": "#7A5F00",
+        "exito": "#0F7B3F",
+        "alerta": "#8A4B00",
+        "error": "#B3261E",
+        "serie-1": "#009385",
+        "serie-2": "#BF5354",
+        "serie-3": "#3A7BCB",
+        "serie-4": "#B36300",
+        "serie-5": "#8864C0",
+        "serie-6": "#319047",
+        "serie-7": "#B55386",
+        "serie-8": "#0089B8"
       },
       "oscuro": {
-        "fondo": "#262624",
-        "superficie": "#30302E",
-        "texto": "#F5F4EE",
-        "texto-secundario": "#B7B3A6",
-        "borde": "#4A4944",
-        "acento": "#E0795A",
-        "acento-texto": "#141413",
-        "acento-fuerte": "#F0A488",
-        "exito": "#86C99A",
-        "alerta": "#E3B25A",
-        "error": "#F28B82"
+        "fondo": "#0A0E1F",
+        "superficie": "#141A33",
+        "texto": "#EEF1FB",
+        "texto-secundario": "#A8B1D6",
+        "borde": "#2B3560",
+        "acento": "#F2C811",
+        "acento-texto": "#0A0E1F",
+        "acento-fuerte": "#FFD84A",
+        "exito": "#4FD08A",
+        "alerta": "#FFB454",
+        "error": "#FF7A85",
+        "serie-1": "#00A898",
+        "serie-2": "#E06062",
+        "serie-3": "#4390EE",
+        "serie-4": "#D27400",
+        "serie-5": "#9F75E1",
+        "serie-6": "#37A953",
+        "serie-7": "#D4609D",
+        "serie-8": "#00A1D8"
       }
     },
     "pares": [
@@ -91,11 +108,51 @@
         "texto": "error",
         "fondo": "superficie",
         "tipo": "normal"
+      },
+      {
+        "texto": "serie-1",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-2",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-3",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-4",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-5",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-6",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-7",
+        "fondo": "superficie",
+        "tipo": "interfaz"
+      },
+      {
+        "texto": "serie-8",
+        "fondo": "superficie",
+        "tipo": "interfaz"
       }
     ],
     "tipografia": {
-      "familia": "\"Instrument Sans\", system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
-      "familia-titulos": "\"Newsreader\", \"Iowan Old Style\", Charter, Georgia, \"Times New Roman\", serif",
+      "familia": "\"Segoe UI\", system-ui, -apple-system, Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "familia-titulos": "\"Segoe UI\", system-ui, -apple-system, Roboto, \"Helvetica Neue\", Arial, sans-serif",
       "familia-mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
       "escala": {
         "xs": "12px",
@@ -124,13 +181,13 @@
       "8": "32px"
     },
     "radio": {
-      "sm": "6px",
-      "md": "10px",
-      "lg": "16px"
+      "sm": "8px",
+      "md": "12px",
+      "lg": "20px"
     },
     "sombra": {
-      "sm": "0 1px 2px rgba(20, 20, 19, 0.06)",
-      "md": "0 8px 24px rgba(20, 20, 19, 0.08)"
+      "sm": "0 1px 2px rgba(5, 8, 20, 0.35)",
+      "md": "0 12px 40px rgba(5, 8, 20, 0.45)"
     }
   }
 }

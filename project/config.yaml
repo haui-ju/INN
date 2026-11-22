@@ -18,7 +18,7 @@ calendario:  # fechas del proyecto (una sola entrega; copia del brief)
   inicio: 22-11-2026  # inicio del proyecto DD-MM-AAAA · null si aún no se conoce (lo define 01-make-project-brief)
   entrega: 07-12-2026  # fecha de entrega y exposición DD-MM-AAAA · null si aún no se conoce (lo define 01-make-project-brief)
 modo_datos: generado  # generado = datos generados para el proyecto · real = datos abiertos o autorizados por la empresa
-diseno: project/02-design-system/22-11-2026-13-03-12/DESIGN.md  # DESIGN.md vigente dentro de project/ · null hasta crear el sistema de diseño (02-design-system)
+diseno: project/02-design-system/22-11-2026-13-33-06-fork/DESIGN.md  # DESIGN.md vigente dentro de project/ · null hasta crear el sistema de diseño (02-design-system)
 dominio: project/domain.md  # archivo con los datos de la empresa o de la solución
 informe:  # estado del informe: qué secciones ya tienen contenido
   secciones:  # una entrada por punto del índice; la marca cada skill al registrar su corrida (12-make-report usa solo las disponibles)
@@ -105,10 +105,11 @@ pasos:  # corrida vigente de cada skill
     historial:  # todas las corridas de este paso, en orden
       - 22-11-2026-12-57-59
   02-design-system:
-    run: 22-11-2026-13-03-12  # carpeta de la corrida vigente en project/<NN-carpeta>/ · cámbiala a mano para usar otra versión
+    run: 22-11-2026-13-33-06-fork  # carpeta de la corrida vigente en project/<NN-carpeta>/ · cámbiala a mano para usar otra versión
     fijada: false  # true = ninguna corrida nueva reemplaza a run · false = la última corrida pasa a ser la vigente
     historial:  # todas las corridas de este paso, en orden
       - 22-11-2026-13-03-12
+      - 22-11-2026-13-33-06-fork
   03-make-business-diagnosis:
     run: 22-11-2026-13-10-38  # carpeta de la corrida vigente en project/<NN-carpeta>/ · cámbiala a mano para usar otra versión
     fijada: false  # true = ninguna corrida nueva reemplaza a run · false = la última corrida pasa a ser la vigente

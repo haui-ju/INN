@@ -24,14 +24,33 @@
   --radius-xl: calc(var(--radio-lg) + 4px);
   --shadow-sm: var(--sombra-sm);
   --shadow-md: var(--sombra-md);
+  --color-serie-1: var(--c-serie-1);
+  --color-serie-2: var(--c-serie-2);
+  --color-serie-3: var(--c-serie-3);
+  --color-serie-4: var(--c-serie-4);
+  --color-serie-5: var(--c-serie-5);
+  --color-serie-6: var(--c-serie-6);
+  --color-serie-7: var(--c-serie-7);
+  --color-serie-8: var(--c-serie-8);
 }
 
 @layer base {
   html { background: var(--c-fondo); color: var(--c-texto); font-family: var(--fuente); -webkit-text-size-adjust: 100%; }
   body { margin: 0; background: var(--c-fondo); color: var(--c-texto); font-family: var(--fuente); font-size: var(--t-base); line-height: 1.55; -webkit-font-smoothing: antialiased; }
-  h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
+  h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 650; letter-spacing: -0.015em; line-height: 1.18; }
+  h1 { font-weight: 750; letter-spacing: -0.03em; }
   code, kbd { font-family: var(--fuente-mono); }
   :focus-visible { outline: 2px solid var(--c-acento-fuerte); outline-offset: 2px; }
 }
 
 @media print { [data-no-captura] { display: none !important; } }
+
+/* Lienzo de captura: noche con resplandores de color (las series de los tokens) para que la imagen se vea viva. */
+.lienzo {
+  background-color: var(--c-fondo);
+  background-image:
+    radial-gradient(46rem 30rem at 96% -6%, color-mix(in srgb, var(--c-serie-5) 24%, transparent), transparent 62%),
+    radial-gradient(40rem 28rem at -6% 4%, color-mix(in srgb, var(--c-serie-1) 20%, transparent), transparent 62%),
+    radial-gradient(50rem 30rem at 52% 112%, color-mix(in srgb, var(--c-serie-3) 20%, transparent), transparent 64%);
+  border: 1px solid color-mix(in srgb, var(--c-acento) 18%, var(--c-borde));
+}
