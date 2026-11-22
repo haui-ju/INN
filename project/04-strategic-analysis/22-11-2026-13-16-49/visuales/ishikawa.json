@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "proyecto": "Mejora del margen por canal y reducción de la merma con Power BI para Pollerías y Parrilladas San Martín",
+  "efecto": "Las ventas crecieron 18 % en el último año, pero el margen neto cayó de 14 % a 8 %",
+  "categorias": [
+    {
+      "nombre": "Método",
+      "causas": [
+        {
+          "codigo": "CAU-01",
+          "texto": "Precios iguales en todos los canales, sin considerar la comisión"
+        },
+        {
+          "codigo": "CAU-02",
+          "texto": "No hay un pronóstico de demanda por día y turno: los domingos falta pollo y los martes sobra"
+        }
+      ]
+    },
+    {
+      "nombre": "Mano de obra",
+      "causas": [
+        {
+          "codigo": "CAU-03",
+          "texto": "El jefe de cocina decide cuántos pollos hornear según su experiencia, sin una referencia de datos"
+        }
+      ]
+    },
+    {
+      "nombre": "Materiales",
+      "causas": [
+        {
+          "codigo": "CAU-04",
+          "texto": "El precio del pollo vivo es volátil y no se monitorea"
+        }
+      ]
+    },
+    {
+      "nombre": "Maquinaria",
+      "causas": [
+        {
+          "codigo": "CAU-05",
+          "texto": "Los registros de caja, aplicaciones y WhatsApp no están integrados"
+        }
+      ]
+    },
+    {
+      "nombre": "Medición",
+      "causas": [
+        {
+          "codigo": "CAU-06",
+          "texto": "No se mide el margen por canal ni la merma por turno"
+        }
+      ]
+    },
+    {
+      "nombre": "Medio ambiente",
+      "causas": [
+        {
+          "codigo": "CAU-07",
+          "texto": "Las aplicaciones cobran comisiones de 25 % a 30 % de la venta"
+        },
+        {
+          "codigo": "CAU-08",
+          "texto": "La inflación de 5.25 % eleva los costos de operación"
+        }
+      ]
+    }
+  ]
+}

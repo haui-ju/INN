@@ -1,0 +1,11 @@
+Aguilar, F. J. (1967). *Scanning the business environment*. Macmillan.
+Andina. (2026, 1 de noviembre). INEI: inflación en Lima Metropolitana fue de 0.57 % en octubre de 2026. *Agencia Andina*. https://andina.pe/agencia/noticia-inei-inflacion-lima-metropolitana-fue-057-octubre-2026-1098147.aspx
+Congreso de la República del Perú. (2013, 2 de julio). Ley N.° 30056, Ley que modifica diversas leyes para facilitar la inversión, impulsar el desarrollo productivo y el crecimiento empresarial. *Diario Oficial El Peruano*. https://busquedas.elperuano.pe/dispositivo/NL/956689-1
+Congreso de la República del Perú. (2018, 19 de diciembre). Ley N.° 30884, Ley que regula el plástico de un solo uso y los recipientes o envases descartables. *Diario Oficial El Peruano*. https://busquedas.elperuano.pe/dispositivo/NL/1724734-1
+Delgado Tong, A. (2026, 1 de abril). Estas son las apps de delivery más utilizadas en Perú: ¿por qué se han expandido tanto? *Infobae*. https://www.infobae.com/peru/2026/04/01/estas-son-las-apps-de-delivery-mas-utilizadas-en-peru-por-que-se-han-expandido-tanto/
+El Peruano. (2024, 30 de noviembre). Protección de datos personales: Ejecutivo aprueba nuevo reglamento de la Ley N° 29733. *El Peruano*. https://elperuano.pe/noticia/258993-proteccion-de-datos-personales-ejecutivo-aprueba-nuevo-reglamento-de-la-ley-n-29733
+Expreso. (2026). Precio del pollo repunta en julio tras registrar nivel bajo: reportes del Midagri reflejan cambios en mercado avícola. *Expreso*. https://www.expreso.com.pe/economia/precio-del-pollo-repunta-en-julio-tras-registrar-nivel-bajo-reportes-del-midagri-reflejan-cambios-en-mercado-avicola-ministerio-de-desarrollo-agrario-y-riego-noticia/1301534/
+Gürel, E., & Tat, M. (2017). SWOT analysis: A theoretical review. *The Journal of International Social Research, 10*(51), 994-1006. https://doi.org/10.17719/jisr.2017.1832
+Ishikawa, K. (1986). *Guide to quality control* (2.ª ed.). Asian Productivity Organization.
+Microsoft. (s. f.). *Power BI Desktop* [Software]. https://www.microsoft.com/es-es/power-platform/products/power-bi/desktop
+Vera, C. (2026, 25 de octubre). ¿Qué pide Lima por delivery? El pollo lidera, pero estos platos «dan la pelea». *Gestión*. https://gestion.pe/economia/gastronomia-peruana-que-pide-lima-por-delivery-el-pollo-lidera-pero-estos-platos-dan-la-pelea-noticia/
