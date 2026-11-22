@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "proyecto": "Mejora del margen por canal y reducción de la merma con Power BI para Pollerías y Parrilladas San Martín",
+  "empresa": "Pollerías y Parrilladas San Martín",
+  "bloques": [
+    {
+      "clave": "segmentos",
+      "nombre": "Segmentos de clientes",
+      "items": [
+        "Familias y trabajadores de Magdalena del Mar y distritos cercanos",
+        "Clientes de delivery"
+      ]
+    },
+    {
+      "clave": "propuesta",
+      "nombre": "Propuesta de valor",
+      "items": [
+        "Pollo a la brasa y parrilladas",
+        "Atención rápida",
+        "Precios justos",
+        "Pedido en el local, para llevar o a domicilio"
+      ]
+    },
+    {
+      "clave": "canales",
+      "nombre": "Canales",
+      "items": [
+        "Salón",
+        "Para llevar",
+        "Delivery propio por WhatsApp",
+        "Rappi",
+        "PedidosYa"
+      ]
+    },
+    {
+      "clave": "relaciones",
+      "nombre": "Relaciones con clientes",
+      "items": [
+        "Atención personal en el local",
+        "Pedidos por WhatsApp con clientes frecuentes",
+        "Reseñas en las aplicaciones"
+      ]
+    },
+    {
+      "clave": "ingresos",
+      "nombre": "Fuentes de ingresos",
+      "items": [
+        "Venta de pollos, parrilladas y combos",
+        "Bebidas y adicionales",
+        "Cargo por delivery propio"
+      ]
+    },
+    {
+      "clave": "recursos",
+      "nombre": "Recursos clave",
+      "items": [
+        "Cocina y hornos del local",
+        "Marca y recetas",
+        "Equipo de cocina, salón y reparto",
+        "Sistema de caja"
+      ]
+    },
+    {
+      "clave": "actividades",
+      "nombre": "Actividades clave",
+      "items": [
+        "Compra y preparación del pollo",
+        "Producción por turno",
+        "Atención y despacho de pedidos"
+      ]
+    },
+    {
+      "clave": "socios",
+      "nombre": "Socios clave",
+      "items": [
+        "Proveedores de pollo vivo y de insumos",
+        "Rappi y PedidosYa",
+        "Proveedor del sistema de caja"
+      ]
+    },
+    {
+      "clave": "costos",
+      "nombre": "Estructura de costos",
+      "items": [
+        "Pollo vivo y otros insumos",
+        "Comisiones de 25 % a 30 % de las aplicaciones",
+        "Planilla",
+        "Alquiler y servicios del local"
+      ]
+    }
+  ]
+}

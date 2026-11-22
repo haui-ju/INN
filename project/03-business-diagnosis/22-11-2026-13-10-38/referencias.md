@@ -1,0 +1,3 @@
+Congreso de la República del Perú. (2013, 2 de julio). Ley N.° 30056, Ley que modifica diversas leyes para facilitar la inversión, impulsar el desarrollo productivo y el crecimiento empresarial. *Diario Oficial El Peruano*.
+Ministerio de Economía y Finanzas. (2025, 17 de diciembre). Decreto Supremo N.° 301-2025-EF, Decreto Supremo que aprueba el valor de la Unidad Impositiva Tributaria durante el año 2026. *Diario Oficial El Peruano*.
+Osterwalder, A., & Pigneur, Y. (2010). *Business model generation: A handbook for visionaries, game changers, and challengers*. John Wiley & Sons.
