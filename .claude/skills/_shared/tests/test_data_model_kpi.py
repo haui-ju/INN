@@ -277,8 +277,8 @@ class TestInforme(Base):
         txt = (run / RP.INFORME).read_text(encoding="utf-8")
         for p in ("2.1", "2.2", "2.3", "2.4", "2.5"):
             self.assertIn(p, res["incluidas"])
-        self.assertIn("(INCLUIR IMAGEN: Figura 5: Figura X: Arquitectura de BI. Archivo sugerido: imagenes/arquitectura-bi.html)", txt)
-        self.assertIn("(INCLUIR IMAGEN: Figura 6: Figura X: Modelo de datos en estrella. Archivo sugerido: imagenes/modelo-datos.html)", txt)
+        self.assertIn("(INCLUIR IMAGEN: Figura 5: Arquitectura de BI. Archivo sugerido: imagenes/arquitectura-bi.html)", txt)
+        self.assertIn("(INCLUIR IMAGEN: Figura 6: Modelo de datos en estrella. Archivo sugerido: imagenes/modelo-datos.html)", txt)
         self.assertEqual(res["figuras"], 6)
         faltantes = (run / "faltantes.md").read_text(encoding="utf-8")
         for p in ("2.1", "2.2", "2.3", "2.4", "2.5"):

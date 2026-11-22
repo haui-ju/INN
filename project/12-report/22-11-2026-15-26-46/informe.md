@@ -77,7 +77,7 @@ Tabla 3: Tamaño de la empresa según la Ley 30056
 
 El Business Model Canvas describe en nueve bloques cómo una organización crea, entrega y captura valor (Osterwalder & Pigneur, 2010). El Business Model Canvas de la pollería muestra un negocio de producto conocido que crece por los canales de delivery.
 
-(INCLUIR IMAGEN: Figura 1: Figura X: Business Model Canvas. Archivo sugerido: imagenes/bmc.html)
+(INCLUIR IMAGEN: Figura 1: Business Model Canvas. Archivo sugerido: imagenes/bmc.html)
 
 **Cómo copiarla.** Abrir [imagenes/bmc.html](imagenes/bmc.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
@@ -103,7 +103,7 @@ Tabla 4: Bloques del Business Model Canvas
 
 El análisis PESTEL examina los factores políticos, económicos, sociales, tecnológicos, ecológicos y legales del entorno que la empresa no controla, pero que condicionan sus resultados (Aguilar, 1967). Para Pollerías y Parrilladas San Martín se identificaron nueve hallazgos, cada uno con su efecto en el negocio y su fuente.
 
-(INCLUIR IMAGEN: Figura 2: Figura X: Análisis PESTEL. Archivo sugerido: imagenes/pestel.html)
+(INCLUIR IMAGEN: Figura 2: Análisis PESTEL. Archivo sugerido: imagenes/pestel.html)
 
 **Cómo copiarla.** Abrir [imagenes/pestel.html](imagenes/pestel.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
@@ -129,7 +129,7 @@ Tabla 5: Análisis PESTEL
 
 La matriz FODA organiza en cuatro cuadros los factores internos y externos que favorecen o dificultan el logro de los objetivos de la organización (Gürel & Tat, 2017). Los factores internos salen del modelo de negocio y de los registros de la pollería; los externos, del análisis PESTEL.
 
-(INCLUIR IMAGEN: Figura 3: Figura X: Matriz FODA. Archivo sugerido: imagenes/foda.html)
+(INCLUIR IMAGEN: Figura 3: Matriz FODA. Archivo sugerido: imagenes/foda.html)
 
 **Cómo copiarla.** Abrir [imagenes/foda.html](imagenes/foda.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
@@ -191,7 +191,7 @@ El diagrama de causa y efecto organiza por categorías las causas posibles de un
 
 **Efecto.** Las ventas crecieron 18 % en el último año, pero el margen neto cayó de 14 % a 8 %.
 
-(INCLUIR IMAGEN: Figura 4: Figura X: Diagrama de Ishikawa. Archivo sugerido: imagenes/ishikawa.html)
+(INCLUIR IMAGEN: Figura 4: Diagrama de Ishikawa. Archivo sugerido: imagenes/ishikawa.html)
 
 **Cómo copiarla.** Abrir [imagenes/ishikawa.html](imagenes/ishikawa.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
@@ -304,7 +304,7 @@ Tabla 16: Componentes de la solución que atienden cada objetivo específico
 
 La arquitectura de la solución sigue las cuatro capas de un sistema de inteligencia de negocios. Son las fuentes que generan los datos, el proceso ETL que los extrae, depura y transforma, el almacenamiento donde queda el modelo dimensional y la visualización donde se consulta (Kimball & Ross, 2013). Cada capa tiene componentes con una función definida, y las herramientas que los construyen se detallan en el punto 2.3.
 
-(INCLUIR IMAGEN: Figura 5: Figura X: Arquitectura de BI. Archivo sugerido: imagenes/arquitectura-bi.html)
+(INCLUIR IMAGEN: Figura 5: Arquitectura de BI. Archivo sugerido: imagenes/arquitectura-bi.html)
 
 **Cómo copiarla.** Abrir [imagenes/arquitectura-bi.html](imagenes/arquitectura-bi.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 
@@ -346,7 +346,7 @@ Tabla 18: Herramientas de la solución de BI
 
 El modelo sigue un esquema en estrella con varios hechos que comparten dimensiones, es decir, una constelación de hechos (Kimball & Ross, 2013). Tiene cuatro tablas de hechos y cinco dimensiones, de modo que las ventas, la producción, el precio del insumo y las metas de los KPI se pueden cruzar por fecha, canal y turno.
 
-(INCLUIR IMAGEN: Figura 6: Figura X: Modelo de datos en estrella. Archivo sugerido: imagenes/modelo-datos.html)
+(INCLUIR IMAGEN: Figura 6: Modelo de datos en estrella. Archivo sugerido: imagenes/modelo-datos.html)
 
 **Cómo copiarla.** Abrir [imagenes/modelo-datos.html](imagenes/modelo-datos.html) en el navegador, elegir la escala y pulsar «Copiar imagen» (o «Descargar imagen»); luego pegarla en el lugar del marcador.
 

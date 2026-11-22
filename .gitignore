@@ -13,3 +13,6 @@ Thumbs.db
 # Python
 __pycache__/
 *.pyc
+
+# Capturas temporales del navegador (Playwright)
+.playwright-mcp/

@@ -139,6 +139,4 @@ pasos:  # corrida vigente de cada skill
     run: 22-11-2026-15-26-46  # carpeta de la corrida vigente en project/<NN-carpeta>/ · cámbiala a mano para usar otra versión
     fijada: false  # true = ninguna corrida nueva reemplaza a run · false = la última corrida pasa a ser la vigente
     historial:  # todas las corridas de este paso, en orden
-      - 22-11-2026-14-20-06
-      - 22-11-2026-14-33-15
       - 22-11-2026-15-26-46

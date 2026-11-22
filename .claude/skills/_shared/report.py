@@ -192,7 +192,8 @@ def como_leer(vinetas):
 def pie_de(vinetas, defecto):
     for rotulo, texto in vinetas or []:
         if rotulo == PIE:
-            return texto.strip().rstrip(".").strip()
+            # leer-imagen sugiere «Figura X: Título»; el marcador ya lleva el número, así que se quita el prefijo.
+            return re.sub(r"^Figura\s+X\s*:\s*", "", texto.strip().rstrip(".").strip(), flags=re.I)
     return defecto
 
 
