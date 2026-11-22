@@ -58,6 +58,8 @@ Todos los visuales usan estos componentes (estilo shadcn/ui, en `_build/src/ui/`
 ## 6. Diagramas de base de datos (modelo de datos)
 El modelo de datos (`modelo-datos`) no usa las tarjetas de color del resto: se dibuja como un **diagrama de base de datos estándar**. Tablas blancas con cabecera gris (más oscura en las tablas de hechos), nombre de la tabla y su código, una fila por columna con su rol (llave primaria `PK`, llave foránea `FK` o medida `Σ` con su tipo y agregación) y líneas grises de relación con la cardinalidad (`1` y `∗`) en sus extremos. La lámina usa los valores del **tema claro** de los tokens aunque el visual abra en oscuro, con la clase `forzar-claro` (el kit la genera en el bloque de tokens), para que se vea como los diagramas de bases de datos de siempre y se lea bien sobre una diapositiva blanca.
 
+**Distribución.** La tabla de hechos con más relaciones va siempre en el centro exacto (si empatan, la primera del modelo) y las demás alrededor, en una rejilla simétrica que evita cruces y líneas sobre otras tablas. Las posiciones se calculan en `modelo.js`; no se fijan por nombre de tabla.
+
 ## 7. Proporción de la imagen (diapositivas)
 Las imágenes se pegan en diapositivas. Cada visual tiene un **ancho de diseño fijo** y su proporción ancho : alto queda **entre 1,6 y 2,0** (la de una diapositiva 16:9 es 1,78): ni demasiado vertical ni demasiado ancha. La captura sale igual sin importar el tamaño de la ventana, porque los visuales no usan puntos de corte y se arma siempre al ancho de diseño.
 

@@ -1,47 +1,33 @@
-import { Key, Link2, Sigma, Table2 } from "lucide-react";
 import { Encabezado, SinDatos } from "../../ui/encabezado.jsx";
 import { Lamina } from "../../ui/lamina.jsx";
 
-// Diagrama de base de datos de estilo estándar: tablas blancas con su cabecera gris, sus columnas con la llave primaria (PK),
-// las llaves foráneas (FK) y las medidas (Σ), y líneas grises de relación. Usa los valores del tema claro de los tokens
-// (clase `forzar-claro`) para verse como un diagrama de base de datos aunque el visual abra en oscuro.
-const ICONO = { PK: Key, FK: Link2, "Σ": Sigma };
-
-function Fila({ f }) {
-  const Icono = ICONO[f.rol];
-  return (
-    <li className="flex h-[25px] items-center gap-2 border-t border-border px-3 text-[13px]" data-columna={f.nombre}>
-      <span className="inline-flex w-9 shrink-0 items-center gap-1 text-[11px] font-bold text-muted-foreground">{Icono ? <Icono className="size-3.5" aria-hidden="true" /> : null}{f.rol === "Σ" ? null : f.rol}</span>
-      <span className={`truncate font-mono ${f.rol === "PK" ? "font-bold" : ""}`}>{f.nombre}</span>
-      {f.detalle ? <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">{f.detalle}</span> : null}
-    </li>
-  );
-}
-
+// Diagrama de base de datos de estilo estándar: tablas con cabecera sólida (gris azulado las dimensiones, roja las de hechos) y el nombre
+// centrado, una fila por columna con su nombre, su tipo en gris y su marca (PK o FK) a la derecha, y líneas de relación con la notación
+// de pata de gallo. Usa los valores del tema claro de los tokens (clase `forzar-claro`) aunque el visual abra en oscuro.
 function Tabla({ t, hecho }) {
   return (
     <section
       data-codigo={t.codigo} data-tabla={t.nombre}
       style={{ left: t.x, top: t.y, width: t.w, height: t.h }}
-      className="absolute overflow-hidden rounded-md border border-[color-mix(in_srgb,var(--c-texto)_35%,var(--c-borde))] bg-card shadow-[0_2px_6px_rgba(17,22,58,0.12)]"
+      className="absolute overflow-hidden border-2 border-[color-mix(in_srgb,var(--c-texto)_30%,var(--c-borde))] bg-card"
     >
-      <header className={`flex h-[50px] items-center gap-2 px-3 ${hecho ? "bg-[color-mix(in_srgb,var(--c-texto)_16%,var(--c-borde))]" : "bg-border"}`}>
-        <Table2 className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-        <div className="min-w-0">
-          <h3 className="truncate text-[16px] leading-tight">{t.nombre}</h3>
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">{hecho ? "Tabla de hechos" : "Dimensión"} · {t.codigo}</p>
-        </div>
-      </header>
-      <ul>{t.filas.map((f, i) => <Fila key={`${f.nombre}-${i}`} f={f} />)}</ul>
-      {hecho && t.granularidad ? <p className="border-t border-border px-3 py-1.5 text-[12px] italic leading-snug text-muted-foreground">{t.granularidad}</p> : null}
-      {!hecho && t.jerarquia ? <p className="truncate border-t border-border px-3 py-1.5 text-[12px] italic text-muted-foreground">Jerarquía: {t.jerarquia}</p> : null}
+      <h3 className={`flex h-[34px] items-center justify-center text-[15px] font-bold text-white ${hecho ? "bg-[var(--c-error)]" : "bg-[var(--c-texto-secundario)]"}`}>{t.nombre}</h3>
+      <ul className="px-2.5 pt-1">
+        {t.filas.map((f, i) => (
+          <li key={`${f.nombre}-${i}`} data-columna={f.nombre} className="grid h-[25px] grid-cols-[minmax(0,1fr)_auto_2rem] items-center gap-2 text-[14px]">
+            <span className={`truncate ${f.marca === "PK" ? "font-semibold" : ""}`}>{f.nombre}</span>
+            <span className="text-[13px] text-muted-foreground">{f.tipo}</span>
+            <span className="text-right text-[13px] font-extrabold">{f.marca}</span>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
 
 export function Vista({ m }) {
-  const cuerpo = (
-    <Lamina className="forzar-claro !bg-none !bg-[var(--c-superficie)] !border-border text-foreground">
+  return (
+    <Lamina className="forzar-claro !bg-[var(--c-superficie)] !bg-[linear-gradient(180deg,var(--c-superficie),var(--c-fondo))] !border-border text-foreground">
       <Encabezado titulo={m.titulo} proyecto={m.proyecto} />
       {m.vacio ? <SinDatos /> : (
         <>
@@ -49,12 +35,10 @@ export function Vista({ m }) {
             <div className="relative mx-auto" style={{ width: m.ancho, height: m.alto }}>
               <svg aria-hidden="true" viewBox={`0 0 ${m.ancho} ${m.alto}`} width={m.ancho} height={m.alto} className="absolute inset-0">
                 {m.lineas.map((l) => (
-                  <g key={l.codigo} data-relacion-linea={l.codigo}>
-                    <path d={l.d} fill="none" stroke="var(--c-texto-secundario)" strokeWidth="1.6" />
-                    <circle cx={l.sx} cy={l.sy + 14} r="9.5" fill="var(--c-superficie)" stroke="var(--c-texto-secundario)" strokeWidth="1.4" />
-                    <text x={l.sx} y={l.sy + 18} textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--c-texto)">{l.ladoHacia}</text>
-                    <circle cx={l.ex} cy={l.ey - 14} r="9.5" fill="var(--c-superficie)" stroke="var(--c-texto-secundario)" strokeWidth="1.4" />
-                    <text x={l.ex} y={l.ey - 10} textAnchor="middle" fontSize="12" fontWeight="700" fill="var(--c-texto)">{l.ladoDesde === "*" ? "∗" : l.ladoDesde}</text>
+                  <g key={l.codigo} data-relacion-linea={l.codigo} stroke="var(--c-texto-secundario)" strokeWidth="1.8" fill="none">
+                    <line x1={l.sx} y1={l.sy} x2={l.ex} y2={l.ey} />
+                    <path d={l.simbolos} />
+                    {l.circulos.map((c, i) => <circle key={i} cx={c.x} cy={c.y} r="5" fill="var(--c-superficie)" />)}
                   </g>
                 ))}
               </svg>
@@ -62,15 +46,14 @@ export function Vista({ m }) {
               {m.hechos.map((h) => <Tabla key={h.codigo} t={h} hecho />)}
             </div>
           </div>
-          <p className="mt-3 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-[13px] text-muted-foreground" data-leyenda>
+          <p className="mt-3 flex flex-wrap items-center justify-center gap-x-8 gap-y-1 text-[13px] text-muted-foreground" data-leyenda>
             <span><b className="text-foreground">PK</b> llave primaria</span>
             <span><b className="text-foreground">FK</b> llave foránea</span>
-            <span><b className="text-foreground">Σ</b> medida (tipo y agregación)</span>
-            <span><b className="text-foreground">1</b> uno · <b className="text-foreground">∗</b> varios: cada línea es una relación de varios a uno</span>
+            <span><b className="text-foreground">| |</b> uno</span>
+            <span><b className="text-foreground">o&lt;</b> cero o varios: cada línea es una relación de varios a uno</span>
           </p>
         </>
       )}
     </Lamina>
   );
-  return cuerpo;
 }

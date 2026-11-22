@@ -40,7 +40,8 @@ function Costilla({ k, arriba }) {
 
 function Cola() {
   return (
-    <svg aria-hidden="true" viewBox="0 0 150 400" preserveAspectRatio="none" className="block h-full w-[150px] shrink-0">
+    <div aria-hidden="true" data-cola className="relative w-[150px] shrink-0 self-stretch">
+    <svg viewBox="0 0 150 400" preserveAspectRatio="none" className="absolute inset-0 block h-full w-full">
       <defs>
         <linearGradient id="g-cola" x1="1" y1="0" x2="0" y2="0">
           <stop offset="0" stopColor="var(--c-serie-1)" stopOpacity="0.34" />
@@ -50,6 +51,7 @@ function Cola() {
       <path d="M150,188 C118,184 92,168 72,138 C56,108 42,58 8,8 C16,84 20,150 38,196 L38,204 C20,250 16,316 8,392 C42,342 56,292 72,262 C92,232 118,216 150,212 Z" fill="url(#g-cola)" stroke="var(--c-serie-1)" strokeWidth="2" strokeOpacity="0.75" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
       <path d="M150,200 C110,200 70,190 30,120 M150,200 C110,200 70,210 30,280" fill="none" stroke="var(--c-serie-1)" strokeOpacity="0.35" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
     </svg>
+    </div>
   );
 }
 
@@ -100,11 +102,11 @@ export function Vista({ m }) {
               </defs>
               <path d="M0,200 C110,28 380,-2 600,14 C820,30 950,110 1000,200 C950,290 820,370 600,386 C380,402 110,372 0,200 Z" fill="url(#g-cuerpo)" stroke="var(--c-serie-1)" strokeWidth="2" strokeOpacity="0.55" vectorEffect="non-scaling-stroke" />
             </svg>
-            <div className="relative grid gap-x-5 px-7 py-6" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`, gridTemplateRows: "auto 12px auto" }}>
+            <div className="relative grid gap-x-5 px-7 py-6" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`, gridTemplateRows: "1fr 12px 1fr" }}>
               {m.arriba.map((c, i) => (
                 <div key={c.nombre} className="flex flex-col justify-end" style={celda(i + 1, 1)}><Categoria c={c} /><Costilla k={c.k} arriba /></div>
               ))}
-              <div aria-hidden="true" className="flex items-center" style={{ gridColumn: `1 / span ${n}`, gridRow: "2 / span 1" }}>
+              <div aria-hidden="true" data-columna-vertebral className="flex items-center" style={{ gridColumn: `1 / span ${n}`, gridRow: "2 / span 1" }}>
                 <div className="h-[5px] flex-1 rounded-full bg-[linear-gradient(90deg,var(--c-serie-1),var(--c-acento))] shadow-[0_0_18px_var(--c-serie-1)]" />
               </div>
               {m.abajo.map((c, i) => (
