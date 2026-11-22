@@ -1,0 +1,1 @@
+Expreso. (2026). Precio del pollo repunta en julio tras registrar nivel bajo: reportes del Midagri reflejan cambios en mercado avícola. *Expreso*. https://www.expreso.com.pe/economia/precio-del-pollo-repunta-en-julio-tras-registrar-nivel-bajo-reportes-del-midagri-reflejan-cambios-en-mercado-avicola-ministerio-de-desarrollo-agrario-y-riego-noticia/1301534/

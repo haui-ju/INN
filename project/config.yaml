@@ -52,28 +52,28 @@ informe:  # estado del informe: qué secciones ya tienen contenido
       estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     1.8:
       skill: 05-make-problem-objectives  # skill que produce esta sección (de pipeline.json)
-      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
-      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+      run: 22-11-2026-14-01-10  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     1.9:
       skill: 05-make-problem-objectives  # skill que produce esta sección (de pipeline.json)
-      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
-      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+      run: 22-11-2026-14-01-10  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     1.10:
       skill: 05-make-problem-objectives  # skill que produce esta sección (de pipeline.json)
-      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
-      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+      run: 22-11-2026-14-01-10  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     2.1:
       skill: 06-make-bi-solution  # skill que produce esta sección (de pipeline.json)
-      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
-      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+      run: 22-11-2026-14-08-14  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     2.2:
       skill: 06-make-bi-solution  # skill que produce esta sección (de pipeline.json)
-      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
-      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+      run: 22-11-2026-14-08-14  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     2.3:
       skill: 06-make-bi-solution  # skill que produce esta sección (de pipeline.json)
-      run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
-      estado: pendiente  # disponible = tiene corrida · pendiente = falta ejecutar la skill
+      run: 22-11-2026-14-08-14  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
+      estado: disponible  # disponible = tiene corrida · pendiente = falta ejecutar la skill
     2.4:
       skill: 07-make-data-model-kpi  # skill que produce esta sección (de pipeline.json)
       run: null  # corrida vigente de esa skill que alimenta la sección · null si aún no hay
@@ -120,3 +120,13 @@ pasos:  # corrida vigente de cada skill
     fijada: false  # true = ninguna corrida nueva reemplaza a run · false = la última corrida pasa a ser la vigente
     historial:  # todas las corridas de este paso, en orden
       - 22-11-2026-13-16-49
+  05-make-problem-objectives:
+    run: 22-11-2026-14-01-10  # carpeta de la corrida vigente en project/<NN-carpeta>/ · cámbiala a mano para usar otra versión
+    fijada: false  # true = ninguna corrida nueva reemplaza a run · false = la última corrida pasa a ser la vigente
+    historial:  # todas las corridas de este paso, en orden
+      - 22-11-2026-14-01-10
+  06-make-bi-solution:
+    run: 22-11-2026-14-08-14  # carpeta de la corrida vigente en project/<NN-carpeta>/ · cámbiala a mano para usar otra versión
+    fijada: false  # true = ninguna corrida nueva reemplaza a run · false = la última corrida pasa a ser la vigente
+    historial:  # todas las corridas de este paso, en orden
+      - 22-11-2026-14-08-14
