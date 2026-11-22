@@ -9,7 +9,7 @@ Pase editorial para textos en español de un informe técnico-académico. Se bas
 
 ## Alcance y límites
 
-- Edita solo **prosa**. No toques: cifras, fechas, códigos (RF-01, HU-03, TAR-12…), citas (Autor, año), nombres propios, enlaces, tablas, bloques de código ni marcadores «(INCLUIR IMAGEN: …)».
+- Edita solo **prosa**. No toques: cifras, fechas, códigos (OE-01, CAU-03, KPI-02, FCT-01…), citas (Autor, año), nombres propios, enlaces, tablas, bloques de código ni marcadores «(INCLUIR IMAGEN: …)».
 - No agregues hechos, datos ni evidencias. Si una frase no se puede mejorar sin inventar, déjala.
 - Texto limpio: no escribas que los datos son simulados, de prueba o inventados.
 - Una corrida de otra skill no se edita en su sitio: bifurca con su skill `-update` (`runs.py fork`) o trabaja sobre una copia y registra el cambio en su `README.md`.
@@ -28,8 +28,8 @@ Pase editorial para textos en español de un informe técnico-académico. Se bas
 9. **Autoridad vaga**: «según expertos», «diversos estudios». Cita la fuente del proyecto o quita la frase.
 10. **Rótulos y viñetas donde cabe un párrafo**, y encabezados decorativos. Convierte a prosa los listados de una línea por ítem cuando el contenido sea continuo.
 11. **Residuos de herramienta**: rutas de archivos internos, «Pegar.», «Sin captura», etiquetas de plantilla, fechas «datos al …» en pies de figura.
-12. **Términos inconsistentes**: fija una sola forma («bot de Telegram» o «asistente») tras presentarlo y úsala siempre. Define cada sigla la primera vez.
-13. **Lector equivocado**: no vuelvas a explicar al jurado conceptos que el capítulo 2 ya definió; remite al punto.
+12. **Términos inconsistentes**: fija una sola forma («dashboard» o «tablero») tras presentarlo y úsala siempre. Define cada sigla la primera vez.
+13. **Lector equivocado**: no vuelvas a explicar al jurado conceptos que un capítulo anterior ya definió (por ejemplo, la arquitectura del capítulo 2); remite al punto.
 
 ## Cómo trabajar
 
