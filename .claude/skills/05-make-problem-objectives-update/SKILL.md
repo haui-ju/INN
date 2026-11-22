@@ -41,7 +41,9 @@ Con `references/dependencias.md`: lista las filas que cambian (valor actual y nu
 1. Edita solo las filas o rótulos afectados de `<fork>/secciones/1.8.md`, `1.9.md` o `1.10.md`.
 2. Actualiza el `README.md` del fork (lista de cambios y corridas de origen vigentes).
 
-### 6. Validar
+### 6. Revisar la redacción y validar
+Si el cambio tocó texto, invoca al agente `revisor-redactor` (subagent_type `revisor-redactor`) con las rutas de las secciones editadas del fork; aplica con Edit solo lo que el usuario apruebe (reglas en `common/redaccion/guia.md`; sin avisos bloqueantes). Después:
+
 `python3 .claude/skills/_shared/validate_run.py <fork>` hasta que no haya incidencias. Comprueba con `diff -rq <base> <fork>` que solo cambian las secciones previstas y `README.md`.
 
 ### 7. Registrar

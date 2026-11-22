@@ -11,6 +11,7 @@ Carpeta sin `SKILL.md` (no es una skill). Contiene lo que usan todas las skills 
 | `doc_html.py` | Conversión de Markdown a HTML autónomo con los estilos de `common/document-html/` (lo usan el informe y sus anexos) |
 | `report.py` y `rules/report.py` | Armado del informe (`12-make-report`): `plan`, `construir` (solo las secciones disponibles, figuras, referencias, anexos y faltantes), `render` (HTML) y `anexos` (HTML de los anexos, `13-make-annex-html`); `cargar_indice` expone la marca de imagen por punto. El validador se carga por la carpeta `12-report` |
 | `diagnostico.py` | Lectura de las secciones de las corridas de los capítulos 1 y 2 (03 a 07) como datos, encabezados exactos del índice y comprobaciones comunes (figuras, citas, marcadores) |
+| `redaccion.py` | Revisor de calidad de redacción de un Markdown (relleno, inflado, gerundios, ritmo, párrafos sin dato propio, siglas); lo usan la skill `redaccion-academica` y el agente `revisor-redactor` (`.claude/agents/`), con las reglas de `common/redaccion/guia.md`. No predice el resultado de ningún detector |
 | `brief.py` | Leer el brief del proyecto (`project/01-project-brief/`) y copiar al config su tema y su calendario |
 | `runs.py` | Crear la carpeta de corrida y bifurcarla (`-fork`) |
 | `validate_run.py` y `rules/` | Validador de coherencia con reglas genéricas y por paso (`rules/<carpeta sin número, con _>.py`) |

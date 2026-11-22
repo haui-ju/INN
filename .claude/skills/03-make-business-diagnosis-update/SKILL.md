@@ -44,7 +44,9 @@ Con `references/dependencias.md`: lista las secciones y filas que cambian (valor
 3. Si cambió `secciones/1.4.md` (o el nombre comercial de 1.1), `python3 .claude/skills/_shared/visuales.py construir --visual bmc --run <fork> --carpeta <fork>/visuales`.
 4. Actualiza el `README.md` del fork (lista de cambios).
 
-### 6. Validar
+### 6. Revisar la redacción y validar
+Si el cambio tocó texto, invoca al agente `revisor-redactor` (subagent_type `revisor-redactor`) con las rutas de las secciones editadas del fork; aplica con Edit solo lo que el usuario apruebe (reglas en `common/redaccion/guia.md`; sin avisos bloqueantes). Después:
+
 `python3 .claude/skills/_shared/validate_run.py <fork>` hasta que no haya incidencias. Comprueba con `diff -rq <base> <fork>` que solo cambian las secciones afectadas, la figura (si tocaba), `referencias.md` y `README.md`.
 
 ### 7. Registrar

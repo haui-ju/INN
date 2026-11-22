@@ -1,11 +1,21 @@
 ---
 name: redaccion-academica
-description: Revisa y mejora la redacción en español de textos del informe del proyecto (capítulos, bloques de las skills, anexos) para que se lean como un trabajo académico escrito por personas, sin muletillas de texto generado, sin cambiar cifras, códigos, citas ni tablas. Úsala cuando el usuario pida "humanizar", "mejorar la redacción", "pulir el informe" o "que no suene a IA" sobre project/.
+description: Puerta de calidad de redacción para el informe del proyecto (capítulos, secciones de las skills, anexos): corre el revisor redaccion.py (frases de relleno, palabras infladas, gerundios de cierre, arranques repetidos, frases largas, ritmo uniforme, párrafos sin dato propio, siglas sin definir), propone los cambios agrupados, los aplica solo si el usuario los aprueba y vuelve a medir, sin cambiar cifras, códigos, citas ni tablas. Úsala cuando el usuario pida "mejorar la redacción", "pulir el informe", "revisar la calidad del texto", "que el texto sea más propio y específico", "revisión de redacción antes de entregar" o "bajar el porcentaje de IA".
 ---
 
 # redaccion-academica
 
 Pase editorial para textos en español de un informe técnico-académico. Se basa en los patrones de escritura automática que documenta el proyecto Humanizer (licencia MIT) y en la guía de Wikipedia «Signs of AI writing», adaptados al español y a un jurado universitario. **No** inyecta personalidad ni cambia el registro: busca claridad, precisión y variedad.
+
+Las reglas viven en `common/redaccion/guia.md` (códigos `R-nn` e inmutables `I-n`); las skills que escriben secciones invocan al agente `revisor-redactor`, que aplica esas mismas reglas. Esta skill es la forma de pedir la revisión a mano.
+
+## Objetivo y honestidad
+
+Dejar el informe con la calidad que pide un jurado: texto específico del caso, claro, consistente y con fuentes. La política del curso puede limitar el contenido generado con IA (por ejemplo, un máximo de 20 % en Turnitin). Esta skill ayuda a **cumplir esa política con un texto mejor**, no a ocultar su origen, y **no predice** el puntaje de ningún detector: solo Turnitin, desde la cuenta de la institución, lo calcula. Lo que más baja el contenido genérico es el contenido propio del equipo; por eso el revisor marca los párrafos sin dato propio. Recomienda además:
+
+- Que cada integrante lea y edite su capítulo y pueda explicarlo en la sustentación.
+- Declarar el uso de IA si la política del curso lo pide.
+- Preguntar al docente si permite enviar un borrador a Turnitin para ver el porcentaje real antes de la entrega.
 
 ## Alcance y límites
 
@@ -31,10 +41,16 @@ Pase editorial para textos en español de un informe técnico-académico. Se bas
 12. **Términos inconsistentes**: fija una sola forma («dashboard» o «tablero») tras presentarlo y úsala siempre. Define cada sigla la primera vez.
 13. **Lector equivocado**: no vuelvas a explicar al jurado conceptos que un capítulo anterior ya definió (por ejemplo, la arquitectura del capítulo 2); remite al punto.
 
+## Herramientas
+
+- `python3 .claude/skills/_shared/redaccion.py revisar <archivo.md> [--json] [--max-frase 40] [--estricto]`: avisa por línea, regla y tipo (`relleno`, `inflado`, `gerundio`, `contraste`, `frase-larga`, `arranque-repetido`, `ritmo`, `sin-dato`, `sigla`). Revisa solo la prosa: ignora tablas, código, encabezados, marcas de figura y títulos de tabla.
+- `python3 .claude/skills/_shared/validate_run.py <corrida>` para comprobar que la corrida sigue válida después de editar.
+
 ## Cómo trabajar
 
-1. Lee el texto completo y el índice del informe (`common/structure/model1.md`).
-2. Marca los hallazgos por patrón y propón los cambios agrupados por sección; muestra «antes → después» de tres o cuatro ejemplos.
-3. Aplica con Edit solo lo aprobado. Después de editar, comprueba que no cambió ningún número, código ni cita (`diff` y `grep`).
-4. Si el texto sale de un bloque de una skill (p. ej. `04-make-strategic-analysis`), el cambio se hace en su corrida con el `-update` correspondiente y el informe se rearma con `12-make-report`.
-5. Informa qué patrones aparecieron y cuántas veces, sin juicio sobre el autor.
+1. Lee el texto completo y el índice del informe (`common/structure/model1.md`). Trabaja capítulo por capítulo sobre `informe.md` o sobre `secciones/<punto>.md` de la corrida.
+2. **Mide antes:** corre `redaccion.py revisar` y guarda el conteo por tipo.
+3. **Propón** los cambios agrupados por sección con «antes → después» de tres o cuatro ejemplos. Para `sin-dato`, pregunta al usuario qué cifra, código o fuente propia del caso va en ese párrafo; **nunca inventes el dato**. Si no hay dato, la frase se reescribe más corta o se elimina.
+4. **Aplica** con Edit solo lo aprobado. Si el texto sale de una skill (p. ej. `04-make-strategic-analysis`), el cambio se hace en una corrida bifurcada con su `-update` y el informe se rearma con `12-make-report`; nunca se edita `informe.md` como única copia.
+5. **Mide después** con el mismo comando y comprueba que no cambió ningún número, código ni cita (`diff` y `grep`). Repite hasta que queden solo avisos que el usuario decida conservar (por ejemplo, una frase larga que es una definición).
+6. Informa el antes y el después por tipo de aviso, sin juicio sobre el autor, y recuerda las tres recomendaciones del apartado anterior.

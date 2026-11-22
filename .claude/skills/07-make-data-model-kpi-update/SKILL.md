@@ -44,7 +44,9 @@ Con `references/dependencias.md`: lista las filas que cambian (código, valor ac
 3. Si cambió el modelo (tablas, medidas, claves, relaciones), `python3 .claude/skills/_shared/visuales.py construir --visual modelo-datos --run <fork> --carpeta <fork>/visuales`.
 4. Actualiza el `README.md` del fork (lista de cambios y metas que siguen pendientes).
 
-### 6. Validar
+### 6. Revisar la redacción y validar
+Si el cambio tocó texto, invoca al agente `revisor-redactor` (subagent_type `revisor-redactor`) con las rutas de las secciones editadas del fork; aplica con Edit solo lo que el usuario apruebe (reglas en `common/redaccion/guia.md`; sin avisos bloqueantes). Después:
+
 `python3 .claude/skills/_shared/validate_run.py <fork>` hasta que no haya incidencias. Comprueba con `diff -rq <base> <fork>` que solo cambian las secciones, `modelo.json`, la figura, su explicación y `README.md` previstos (un KPI nuevo no toca 2.4 ni la figura).
 
 ### 7. Registrar
