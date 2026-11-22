@@ -175,7 +175,7 @@ def check_figuras(run, archivo, lin, numerar=True):
         if not siguiente.startswith(R.COMO_COPIAR):
             inc.append((archivo, f"la Figura {n} no lleva la línea «Cómo copiarla»"))
             continue
-        ln = re.search(r"\]\(([^)\s]+\.html)\)", siguiente)
+        ln = re.search(r"\]\(([^)\s]+\.(?:html|png))\)", siguiente)
         if ln and not (base / ln.group(1)).is_file():
             inc.append((archivo, f"«Cómo copiarla» de la Figura {n} apunta a {ln.group(1)}, que no existe en la corrida"))
     return inc

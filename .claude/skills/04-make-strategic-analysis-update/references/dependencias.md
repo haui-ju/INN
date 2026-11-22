@@ -1,6 +1,6 @@
 # Dependencias del análisis estratégico
 
-Úsala para armar el plan de un `update`. Rutas relativas a la corrida (`project/04-strategic-analysis/<corrida>/`). Las skills de `08` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+Úsala para armar el plan de un `update`. Rutas relativas a la corrida (`project/04-strategic-analysis/<corrida>/`). Las skills de `10` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
 
 ## Qué contiene la corrida y a quién llega
 

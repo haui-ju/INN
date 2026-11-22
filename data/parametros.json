@@ -1,0 +1,123 @@
+{
+  "schema": 1,
+  "semilla": 2026,
+  "periodo": {
+    "inicio": "2025-08-01",
+    "fin": "2026-10-31"
+  },
+  "locales": 1,
+  "ventas_anuales_uit": 436,
+  "valor_uit": 5500,
+  "ventas_anuales": 2400000,
+  "canales": [
+    {
+      "nombre": "Salón",
+      "comision_pct": 0,
+      "participacion_inicial": 0.39,
+      "participacion_final": 0.28
+    },
+    {
+      "nombre": "Para llevar",
+      "comision_pct": 0,
+      "participacion_inicial": 0.36,
+      "participacion_final": 0.25
+    },
+    {
+      "nombre": "WhatsApp",
+      "comision_pct": 0,
+      "participacion_inicial": 0.1,
+      "participacion_final": 0.12
+    },
+    {
+      "nombre": "Rappi",
+      "comision_pct": 30,
+      "participacion_inicial": 0.09,
+      "participacion_final": 0.2
+    },
+    {
+      "nombre": "PedidosYa",
+      "comision_pct": 25,
+      "participacion_inicial": 0.06,
+      "participacion_final": 0.15
+    }
+  ],
+  "productos": [
+    {
+      "nombre": "Pollo entero a la brasa",
+      "categoria": "Pollo",
+      "precio": 62.0,
+      "costo": 20.59
+    },
+    {
+      "nombre": "Medio pollo a la brasa",
+      "categoria": "Pollo",
+      "precio": 34.0,
+      "costo": 11.29
+    },
+    {
+      "nombre": "Cuarto de pollo con papas",
+      "categoria": "Pollo",
+      "precio": 19.0,
+      "costo": 6.43
+    },
+    {
+      "nombre": "Combo familiar",
+      "categoria": "Combos",
+      "precio": 78.0,
+      "costo": 25.59
+    },
+    {
+      "nombre": "Parrilla personal",
+      "categoria": "Parrillas",
+      "precio": 32.0,
+      "costo": 13.0
+    },
+    {
+      "nombre": "Parrilla familiar",
+      "categoria": "Parrillas",
+      "precio": 85.0,
+      "costo": 36.0
+    },
+    {
+      "nombre": "Bebida",
+      "categoria": "Bebidas",
+      "precio": 9.0,
+      "costo": 3.2
+    },
+    {
+      "nombre": "Adicional",
+      "categoria": "Adicionales",
+      "precio": 7.0,
+      "costo": 2.2
+    }
+  ],
+  "merma_pct": 7.0,
+  "margen_neto": {
+    "inicial": 14.0,
+    "final": 8.0
+  },
+  "precio_pollo": {
+    "inicial": 6.1,
+    "julio_antes": 6.1,
+    "julio_despues": 6.9
+  },
+  "crecimiento_interanual": 18.0,
+  "tolerancias": {
+    "margen_neto_pp": 0.5,
+    "merma_pp": 0.4,
+    "participacion_apps_pp": 2.0,
+    "crecimiento_pp": 2.5,
+    "ventas_anuales_pct": 5.0,
+    "calidad_minima": 97.5,
+    "calidad_maxima": 99.5
+  },
+  "origen": {
+    "periodo": "brief: alcance y FUE-01",
+    "ventas_anuales": "informe: sección 1.3",
+    "margen_neto": "informe: secciones 1.4, 1.5, 1.7 y 1.8 (valor base si no se pudo leer)",
+    "merma_pct": "informe: secciones 1.4, 1.5, 1.7 y 1.8 (valor base si no se pudo leer)",
+    "precio_pollo": "informe: secciones 1.4, 1.5, 1.7 y 1.8 (valor base si no se pudo leer)",
+    "crecimiento_interanual": "informe: secciones 1.4, 1.5, 1.7 y 1.8 (valor base si no se pudo leer)",
+    "canales": "informe: secciones 1.4, 1.5, 1.7 y 1.8 (valor base si no se pudo leer)"
+  }
+}

@@ -17,6 +17,7 @@ Solo biblioteca estándar. PROJECT_ROOT o --raiz cambian la raíz (pruebas).
 import argparse
 import html
 import json
+import os
 import re
 import shutil
 import sys
@@ -46,6 +47,7 @@ RE_PUNTO = re.compile(r"^- (\d+(?:\.\d+)?)\. (.+?)\s*$")
 RE_ANEXO = re.compile(r"^- Anexo ([A-Z]): (.+?)\s*$")
 RE_HEAD = re.compile(r"^(#{1,6})\s+(.+?)\s*#*\s*$")
 RE_FIGURA = re.compile(r"^\s*<!--\s*figura:\s*([A-Za-z0-9][\w-]*)\s*-->\s*$")
+RE_CAPTURA = re.compile(r"^\s*<!--\s*captura:\s*([A-Za-z0-9][\w-]*)\s*-->\s*$")
 RE_REF_FIGURA = re.compile(r"\{\{figura:([A-Za-z0-9][\w-]*)\}\}")
 RE_MENCION = re.compile(r"\b(Figura|Tabla) (\d+)\b")
 RE_TITULO_TABLA = re.compile(r"^(\*\*)?Tabla (\d+)([.:])")
@@ -208,7 +210,11 @@ def pie_de(vinetas, defecto):
 
 
 def marcador(n, pie, visual):
-    return f"(INCLUIR IMAGEN: Figura {n}: {pie}. Archivo sugerido: imagenes/{visual}.html)"
+    return marcador_archivo(n, pie, f"imagenes/{visual}.html")
+
+
+def marcador_archivo(n, pie, ruta):
+    return f"(INCLUIR IMAGEN: Figura {n}: {pie}. Archivo sugerido: {ruta})"
 
 
 # ---------------------------------------------------------------- plan
@@ -291,6 +297,7 @@ class _Estado:
         self.tablas = 0
         self.visuales = {}      # visual -> número de figura
         self.imagenes = []      # (visual, n, lugar, skill)
+        self.capturas = []      # (id, n, lugar, skill, ruta o None): imágenes que aporta el equipo, no se copian
         self.avisos = []
         self.fig_incompletas = []  # (n, visual, lugar, qué falta, qué hacer)
 
@@ -360,6 +367,40 @@ def _bloque_figura(st, n, visual, ctx, prefijo, copiar):
     return out
 
 
+def _pie_captura(png, titulo):
+    """Pie de una captura: primera línea de capturas/<id>.md (sin viñeta) o, si falta, el título de la sección."""
+    f = png.with_suffix(".md")
+    if f.is_file():
+        for l in f.read_text(encoding="utf-8").splitlines():
+            t = re.sub(r"^\s*(?:[-*#]+\s*)+", "", l).strip().rstrip(".")
+            if t:
+                return t
+    return titulo
+
+
+def _bloque_captura(st, n, id_, ctx, prefijo, copiar):
+    """Marcador de una captura que aporta el equipo (capturas/<id>.png de la corrida de la sección). No se copia al informe."""
+    run, skill, lugar, titulo = ctx["dir"], ctx["skill"], ctx["lugar"], ctx["titulo"]
+    png = run / "capturas" / f"{id_}.png"
+    pie = _pie_captura(png, titulo)
+    if png.is_file():
+        ruta = os.path.relpath(png, st.salida).replace(os.sep, "/")
+        if prefijo.startswith("../"):
+            ruta = "../" + ruta
+        out = [marcador_archivo(n, pie, ruta), "",
+               f"{COMO_COPIAR} Abrir [{ruta}]({ruta}) y pegar la imagen en el lugar del marcador.", ""]
+        if copiar:
+            st.capturas.append((id_, n, lugar, skill, ruta))
+        return out
+    out = [marcador_archivo(n, pie, f"capturas/{id_}.png"), "",
+           f"{COMO_COPIAR} Falta la captura «{id_}»: guárdala en capturas/{id_}.png de la corrida de {skill} y vuelve a armar el informe.", ""]
+    if copiar:
+        st.capturas.append((id_, n, lugar, skill, None))
+        st.fig_incompletas.append((n, id_, lugar, "captura", f"guarda capturas/{id_}.png en la corrida de {skill}"))
+        st.avisos.append(f"la Figura {n} ({id_}) de {lugar}: falta la captura capturas/{id_}.png de la corrida de {skill}")
+    return out
+
+
 def _sin_tablas_de_la_figura(lineas, ctx):
     """Quita, con su título, las tablas de TABLAS_EN_FIGURA cuya figura está en el bloque y tiene su HTML."""
     vivas = fuera_de_codigo(lineas)
@@ -388,7 +429,7 @@ def _procesar(st, lineas, ctx, prefijo="imagenes/", copiar=True):
     """Reemplaza las marcas de figura, renumera figuras y títulos de tabla y actualiza sus menciones en el bloque."""
     lineas = _sin_tablas_de_la_figura(lineas, ctx)
     vivas = fuera_de_codigo(lineas)
-    figs = [k for k in sorted(vivas) if RE_FIGURA.match(lineas[k])]
+    figs = [k for k in sorted(vivas) if RE_FIGURA.match(lineas[k]) or RE_CAPTURA.match(lineas[k])]
     tits = [k for k in sorted(vivas) if RE_TITULO_TABLA.match(lineas[k])]
     mapa = {"Figura": {}, "Tabla": {}}
     for j, k in enumerate(figs, 1):
@@ -417,13 +458,15 @@ def _procesar(st, lineas, ctx, prefijo="imagenes/", copiar=True):
             out.append(l)
             continue
         m = RE_FIGURA.match(l)
-        if m:
+        c = None if m else RE_CAPTURA.match(l)
+        if m or c:
             st.figuras += 1
+            nombre = (m or c).group(1)
             if copiar:
-                st.visuales.setdefault(m.group(1), st.figuras)
+                st.visuales.setdefault(nombre, st.figuras)
             if out and out[-1].strip():
                 out.append("")
-            out += _bloque_figura(st, st.figuras, m.group(1), ctx, prefijo, copiar)
+            out += (_bloque_figura if m else _bloque_captura)(st, st.figuras, nombre, ctx, prefijo, copiar)
             continue
         out.append(RE_MENCION.sub(mencion, l))
     st.tablas += len(tits)
@@ -501,7 +544,7 @@ def escribir_faltantes(pl, st, portada, sin_refs):
 
 
 def escribir_indice_imagenes(st):
-    if not st.imagenes:
+    if not st.imagenes and not st.capturas:
         return
     d = st.salida / "imagenes"
     d.mkdir(parents=True, exist_ok=True)
@@ -509,9 +552,13 @@ def escribir_indice_imagenes(st):
     for visual, n, lugar, skill, hay in st.imagenes:
         archivo = f"[{visual}.html]({visual}.html)" if hay else f"{visual}.html (sin HTML: ejecuta {skill}-update)"
         filas.append((archivo, f"Figura {n}", lugar, skill))
+    for id_, n, lugar, skill, ruta in st.capturas:
+        archivo = f"[{id_}.png](../{ruta})" if ruta else f"{id_}.png (falta la captura: guárdala en la corrida de {skill})"
+        filas.append((archivo, f"Figura {n}", lugar, skill))
     t = ["# Imágenes del informe", "",
          "Cada HTML de esta carpeta es una figura del informe. Ábrelo en el navegador, elige la escala y pulsa «Copiar imagen» "
-         "(o «Descargar imagen»); luego pégala en el marcador «(INCLUIR IMAGEN: …)» de su figura.", ""]
+         "(o «Descargar imagen»); luego pégala en el marcador «(INCLUIR IMAGEN: …)» de su figura. "
+         "Las capturas del dashboard son imágenes del equipo: el enlace apunta a su archivo en la corrida que las produjo.", ""]
     t += _tabla(["Archivo", "Figura", "Dónde va", "Skill de origen"], filas)
     (d / "INDICE.md").write_text("\n".join(t) + "\n", encoding="utf-8")
 

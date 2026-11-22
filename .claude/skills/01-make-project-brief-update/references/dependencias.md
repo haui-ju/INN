@@ -1,6 +1,8 @@
 # Dependencias del brief
 
-Úsala para armar el plan de un `update`. El brief es la fuente del núcleo: **todas las demás skills lo leen**. Rutas relativas a la corrida (`project/01-project-brief/<corrida>/`). Las skills de `08` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+Úsala para armar el plan de un `update`. El brief es la fuente del núcleo: **todas las demás skills lo leen**. Rutas relativas a la corrida (`project/01-project-brief/<corrida>/`). Las skills de `10` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+
+Si cambian las fuentes o el periodo del brief y ya hay una corrida de `08-make-etl`, ejecuta `08-make-etl-update` (los datos se regeneran con el periodo nuevo y la evidencia del equipo queda desactualizada).
 
 ## Qué contiene `brief.md` y a quién llega
 

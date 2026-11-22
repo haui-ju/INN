@@ -1,6 +1,8 @@
 # Dependencias de la solución de BI
 
-Úsala para armar el plan de un `update`. Rutas relativas a la corrida (`project/06-bi-solution/<corrida>/`). Las skills de `08` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+Úsala para armar el plan de un `update`. Rutas relativas a la corrida (`project/06-bi-solution/<corrida>/`). Las skills de `10` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+
+Si cambia el ETL o el almacenamiento y ya hay una corrida de `08-make-etl`, ejecuta `08-make-etl-update`.
 
 ## Qué contiene la corrida y a quién llega
 

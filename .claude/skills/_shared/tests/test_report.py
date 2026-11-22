@@ -297,6 +297,62 @@ class TestRender(Base):
         self.assertIn("INCLUIR IMAGEN: Figura 1", h)
 
 
+class TestCapturas(Base):
+    """Marcador `<!-- captura: <id> -->`: imagen del equipo, numerada como figura y sin copiarla al informe."""
+
+    def construir(self, con_png=True, con_pie=True):
+        d = self.dirs[RF.ESTR]
+        sec = d / "secciones" / "1.6.md"
+        sec.write_text(sec.read_text(encoding="utf-8").rstrip("\n") + "\n\n<!-- captura: pag-01 -->\n\nLa Figura 2 de este bloque es la captura.\n", encoding="utf-8")
+        (d / "capturas").mkdir(exist_ok=True)
+        if con_png:
+            (d / "capturas" / "pag-01.png").write_bytes(b"\x89PNG\r\n")
+        if con_pie:
+            (d / "capturas" / "pag-01.md").write_text("- Página de ventas por canal.\n", encoding="utf-8")
+        self.run = Path(self.root) / "project" / "12-report" / "r1"
+        self.run.mkdir(parents=True)
+        self.res = R.construir(self.root, self.run)
+        return (self.run / "informe.md").read_text(encoding="utf-8")
+
+    def test_captura_numerada_junto_con_las_figuras_y_sin_copiarla(self):
+        txt = self.construir()
+        ruta = "../../04-strategic-analysis/12-11-2026-08-00-00/capturas/pag-01.png"
+        self.assertRegex(txt, r"\(INCLUIR IMAGEN: Figura 4: Página de ventas por canal\. Archivo sugerido: \.\./\.\./[^)]*capturas/pag-01\.png\)")
+        self.assertIn("**Cómo copiarla.** Abrir [", txt)
+        self.assertNotIn("<!-- captura", txt)
+        self.assertEqual(list(self.run.rglob("*.png")), [])
+        self.assertIn("pag-01.png", (self.run / "imagenes" / "INDICE.md").read_text(encoding="utf-8"))
+        self.assertIn("La Figura 4 de este bloque es la captura.", txt)
+
+    def test_captura_sin_pie_usa_el_titulo_de_la_seccion(self):
+        txt = self.construir(con_pie=False)
+        self.assertRegex(txt, r"\(INCLUIR IMAGEN: Figura \d: Matriz FODA\. Archivo sugerido:")
+
+    def test_captura_ausente_queda_el_marcador_y_se_avisa(self):
+        txt = self.construir(con_png=False)
+        self.assertIn("Archivo sugerido: capturas/pag-01.png)", txt)
+        self.assertIn("Falta la captura «pag-01»", txt)
+        self.assertTrue(any("pag-01" in a and "captura" in a for a in self.res["avisos"]))
+        self.assertIn("| Figura 4 | pag-01 |", (self.run / "faltantes.md").read_text(encoding="utf-8"))
+
+    def test_seccion_con_imagen_cubierta_solo_por_una_captura(self):
+        d = self.dirs[RF.ESTR]
+        sec = d / "secciones" / "1.5.md"
+        sec.write_text(sec.read_text(encoding="utf-8").replace("<!-- figura: pestel -->", "<!-- captura: pag-01 -->"), encoding="utf-8")
+        (d / "capturas").mkdir()
+        (d / "capturas" / "pag-01.png").write_bytes(b"\x89PNG\r\n")
+        self.run = Path(self.root) / "project" / "12-report" / "r1"
+        self.run.mkdir(parents=True)
+        res = R.construir(self.root, self.run)
+        self.assertFalse(any("(incluye imagen)" in a and "1.5" in a for a in res["avisos"]))
+        self.assertIn("capturas/pag-01.png)", (self.run / "informe.md").read_text(encoding="utf-8"))
+
+    def test_el_informe_con_capturas_valida(self):
+        self.construir()
+        import validate_run as VR
+        self.assertEqual(VR.validate(self.run), [])
+
+
 class TestFiguraSinTablasRepetidas(unittest.TestCase):
     TABLA = ["Tabla 1: Relaciones del modelo", "", "| Código | Desde |", "|---|---|", "| REL-01 | fPedidos |", "", "Después."]
 

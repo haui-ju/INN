@@ -1,0 +1,867 @@
+{
+ "schema": 1,
+ "descripcion": "Plan de páginas del dashboard del caso: páginas, visuales, medidas y columnas calculadas. Lo lee dashboard_ref.py.",
+ "medidas": [
+  {
+   "codigo": "MED-01",
+   "nombre": "Venta bruta",
+   "explicacion": "Suma de la venta bruta de las líneas válidas (las líneas descartadas tienen la venta en 0).",
+   "dax": "SUM ( fPedidos[venta_bruta] )",
+   "kpi": "",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-02",
+   "nombre": "Comisión pagada",
+   "explicacion": "Suma de la comisión que cobran las aplicaciones (0 en salón, para llevar y WhatsApp).",
+   "dax": "SUM ( fPedidos[comision] )",
+   "kpi": "",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-03",
+   "nombre": "Costo estimado",
+   "explicacion": "Suma del costo estimado de cada línea: insumos del producto, con el precio del pollo vivo del día.",
+   "dax": "SUM ( fPedidos[costo_estimado] )",
+   "kpi": "",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-04",
+   "nombre": "Costo operativo",
+   "explicacion": "Suma del costo operativo del mes (planilla, alquiler, servicios y otros) repartido entre las líneas.",
+   "dax": "SUM ( fPedidos[costo_operativo] )",
+   "kpi": "",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-05",
+   "nombre": "Margen de contribución %",
+   "explicacion": "Lo que queda de cada sol vendido después de la comisión y del costo estimado.",
+   "dax": "DIVIDE ( [Venta bruta] - [Comisión pagada] - [Costo estimado], [Venta bruta] )",
+   "kpi": "KPI-02",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-06",
+   "nombre": "Margen neto %",
+   "explicacion": "Lo que queda de cada sol vendido después de la comisión, el costo estimado y el costo operativo.",
+   "dax": "DIVIDE ( [Venta bruta] - [Comisión pagada] - [Costo estimado] - [Costo operativo], [Venta bruta] )",
+   "kpi": "KPI-03",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-07",
+   "nombre": "Calidad de datos %",
+   "explicacion": "Filas válidas entre filas leídas de las cuatro fuentes de ventas; el ETL conserva todas las filas y marca cada una con 1 o 0.",
+   "dax": "DIVIDE ( SUM ( fPedidos[registro_valido] ), SUM ( fPedidos[registro_total] ) )",
+   "kpi": "KPI-01",
+   "tablas": [
+    "fPedidos"
+   ]
+  },
+  {
+   "codigo": "MED-08",
+   "nombre": "Pollos preparados",
+   "explicacion": "Pollos que la cocina preparó en el turno.",
+   "dax": "SUM ( fProduccion[pollos_preparados] )",
+   "kpi": "",
+   "tablas": [
+    "fProduccion"
+   ]
+  },
+  {
+   "codigo": "MED-09",
+   "nombre": "Pollos vendidos",
+   "explicacion": "Pollos equivalentes que se vendieron en el turno.",
+   "dax": "SUM ( fProduccion[pollos_vendidos] )",
+   "kpi": "",
+   "tablas": [
+    "fProduccion"
+   ]
+  },
+  {
+   "codigo": "MED-10",
+   "nombre": "Pollos de merma",
+   "explicacion": "Pollos preparados que no se vendieron.",
+   "dax": "SUM ( fProduccion[pollos_merma] )",
+   "kpi": "",
+   "tablas": [
+    "fProduccion"
+   ]
+  },
+  {
+   "codigo": "MED-11",
+   "nombre": "Merma %",
+   "explicacion": "Pollos de merma entre pollos preparados.",
+   "dax": "DIVIDE ( [Pollos de merma], [Pollos preparados] )",
+   "kpi": "KPI-04",
+   "tablas": [
+    "fProduccion"
+   ]
+  },
+  {
+   "codigo": "MED-12",
+   "nombre": "Precio promedio del pollo vivo",
+   "explicacion": "Promedio del precio diario por kilogramo (con el último precio publicado en los días sin precio).",
+   "dax": "AVERAGE ( fPrecioInsumo[precio_kg] )",
+   "kpi": "KPI-06",
+   "tablas": [
+    "fPrecioInsumo"
+   ]
+  },
+  {
+   "codigo": "MED-13",
+   "nombre": "Pronóstico de referencia",
+   "explicacion": "Promedio de lo vendido en las cuatro jornadas anteriores del mismo día de la semana y el mismo turno.",
+   "dax": "VAR fechaActual = MAX ( dCalendario[fecha] )\nVAR diaSemana = WEEKDAY ( fechaActual, 2 )\nVAR anteriores =\n    TOPN (\n        4,\n        FILTER ( ALL ( dCalendario ), dCalendario[fecha] < fechaActual && WEEKDAY ( dCalendario[fecha], 2 ) = diaSemana ),\n        dCalendario[fecha], DESC\n    )\nRETURN\n    AVERAGEX ( anteriores, CALCULATE ( [Pollos vendidos] ) )",
+   "kpi": "",
+   "tablas": [
+    "fProduccion",
+    "dCalendario",
+    "dTurno"
+   ]
+  },
+  {
+   "codigo": "MED-14",
+   "nombre": "Error del pronóstico %",
+   "explicacion": "Error porcentual absoluto medio entre lo vendido y el pronóstico, por día y turno.",
+   "dax": "AVERAGEX (\n    CROSSJOIN ( VALUES ( dCalendario[fecha] ), VALUES ( dTurno[turno] ) ),\n    IF ( NOT ISBLANK ( [Pronóstico de referencia] ) && [Pollos vendidos] > 0,\n        DIVIDE ( ABS ( [Pollos vendidos] - [Pronóstico de referencia] ), [Pollos vendidos] ) )\n)",
+   "kpi": "KPI-05",
+   "tablas": [
+    "fProduccion",
+    "dCalendario",
+    "dTurno"
+   ]
+  },
+  {
+   "codigo": "MED-15",
+   "nombre": "Participación de ventas %",
+   "explicacion": "Parte de la venta total que representa cada canal.",
+   "dax": "DIVIDE ( [Venta bruta], CALCULATE ( [Venta bruta], ALL ( dCanal[canal] ) ) )",
+   "kpi": "",
+   "tablas": [
+    "fPedidos",
+    "dCanal"
+   ]
+  },
+  {
+   "codigo": "MED-16",
+   "nombre": "KPI con meta %",
+   "explicacion": "KPI del dashboard que tienen meta entre todos los KPI.",
+   "dax": "DIVIDE ( CALCULATE ( COUNTROWS ( dKpi ), dKpi[tiene_meta] = TRUE () ), COUNTROWS ( dKpi ) )",
+   "kpi": "KPI-07",
+   "tablas": [
+    "dKpi"
+   ]
+  },
+  {
+   "codigo": "MED-17",
+   "nombre": "Meta del KPI",
+   "explicacion": "Meta cargada para el KPI seleccionado.",
+   "dax": "AVERAGE ( fMetaKpi[meta] )",
+   "kpi": "",
+   "tablas": [
+    "fMetaKpi",
+    "dKpi"
+   ]
+  }
+ ],
+ "columnas_calculadas": [
+  {
+   "tabla": "fPedidos",
+   "columna": "venta_bruta",
+   "donde": "Power Query",
+   "formula": "Caja: cantidad × precio_unitario − descuento (descuento vacío = 0). Rappi: monto. PedidosYa: total. WhatsApp: monto. En las filas descartadas, 0.",
+   "campos": [
+    "cantidad",
+    "precio_unitario",
+    "descuento",
+    "monto",
+    "total"
+   ],
+   "archivos": [
+    "data/fue-01-caja.csv",
+    "data/fue-02-rappi.csv",
+    "data/fue-03-pedidosya.csv",
+    "data/fue-04-whatsapp.csv"
+   ],
+   "explicacion": "Cada fuente trae el importe con un nombre distinto; se calcula uno solo."
+  },
+  {
+   "tabla": "fPedidos",
+   "columna": "comision",
+   "donde": "Power Query",
+   "formula": "Rappi: la columna comision. PedidosYa: total × comision_pct ÷ 100. Salón, para llevar y WhatsApp: 0.",
+   "campos": [
+    "comision",
+    "total",
+    "comision_pct"
+   ],
+   "archivos": [
+    "data/fue-02-rappi.csv",
+    "data/fue-03-pedidosya.csv"
+   ],
+   "explicacion": "La comisión de las aplicaciones es el costo de vender por ese canal."
+  },
+  {
+   "tabla": "fPedidos",
+   "columna": "costo_estimado",
+   "donde": "Power Query",
+   "formula": "cantidad × (kg_pollo_vivo × precio_kg del día + costo_otros). El producto se une con el catálogo y el día con fPrecioInsumo (último precio disponible si falta el día).",
+   "campos": [
+    "cantidad",
+    "kg_pollo_vivo",
+    "costo_otros",
+    "precio_kg"
+   ],
+   "archivos": [
+    "data/apoyo-catalogo-productos.csv",
+    "data/fue-06-precios-pollo.csv"
+   ],
+   "explicacion": "El costo de los insumos sube cuando sube el pollo vivo."
+  },
+  {
+   "tabla": "fPedidos",
+   "columna": "costo_operativo",
+   "donde": "Power Query",
+   "formula": "total del mes × venta_bruta de la línea ÷ suma de venta_bruta de las líneas válidas del mes.",
+   "campos": [
+    "total",
+    "venta_bruta"
+   ],
+   "archivos": [
+    "data/apoyo-costos-operativos.csv"
+   ],
+   "explicacion": "Reparte la planilla, el alquiler, los servicios y otros costos del mes en proporción a la venta."
+  },
+  {
+   "tabla": "fPedidos",
+   "columna": "pollos_equivalentes",
+   "donde": "Power Query",
+   "formula": "cantidad × pollos_equivalentes del producto en el catálogo.",
+   "campos": [
+    "cantidad",
+    "pollos_equivalentes"
+   ],
+   "archivos": [
+    "data/apoyo-catalogo-productos.csv"
+   ],
+   "explicacion": "Convierte medios pollos, cuartos y combos a pollos enteros."
+  },
+  {
+   "tabla": "fPedidos",
+   "columna": "registro_valido / registro_total",
+   "donde": "Power Query",
+   "formula": "registro_total = 1 en cada fila leída; registro_valido = 1 si la fila pasa todas las reglas de calidad y 0 si es duplicada o inválida (con sus medidas en 0).",
+   "campos": [
+    "(todas las reglas del ETL)"
+   ],
+   "archivos": [
+    "data/fue-01-caja.csv",
+    "data/fue-02-rappi.csv",
+    "data/fue-03-pedidosya.csv",
+    "data/fue-04-whatsapp.csv"
+   ],
+   "explicacion": "El ETL conserva todas las filas leídas para poder medir la calidad de datos."
+  },
+  {
+   "tabla": "fPrecioInsumo",
+   "columna": "valor_imputado",
+   "donde": "Power Query",
+   "formula": "1 si el día no tiene fila en la fuente y se completó con el último precio; 0 en los demás.",
+   "campos": [
+    "fecha"
+   ],
+   "archivos": [
+    "data/fue-06-precios-pollo.csv"
+   ],
+   "explicacion": "Permite marcar en el gráfico los días sin precio."
+  },
+  {
+   "tabla": "dCalendario",
+   "columna": "anio, mes, nombre_mes, dia_semana",
+   "donde": "DAX",
+   "formula": "anio = YEAR ( [fecha] ); mes = MONTH ( [fecha] ); nombre_mes = FORMAT ( [fecha], \"mmm yy\" ); dia_semana = FORMAT ( [fecha], \"dddd\" ). Ordena nombre_mes por mes y dia_semana por WEEKDAY ( [fecha], 2 ).",
+   "campos": [
+    "fecha"
+   ],
+   "archivos": [
+    "(calendario generado desde la fecha mínima y máxima)"
+   ],
+   "explicacion": "Los gráficos por mes y por día de la semana usan estas columnas."
+  },
+  {
+   "tabla": "dCalendario",
+   "columna": "es_feriado",
+   "donde": "Power Query",
+   "formula": "Verdadero en los feriados nacionales del periodo: 1 de enero, 1 de mayo, 29 de junio, 28 y 29 de julio, 30 de agosto, 8 de octubre, 1 de noviembre, 8 y 25 de diciembre.",
+   "campos": [
+    "fecha"
+   ],
+   "archivos": [
+    "(lista de feriados escrita a mano)"
+   ],
+   "explicacion": "No alimenta ningún KPI; sirve como filtro."
+  },
+  {
+   "tabla": "dKpi",
+   "columna": "tiene_meta",
+   "donde": "Especificar datos",
+   "formula": "Verdadero si el KPI tiene una meta en la sección 2.5 y no verdadero si dice Pendiente.",
+   "campos": [
+    "kpi"
+   ],
+   "archivos": [
+    "(lista de KPI de la sección 2.5)"
+   ],
+   "explicacion": "Es la base del KPI-07."
+  },
+  {
+   "tabla": "fMetaKpi",
+   "columna": "meta",
+   "donde": "Especificar datos",
+   "formula": "Meta de cada KPI y mes copiada de la sección 2.5.",
+   "campos": [
+    "kpi_key",
+    "fecha_key"
+   ],
+   "archivos": [
+    "(metas de la sección 2.5)"
+   ],
+   "explicacion": "Permite dibujar la meta como línea y calcular el estado."
+  }
+ ],
+ "paginas": [
+  {
+   "codigo": "PAG-01",
+   "nombre": "Resumen del negocio",
+   "usuario": "Dueño",
+   "pregunta": "¿Gana el negocio lo que debería y qué indicadores están fuera de su meta?",
+   "kpis": [
+    "KPI-03",
+    "KPI-02",
+    "KPI-01",
+    "KPI-04",
+    "KPI-06"
+   ],
+   "segmentadores": [
+    "dCalendario[anio]",
+    "dCalendario[nombre_mes]",
+    "dCanal[canal]"
+   ],
+   "visuales": [
+    {
+     "id": 1,
+     "tipo": "linea",
+     "titulo": "Margen neto mensual contra la meta",
+     "pos": [
+      1,
+      1,
+      6,
+      1
+     ],
+     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "y": "[Margen neto %]",
+     "serie": "",
+     "origen": [
+      "fPedidos",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-06",
+      "MED-17"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "kpi_mensual",
+      "kpi": "KPI-03"
+     },
+     "unidad": "%",
+     "lectura": "El margen baja de 14 % a 8 % y desde febrero de 2026 queda bajo la meta de 12 %.",
+     "formato": "Línea de 2 px, etiqueta de datos solo en el último punto; la meta va como línea constante punteada (panel Analytics).",
+     "meta": {
+      "kpi": "KPI-03"
+     }
+    },
+    {
+     "id": 2,
+     "tipo": "apiladas",
+     "titulo": "Ventas mensuales por canal",
+     "pos": [
+      7,
+      1,
+      6,
+      1
+     ],
+     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "y": "[Venta bruta]",
+     "serie": "dCanal[canal]",
+     "origen": [
+      "fPedidos",
+      "dCalendario",
+      "dCanal"
+     ],
+     "medidas": [
+      "MED-01"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "ventas_canal_mes",
+      "modo": "valor"
+     },
+     "unidad": "S/",
+     "lectura": "Las ventas crecen y las aplicaciones (Rappi y PedidosYa) ocupan una franja cada vez mayor.",
+     "formato": "Columnas apiladas; orden de la leyenda: Salón, Para llevar, WhatsApp, Rappi y PedidosYa."
+    },
+    {
+     "id": 3,
+     "tipo": "tabla",
+     "titulo": "KPI del dashboard contra su meta",
+     "pos": [
+      1,
+      2,
+      12,
+      1
+     ],
+     "x": "dKpi[kpi]",
+     "y": "[Margen neto %], [Margen de contribución %], [Calidad de datos %], [Merma %], [Error del pronóstico %], [Precio promedio del pollo vivo], [KPI con meta %]",
+     "serie": "",
+     "origen": [
+      "dKpi",
+      "fMetaKpi"
+     ],
+     "medidas": [
+      "MED-05",
+      "MED-06",
+      "MED-07",
+      "MED-11",
+      "MED-12",
+      "MED-14",
+      "MED-16",
+      "MED-17"
+     ],
+     "filtros": [
+      "dCalendario[nombre_mes] = último mes del periodo"
+     ],
+     "datos": {
+      "fuente": "tabla_kpi"
+     },
+     "unidad": "",
+     "lectura": "La calidad de datos cumple; el margen neto, la merma, el pronóstico y los KPI con meta no cumplen, y dos KPI siguen sin meta.",
+     "formato": "Tabla con una fila por KPI; el estado se escribe con texto (Cumple, No cumple, Sin meta) y un icono, no solo con color."
+    }
+   ]
+  },
+  {
+   "codigo": "PAG-02",
+   "nombre": "Rentabilidad por canal y producto",
+   "usuario": "Dueño",
+   "pregunta": "¿Qué canales y productos dejan margen después de la comisión?",
+   "kpis": [
+    "KPI-02"
+   ],
+   "segmentadores": [
+    "dCalendario[anio]",
+    "dCalendario[nombre_mes]",
+    "dProducto[categoria]"
+   ],
+   "visuales": [
+    {
+     "id": 1,
+     "tipo": "barras",
+     "titulo": "Margen de contribución por canal",
+     "pos": [
+      1,
+      1,
+      4,
+      1
+     ],
+     "x": "dCanal[canal]",
+     "y": "[Margen de contribución %]",
+     "serie": "",
+     "origen": [
+      "fPedidos",
+      "dCanal"
+     ],
+     "medidas": [
+      "MED-05"
+     ],
+     "filtros": [
+      "Todo el periodo"
+     ],
+     "datos": {
+      "fuente": "margen_canal"
+     },
+     "unidad": "%",
+     "lectura": "Salón, para llevar y WhatsApp dejan cerca de 65 %; PedidosYa deja 40.5 % y Rappi 35.5 %, por la comisión.",
+     "formato": "Barras horizontales ordenadas de mayor a menor margen."
+    },
+    {
+     "id": 2,
+     "tipo": "matriz",
+     "titulo": "Margen de contribución por canal y producto",
+     "pos": [
+      5,
+      1,
+      8,
+      1
+     ],
+     "x": "dProducto[producto]",
+     "y": "[Margen de contribución %]",
+     "serie": "dCanal[canal]",
+     "origen": [
+      "fPedidos",
+      "dProducto",
+      "dCanal"
+     ],
+     "medidas": [
+      "MED-05"
+     ],
+     "filtros": [
+      "Todo el periodo"
+     ],
+     "datos": {
+      "fuente": "margen_canal_producto"
+     },
+     "unidad": "%",
+     "lectura": "El color más oscuro marca mayor margen; las aplicaciones bajan en todos los productos.",
+     "formato": "Matriz con formato condicional de color de fondo (escala de un solo color)."
+    },
+    {
+     "id": 3,
+     "tipo": "apiladas100",
+     "titulo": "Participación de las ventas por canal",
+     "pos": [
+      1,
+      2,
+      7,
+      1
+     ],
+     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "y": "[Participación de ventas %]",
+     "serie": "dCanal[canal]",
+     "origen": [
+      "fPedidos",
+      "dCalendario",
+      "dCanal"
+     ],
+     "medidas": [
+      "MED-15"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "ventas_canal_mes",
+      "modo": "participacion"
+     },
+     "unidad": "%",
+     "lectura": "Las aplicaciones suben de 15 % a 35 % de las ventas.",
+     "formato": "Columnas apiladas al 100 %."
+    },
+    {
+     "id": 4,
+     "tipo": "linea",
+     "titulo": "Comisión pagada por mes",
+     "pos": [
+      8,
+      2,
+      5,
+      1
+     ],
+     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "y": "[Comisión pagada]",
+     "serie": "",
+     "origen": [
+      "fPedidos",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-02"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "comision_mes"
+     },
+     "unidad": "S/",
+     "lectura": "La comisión crece junto con la participación de las aplicaciones.",
+     "formato": "Línea de 2 px con etiqueta en el último punto."
+    }
+   ]
+  },
+  {
+   "codigo": "PAG-03",
+   "nombre": "Producción y merma por turno",
+   "usuario": "Jefe de cocina",
+   "pregunta": "¿Cuánto pollo se prepara de más o de menos en cada turno y día?",
+   "kpis": [
+    "KPI-04",
+    "KPI-05"
+   ],
+   "segmentadores": [
+    "dCalendario[anio]",
+    "dCalendario[nombre_mes]",
+    "dTurno[turno]"
+   ],
+   "visuales": [
+    {
+     "id": 1,
+     "tipo": "columnas",
+     "titulo": "Merma por turno contra la meta",
+     "pos": [
+      1,
+      1,
+      4,
+      1
+     ],
+     "x": "dTurno[turno]",
+     "y": "[Merma %]",
+     "serie": "",
+     "origen": [
+      "fProduccion",
+      "dTurno"
+     ],
+     "medidas": [
+      "MED-11"
+     ],
+     "filtros": [
+      "Todo el periodo"
+     ],
+     "datos": {
+      "fuente": "merma_turno"
+     },
+     "unidad": "%",
+     "lectura": "Los tres turnos están por encima de la meta de 3 %.",
+     "formato": "Columnas con la meta como línea constante.",
+     "meta": {
+      "kpi": "KPI-04"
+     }
+    },
+    {
+     "id": 2,
+     "tipo": "columnas",
+     "titulo": "Merma por día de la semana",
+     "pos": [
+      5,
+      1,
+      4,
+      1
+     ],
+     "x": "dCalendario[dia_semana] (ordenada de lunes a domingo)",
+     "y": "[Merma %]",
+     "serie": "",
+     "origen": [
+      "fProduccion",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-11"
+     ],
+     "filtros": [
+      "Todo el periodo"
+     ],
+     "datos": {
+      "fuente": "merma_dia"
+     },
+     "unidad": "%",
+     "lectura": "El martes sobra pollo (11.5 %) y el domingo casi no hay merma (3.7 %): falta pollo.",
+     "formato": "Columnas con la meta como línea constante.",
+     "meta": {
+      "kpi": "KPI-04"
+     }
+    },
+    {
+     "id": 3,
+     "tipo": "columnas",
+     "titulo": "Preparados y vendidos",
+     "pos": [
+      9,
+      1,
+      4,
+      1
+     ],
+     "x": "dCalendario[dia_semana] (ordenada de lunes a domingo)",
+     "y": "[Pollos preparados], [Pollos vendidos]",
+     "serie": "Medidas en la leyenda",
+     "origen": [
+      "fProduccion",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-08",
+      "MED-09"
+     ],
+     "filtros": [
+      "Todo el periodo"
+     ],
+     "datos": {
+      "fuente": "prep_vend_dia"
+     },
+     "unidad": "pollos",
+     "lectura": "La diferencia entre las dos columnas es la merma de cada día.",
+     "formato": "Columnas agrupadas con dos medidas."
+    },
+    {
+     "id": 4,
+     "tipo": "linea",
+     "titulo": "Vendidos contra pronóstico de referencia (últimos 28 días)",
+     "pos": [
+      1,
+      2,
+      12,
+      1
+     ],
+     "x": "dCalendario[fecha]",
+     "y": "[Pollos vendidos], [Pronóstico de referencia]",
+     "serie": "Medidas en la leyenda",
+     "origen": [
+      "fProduccion",
+      "dCalendario",
+      "dTurno"
+     ],
+     "medidas": [
+      "MED-09",
+      "MED-13"
+     ],
+     "filtros": [
+      "dCalendario[fecha]: últimos 28 días"
+     ],
+     "datos": {
+      "fuente": "vendidos_pronostico"
+     },
+     "unidad": "pollos",
+     "lectura": "El pronóstico sigue el patrón semanal pero no el pico de los fines de semana.",
+     "formato": "Línea con dos series; el pronóstico va punteado."
+    }
+   ]
+  },
+  {
+   "codigo": "PAG-04",
+   "nombre": "Precio del pollo vivo y margen",
+   "usuario": "Dueño",
+   "pregunta": "¿Cómo se mueve el precio del pollo vivo y cómo afecta al margen?",
+   "kpis": [
+    "KPI-06"
+   ],
+   "segmentadores": [
+    "dCalendario[anio]",
+    "dCalendario[nombre_mes]"
+   ],
+   "visuales": [
+    {
+     "id": 1,
+     "tipo": "linea",
+     "titulo": "Precio diario del pollo vivo por kilogramo",
+     "pos": [
+      1,
+      1,
+      12,
+      1
+     ],
+     "x": "dCalendario[fecha]",
+     "y": "[Precio promedio del pollo vivo]",
+     "serie": "",
+     "origen": [
+      "fPrecioInsumo",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-12"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "precio_dia"
+     },
+     "unidad": "S/ por kg",
+     "lectura": "Entre el 1 y el 14 de julio de 2026 el precio sube de S/ 6.10 a S/ 6.90; los puntos marcan días sin precio.",
+     "formato": "Línea de 2 px; los días con fPrecioInsumo[valor_imputado] = 1 se marcan con un punto."
+    },
+    {
+     "id": 2,
+     "tipo": "linea",
+     "titulo": "Margen neto mensual",
+     "pos": [
+      1,
+      2,
+      6,
+      1
+     ],
+     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "y": "[Margen neto %]",
+     "serie": "",
+     "origen": [
+      "fPedidos",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-06"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "kpi_mensual",
+      "kpi": "KPI-03"
+     },
+     "unidad": "%",
+     "lectura": "El margen sigue bajando después del salto de precio.",
+     "formato": "Mismo eje horizontal que el visual 3: dos gráficos alineados en lugar de uno con dos ejes.",
+     "meta": {
+      "kpi": "KPI-03"
+     }
+    },
+    {
+     "id": 3,
+     "tipo": "linea",
+     "titulo": "Precio promedio mensual del pollo vivo",
+     "pos": [
+      7,
+      2,
+      6,
+      1
+     ],
+     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "y": "[Precio promedio del pollo vivo]",
+     "serie": "",
+     "origen": [
+      "fPrecioInsumo",
+      "dCalendario"
+     ],
+     "medidas": [
+      "MED-12"
+     ],
+     "filtros": [
+      "Ninguno: se ve todo el periodo"
+     ],
+     "datos": {
+      "fuente": "precio_mes"
+     },
+     "unidad": "S/ por kg",
+     "lectura": "El precio se mantiene cerca de S/ 6.10 hasta junio y de S/ 6.90 desde agosto.",
+     "formato": "Mismo eje horizontal que el visual 2."
+    }
+   ]
+  }
+ ]
+}

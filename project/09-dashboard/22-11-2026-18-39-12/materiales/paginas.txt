@@ -1,0 +1,72 @@
+PAG-01 · Resumen del negocio (Dueño)
+  Pregunta: ¿Gana el negocio lo que debería y qué indicadores están fuera de su meta?
+  KPI: KPI-03, KPI-02, KPI-01, KPI-04, KPI-06
+  Segmentadores: dCalendario[anio], dCalendario[nombre_mes], dCanal[canal]
+  - Visual 1 [linea] Margen neto mensual contra la meta
+      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      Y: [Margen neto %]
+      Origen: fPedidos, dCalendario
+  - Visual 2 [apiladas] Ventas mensuales por canal
+      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      Y: [Venta bruta]
+      Origen: fPedidos, dCalendario, dCanal
+  - Visual 3 [tabla] KPI del dashboard contra su meta
+      X: dKpi[kpi]
+      Y: [Margen neto %], [Margen de contribución %], [Calidad de datos %], [Merma %], [Error del pronóstico %], [Precio promedio del pollo vivo], [KPI con meta %]
+      Origen: dKpi, fMetaKpi
+PAG-02 · Rentabilidad por canal y producto (Dueño)
+  Pregunta: ¿Qué canales y productos dejan margen después de la comisión?
+  KPI: KPI-02
+  Segmentadores: dCalendario[anio], dCalendario[nombre_mes], dProducto[categoria]
+  - Visual 1 [barras] Margen de contribución por canal
+      X: dCanal[canal]
+      Y: [Margen de contribución %]
+      Origen: fPedidos, dCanal
+  - Visual 2 [matriz] Margen de contribución por canal y producto
+      X: dProducto[producto]
+      Y: [Margen de contribución %]
+      Origen: fPedidos, dProducto, dCanal
+  - Visual 3 [apiladas100] Participación de las ventas por canal
+      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      Y: [Participación de ventas %]
+      Origen: fPedidos, dCalendario, dCanal
+  - Visual 4 [linea] Comisión pagada por mes
+      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      Y: [Comisión pagada]
+      Origen: fPedidos, dCalendario
+PAG-03 · Producción y merma por turno (Jefe de cocina)
+  Pregunta: ¿Cuánto pollo se prepara de más o de menos en cada turno y día?
+  KPI: KPI-04, KPI-05
+  Segmentadores: dCalendario[anio], dCalendario[nombre_mes], dTurno[turno]
+  - Visual 1 [columnas] Merma por turno contra la meta
+      X: dTurno[turno]
+      Y: [Merma %]
+      Origen: fProduccion, dTurno
+  - Visual 2 [columnas] Merma por día de la semana
+      X: dCalendario[dia_semana] (ordenada de lunes a domingo)
+      Y: [Merma %]
+      Origen: fProduccion, dCalendario
+  - Visual 3 [columnas] Preparados y vendidos
+      X: dCalendario[dia_semana] (ordenada de lunes a domingo)
+      Y: [Pollos preparados], [Pollos vendidos]
+      Origen: fProduccion, dCalendario
+  - Visual 4 [linea] Vendidos contra pronóstico de referencia (últimos 28 días)
+      X: dCalendario[fecha]
+      Y: [Pollos vendidos], [Pronóstico de referencia]
+      Origen: fProduccion, dCalendario, dTurno
+PAG-04 · Precio del pollo vivo y margen (Dueño)
+  Pregunta: ¿Cómo se mueve el precio del pollo vivo y cómo afecta al margen?
+  KPI: KPI-06
+  Segmentadores: dCalendario[anio], dCalendario[nombre_mes]
+  - Visual 1 [linea] Precio diario del pollo vivo por kilogramo
+      X: dCalendario[fecha]
+      Y: [Precio promedio del pollo vivo]
+      Origen: fPrecioInsumo, dCalendario
+  - Visual 2 [linea] Margen neto mensual
+      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      Y: [Margen neto %]
+      Origen: fPedidos, dCalendario
+  - Visual 3 [linea] Precio promedio mensual del pollo vivo
+      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      Y: [Precio promedio del pollo vivo]
+      Origen: fPrecioInsumo, dCalendario

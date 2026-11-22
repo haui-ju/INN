@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "proyecto": "Mejora del margen por canal y reducción de la merma con Power BI para Pollerías y Parrilladas San Martín",
+  "capas": [
+    {
+      "clave": "fuentes",
+      "nombre": "Fuentes",
+      "herramientas": [],
+      "componentes": [
+        {
+          "codigo": "CAP-01",
+          "nombre": "Sistema de caja, salón y para llevar (FUE-01)",
+          "funcion": "Aporta las ventas por ticket, producto, canal y turno",
+          "entrada_salida": "Registro de caja → archivo de ventas"
+        },
+        {
+          "codigo": "CAP-02",
+          "nombre": "Reportes de Rappi (FUE-02)",
+          "funcion": "Aporta los pedidos y la comisión de cada pedido",
+          "entrada_salida": "Reporte de la aplicación → archivo de pedidos"
+        },
+        {
+          "codigo": "CAP-03",
+          "nombre": "Reportes de PedidosYa (FUE-03)",
+          "funcion": "Aporta los pedidos y la comisión de cada pedido",
+          "entrada_salida": "Reporte de la aplicación → archivo de pedidos"
+        },
+        {
+          "codigo": "CAP-04",
+          "nombre": "Pedidos por WhatsApp (FUE-04)",
+          "funcion": "Aporta los pedidos del delivery propio",
+          "entrada_salida": "Registro de pedidos → archivo de pedidos"
+        },
+        {
+          "codigo": "CAP-05",
+          "nombre": "Control de producción por turno (FUE-05)",
+          "funcion": "Aporta los pollos preparados, vendidos y la merma de cada turno",
+          "entrada_salida": "Registro de cocina → archivo de producción"
+        },
+        {
+          "codigo": "CAP-06",
+          "nombre": "Boletín de precios de aves del Ministerio de Desarrollo Agrario y Riego (FUE-06)",
+          "funcion": "Aporta el precio diario del pollo vivo en Lima Metropolitana",
+          "entrada_salida": "Boletín en PDF → archivo de precios diarios"
+        }
+      ]
+    },
+    {
+      "clave": "etl",
+      "nombre": "ETL",
+      "herramientas": [
+        "Power Query"
+      ],
+      "componentes": [
+        {
+          "codigo": "CAP-07",
+          "nombre": "Extracción y transformación con Power Query",
+          "funcion": "Combina los archivos de las seis fuentes, asigna tipos de dato, homologa productos y canales y calcula columnas",
+          "entrada_salida": "Archivos de las fuentes → tablas transformadas"
+        },
+        {
+          "codigo": "CAP-08",
+          "nombre": "Reglas de calidad y homologación",
+          "funcion": "Quita duplicados, trata nulos, anonimiza los datos de clientes y cuenta los registros descartados",
+          "entrada_salida": "Tablas transformadas → tablas limpias"
+        }
+      ]
+    },
+    {
+      "clave": "almacenamiento",
+      "nombre": "Almacenamiento",
+      "herramientas": [
+        "Modelo semántico de Power BI"
+      ],
+      "componentes": [
+        {
+          "codigo": "CAP-09",
+          "nombre": "Modelo dimensional",
+          "funcion": "Guarda los hechos y las dimensiones que consume el dashboard",
+          "entrada_salida": "Tablas limpias → modelo en estrella"
+        }
+      ]
+    },
+    {
+      "clave": "visualizacion",
+      "nombre": "Visualización",
+      "herramientas": [
+        "Power BI Desktop",
+        "Power BI Service"
+      ],
+      "componentes": [
+        {
+          "codigo": "CAP-10",
+          "nombre": "Dashboard de rentabilidad, merma y precio del insumo",
+          "funcion": "Muestra los KPI, el margen por canal y producto, la merma por turno y el precio del pollo vivo",
+          "entrada_salida": "Modelo en estrella → páginas e indicadores"
+        },
+        {
+          "codigo": "CAP-11",
+          "nombre": "Pronóstico de demanda por día y turno",
+          "funcion": "Estima cuántos pollos preparar según el patrón de ventas",
+          "entrada_salida": "Modelo en estrella → serie con su pronóstico"
+        },
+        {
+          "codigo": "CAP-12",
+          "nombre": "Publicación del dashboard",
+          "funcion": "Pone el dashboard a disposición del dueño y del jefe de cocina en el navegador",
+          "entrada_salida": "Dashboard terminado → informe publicado"
+        }
+      ]
+    }
+  ]
+}

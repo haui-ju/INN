@@ -1,0 +1,370 @@
+{
+  "schema": 1,
+  "hechos": [
+    {
+      "codigo": "FCT-01",
+      "nombre": "fPedidos",
+      "granularidad": "Una fila por línea de pedido, canal y día",
+      "medidas": [
+        {
+          "nombre": "cantidad",
+          "tipo": "entero",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "venta_bruta",
+          "tipo": "decimal",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "comision",
+          "tipo": "decimal",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "costo_estimado",
+          "tipo": "decimal",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "costo_operativo",
+          "tipo": "decimal",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "pollos_equivalentes",
+          "tipo": "decimal",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "registro_valido",
+          "tipo": "entero",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "registro_total",
+          "tipo": "entero",
+          "agregacion": "conteo"
+        }
+      ],
+      "claves": [
+        "fecha_key",
+        "producto_key",
+        "canal_key",
+        "turno_key"
+      ]
+    },
+    {
+      "codigo": "FCT-02",
+      "nombre": "fProduccion",
+      "granularidad": "Una fila por turno y día",
+      "medidas": [
+        {
+          "nombre": "pollos_preparados",
+          "tipo": "entero",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "pollos_vendidos",
+          "tipo": "entero",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "pollos_merma",
+          "tipo": "entero",
+          "agregacion": "suma"
+        }
+      ],
+      "claves": [
+        "fecha_key",
+        "turno_key"
+      ]
+    },
+    {
+      "codigo": "FCT-03",
+      "nombre": "fPrecioInsumo",
+      "granularidad": "Una fila por día",
+      "medidas": [
+        {
+          "nombre": "precio_kg",
+          "tipo": "decimal",
+          "agregacion": "promedio"
+        },
+        {
+          "nombre": "valor_imputado",
+          "tipo": "entero",
+          "agregacion": "suma"
+        }
+      ],
+      "claves": [
+        "fecha_key"
+      ]
+    },
+    {
+      "codigo": "FCT-04",
+      "nombre": "fMetaKpi",
+      "granularidad": "Una fila por KPI y mes",
+      "medidas": [
+        {
+          "nombre": "meta",
+          "tipo": "decimal",
+          "agregacion": "promedio"
+        },
+        {
+          "nombre": "valor_real",
+          "tipo": "decimal",
+          "agregacion": "promedio"
+        }
+      ],
+      "claves": [
+        "kpi_key",
+        "fecha_key"
+      ]
+    }
+  ],
+  "dimensiones": [
+    {
+      "codigo": "DIM-01",
+      "nombre": "dCalendario",
+      "clave": "fecha_key",
+      "atributos": [
+        "fecha",
+        "anio",
+        "mes",
+        "nombre_mes",
+        "dia_semana",
+        "es_feriado"
+      ],
+      "jerarquias": [
+        "Año > Mes > Fecha"
+      ]
+    },
+    {
+      "codigo": "DIM-02",
+      "nombre": "dProducto",
+      "clave": "producto_key",
+      "atributos": [
+        "producto",
+        "categoria"
+      ],
+      "jerarquias": [
+        "Categoría > Producto"
+      ]
+    },
+    {
+      "codigo": "DIM-03",
+      "nombre": "dCanal",
+      "clave": "canal_key",
+      "atributos": [
+        "canal",
+        "tipo_canal",
+        "comision_pct"
+      ],
+      "jerarquias": []
+    },
+    {
+      "codigo": "DIM-04",
+      "nombre": "dTurno",
+      "clave": "turno_key",
+      "atributos": [
+        "turno",
+        "hora_inicio",
+        "hora_fin"
+      ],
+      "jerarquias": []
+    },
+    {
+      "codigo": "DIM-05",
+      "nombre": "dKpi",
+      "clave": "kpi_key",
+      "atributos": [
+        "kpi",
+        "objetivo",
+        "tiene_meta",
+        "frecuencia"
+      ],
+      "jerarquias": []
+    }
+  ],
+  "relaciones": [
+    {
+      "codigo": "REL-01",
+      "desde": "fPedidos",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-02",
+      "desde": "fPedidos",
+      "hacia": "dProducto",
+      "campos": "producto_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-03",
+      "desde": "fPedidos",
+      "hacia": "dCanal",
+      "campos": "canal_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-04",
+      "desde": "fPedidos",
+      "hacia": "dTurno",
+      "campos": "turno_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-05",
+      "desde": "fProduccion",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-06",
+      "desde": "fProduccion",
+      "hacia": "dTurno",
+      "campos": "turno_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-07",
+      "desde": "fPrecioInsumo",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-08",
+      "desde": "fMetaKpi",
+      "hacia": "dKpi",
+      "campos": "kpi_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-09",
+      "desde": "fMetaKpi",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    }
+  ],
+  "kpis": [
+    {
+      "codigo": "KPI-01",
+      "nombre": "Calidad de datos del ETL",
+      "formula": "Registros válidos entre registros cargados",
+      "medida": "% Registros válidos",
+      "origen": [
+        "fPedidos.registro_valido",
+        "fPedidos.registro_total"
+      ],
+      "meta": "98 % o más",
+      "frecuencia": "Por carga",
+      "objetivo": "OE-01",
+      "decision": "Confiar en las cifras del dashboard antes de decidir"
+    },
+    {
+      "codigo": "KPI-02",
+      "nombre": "Margen de contribución por canal y producto",
+      "formula": "(Venta bruta menos comisión menos costo estimado) entre venta bruta, por canal y producto",
+      "medida": "Margen de contribución %",
+      "origen": [
+        "fPedidos.venta_bruta",
+        "fPedidos.comision",
+        "fPedidos.costo_estimado",
+        "dCanal.canal",
+        "dProducto.producto"
+      ],
+      "meta": "Pendiente",
+      "frecuencia": "Mensual",
+      "objetivo": "OE-02",
+      "decision": "Fijar precios diferenciados por canal"
+    },
+    {
+      "codigo": "KPI-03",
+      "nombre": "Margen neto global",
+      "formula": "(Venta bruta menos comisión, costo estimado y costo operativo) entre venta bruta",
+      "medida": "Margen neto %",
+      "origen": [
+        "fPedidos.venta_bruta",
+        "fPedidos.comision",
+        "fPedidos.costo_estimado",
+        "fPedidos.costo_operativo"
+      ],
+      "meta": "12 % o más",
+      "frecuencia": "Mensual",
+      "objetivo": "OE-02",
+      "decision": "Fijar precios diferenciados por canal"
+    },
+    {
+      "codigo": "KPI-04",
+      "nombre": "Porcentaje de merma por turno",
+      "formula": "Pollos de merma entre pollos preparados, por turno",
+      "medida": "% Merma",
+      "origen": [
+        "fProduccion.pollos_merma",
+        "fProduccion.pollos_preparados",
+        "dTurno.turno"
+      ],
+      "meta": "3 % o menos",
+      "frecuencia": "Diaria",
+      "objetivo": "OE-03",
+      "decision": "Definir cuántos pollos preparar en cada turno y día de la semana"
+    },
+    {
+      "codigo": "KPI-05",
+      "nombre": "Precisión del pronóstico de demanda",
+      "formula": "Error porcentual absoluto medio entre los pollos vendidos y los pronosticados por día y turno",
+      "medida": "Error del pronóstico %",
+      "origen": [
+        "fProduccion.pollos_vendidos",
+        "dCalendario.fecha",
+        "dTurno.turno"
+      ],
+      "meta": "15 % o menos",
+      "frecuencia": "Semanal",
+      "objetivo": "OE-03",
+      "decision": "Definir cuántos pollos preparar en cada turno y día de la semana, y asignar el personal según la franja horaria"
+    },
+    {
+      "codigo": "KPI-06",
+      "nombre": "Precio promedio del pollo vivo por kilogramo",
+      "formula": "Promedio del precio diario por kilogramo en el periodo",
+      "medida": "Precio pollo vivo",
+      "origen": [
+        "fPrecioInsumo.precio_kg",
+        "dCalendario.fecha"
+      ],
+      "meta": "Pendiente",
+      "frecuencia": "Semanal",
+      "objetivo": "OE-04",
+      "decision": "Anticipar compras y ajustar precios ante subidas del pollo vivo"
+    },
+    {
+      "codigo": "KPI-07",
+      "nombre": "KPI con meta en el dashboard",
+      "formula": "KPI con meta definida entre KPI del dashboard",
+      "medida": "% KPI con meta",
+      "origen": [
+        "dKpi.kpi_key",
+        "dKpi.tiene_meta"
+      ],
+      "meta": "100 %",
+      "frecuencia": "Por carga",
+      "objetivo": "OE-05",
+      "decision": "Revisar cada decisión del dashboard frente a su meta"
+    }
+  ]
+}

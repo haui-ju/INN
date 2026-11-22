@@ -1,6 +1,8 @@
 # Dependencias del modelo de datos y los KPI
 
-Úsala para armar el plan de un `update`. Rutas relativas a la corrida (`project/07-data-model-kpi/<corrida>/`). Las skills de `08` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+Úsala para armar el plan de un `update`. Rutas relativas a la corrida (`project/07-data-model-kpi/<corrida>/`). Las skills de `10` en adelante se crean más adelante: menciona su `-update` solo si ya existe en `.claude/skills/`.
+
+Si cambian el modelo o los KPI y ya hay corridas de `08-make-etl` o `09-make-dashboard`, ejecuta `08-make-etl-update` y `09-make-dashboard-update` (la evidencia del ETL, las medidas y los valores del equipo dependen del modelo). Las metas «Pendiente» de 2.5 se cierran aquí con los valores reales que propone `09-make-dashboard`.
 
 ## Qué contiene la corrida y a quién llega
 

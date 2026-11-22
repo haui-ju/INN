@@ -16,3 +16,8 @@ __pycache__/
 
 # Capturas temporales del navegador (Playwright)
 .playwright-mcp/
+
+# Datos generados del proyecto (se regeneran con la semilla de data/parametros.json)
+data/*
+!data/README.md
+!data/parametros.json

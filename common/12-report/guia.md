@@ -24,6 +24,8 @@ Cada corrida de una skill que aporta secciones contiene:
 | `secciones/<punto>.md` | Texto final de una sección. Abre con `## <punto>. <título del índice>`; los capítulos 4 y 5 usan `secciones/4.md` y `secciones/5.md` con `## 4. …` y `## 5. …` | Se copia bajo el encabezado del índice; el encabezado propio se reemplaza |
 | `<!-- figura: <visual> -->` | Línea sola donde va una figura | Se reemplaza por el marcador de imagen (sección 3) |
 | `visuales/<visual>.html` | HTML autónomo de la figura | Se copia a `imagenes/<visual>.html` |
+| `<!-- captura: <id> -->` | Línea sola donde va una imagen del equipo (captura del dashboard o de Power Query) | Se reemplaza por el marcador de imagen y se numera como figura; el pie sale de `capturas/<id>.md` o, si falta, del título de la sección |
+| `capturas/<id>.png` | Imagen que el equipo guarda en la corrida de la skill de la sección | No se copia al informe: el marcador y `imagenes/INDICE.md` enlazan a este archivo, y si falta el marcador queda con aviso |
 | `leer-imagen/<visual>.md` | Viñetas «Para qué sirve», «Qué dice», opcional «Por qué se resalta», «Qué debes entender» (lo redacta la skill) y «Pie de foto sugerido» | Da el pie y el párrafo «Cómo leer la figura»: lo que sirve más lo que debes entender (sin «Qué dice»; si falta «Qué debes entender», usa «Qué dice») |
 | `referencias.md` | Opcional: una entrada APA 7 por línea | Se combina en las referencias |
 | `anexos/<letra>.md` | Contenido de un anexo (A a D), en la corrida de la skill de su sección de origen | Se agrega como anexo (sección 6) |
