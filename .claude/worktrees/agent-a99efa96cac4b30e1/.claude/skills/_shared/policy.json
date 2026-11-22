@@ -1,0 +1,23 @@
+{
+ "schema": 1,
+ "descripcion": "Texto limpio: ningun archivo de una corrida, salvo su README.md, debe calificar los datos con estos terminos.",
+ "prohibidos": [
+  "simulad[oa]s?",
+  "inventad[oa]s?",
+  "fictici[oa]s?",
+  "\\bfals[oa]s?\\b",
+  "ilustrativ[oa]s?",
+  "datos? de prueba",
+  "datos? de ejemplo",
+  "texto de ejemplo",
+  "\\bdummy\\b",
+  "placeholder"
+ ],
+ "excepciones": [
+  "falso positivo",
+  "falsos positivos"
+ ],
+ "archivos_exentos": [
+  "README.md"
+ ]
+}

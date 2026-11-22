@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "proyecto": "Inventario digital y fichas de tallaje",
+  "cuadrantes": {
+    "fortalezas": [
+      {
+        "codigo": "FOR-01",
+        "texto": "Conoce bien sus prendas y a sus clientes habituales",
+        "evidencia": "Observación OBS-01"
+      },
+      {
+        "codigo": "FOR-02",
+        "texto": "Equipo pequeño que decide rápido",
+        "evidencia": "Entrevista ENT-03"
+      },
+      {
+        "codigo": "FOR-03",
+        "texto": "Ya usa el celular para comunicarse con proveedores",
+        "evidencia": "OBS-05"
+      }
+    ],
+    "debilidades": [
+      {
+        "codigo": "DEB-01",
+        "texto": "El inventario se anota en un cuaderno que se desactualiza",
+        "evidencia": "OBS-01, OBS-04"
+      },
+      {
+        "codigo": "DEB-02",
+        "texto": "Las tallas se registran sin un formato común",
+        "evidencia": "ENT-03, ENT-05"
+      },
+      {
+        "codigo": "DEB-03",
+        "texto": "La reposición se decide de memoria",
+        "evidencia": "ENT-02, ENT-04"
+      }
+    ],
+    "oportunidades": [
+      {
+        "codigo": "OPO-01",
+        "texto": "Herramientas móviles gratuitas para registrar ventas",
+        "evidencia": "Revisión de herramientas, 2026"
+      },
+      {
+        "codigo": "OPO-02",
+        "texto": "Clientes que esperan respuestas rápidas por mensajería",
+        "evidencia": "ENT-01"
+      }
+    ],
+    "amenazas": [
+      {
+        "codigo": "AME-01",
+        "texto": "Tiendas del frente con catálogo en línea",
+        "evidencia": "ENT-02"
+      },
+      {
+        "codigo": "AME-02",
+        "texto": "Proveedores que cambian las tallas entre temporadas",
+        "evidencia": "ENT-03"
+      }
+    ]
+  }
+}

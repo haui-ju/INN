@@ -1,0 +1,31 @@
+/* Estilo de texto del documento: solo variables de token. La cabecera y los botones vienen del estándar visual (common/html/pantalla o vista-previa). */
+body { margin: 0; background: var(--c-fondo); color: var(--c-texto); font-family: var(--fuente); font-size: var(--t-base); line-height: 1.65; }
+main#captura h1, main#captura h2, main#captura h3, main#captura h4, main#captura h5, main#captura h6 { font-family: var(--fuente-titulos); line-height: 1.25; font-weight: 500; margin: var(--espacio-6) 0 var(--espacio-2); }
+main#captura h1 { font-size: var(--t-xl); margin-top: 0; }
+main#captura h2 { font-size: var(--t-lg); }
+main#captura h3, main#captura h4 { font-size: var(--t-base); }
+main#captura p, main#captura ul, main#captura ol, main#captura blockquote, main#captura .tabla, main#captura pre { margin: 0 0 var(--espacio-3); }
+main#captura ul, main#captura ol { padding-left: 1.4em; }
+main#captura li > ul, main#captura li > ol { margin: var(--espacio-1) 0 0; }
+main#captura li.tarea { list-style: none; margin-left: -1.4em; }
+main#captura li.tarea input { margin-right: var(--espacio-2); accent-color: var(--c-acento); }
+main#captura blockquote { border-left: 3px solid var(--c-acento); padding: 0 var(--espacio-3); color: var(--c-texto-secundario); }
+main#captura hr { border: 0; border-top: 1px solid var(--c-borde); margin: var(--espacio-4) 0; }
+main#captura code { font-family: var(--fuente-mono, ui-monospace, monospace); font-size: .9em; background: var(--c-superficie); border: 1px solid var(--c-borde); border-radius: var(--radio-sm, 6px); padding: 0 .3em; }
+main#captura pre { overflow-x: auto; background: var(--c-superficie); border: 1px solid var(--c-borde); border-radius: var(--radio-md, 10px); padding: var(--espacio-3); }
+main#captura pre code { border: 0; padding: 0; background: none; }
+main#captura a { color: var(--c-acento-fuerte); text-underline-offset: 2px; }
+main#captura .tabla { overflow-x: auto; }
+main#captura table { border-collapse: collapse; width: 100%; font-size: var(--t-sm); }
+main#captura th, main#captura td { border: 1px solid var(--c-borde); padding: var(--espacio-2) var(--espacio-3); text-align: left; vertical-align: top; }
+main#captura th { background: var(--c-superficie); font-size: var(--t-xs); text-transform: uppercase; letter-spacing: .04em; color: var(--c-texto-secundario); }
+main#captura .saltos { display: block; }
+nav.ruta { font-size: var(--t-sm); color: var(--c-texto-secundario); margin-bottom: var(--espacio-3); }
+nav.ruta a { color: var(--c-texto-secundario); }
+nav.ruta [aria-current] { color: var(--c-texto); font-weight: 600; }
+nav.vecinos { display: flex; justify-content: space-between; gap: var(--espacio-3); margin-top: var(--espacio-4); font-size: var(--t-sm); }
+nav.vecinos a { color: var(--c-acento-fuerte); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.sr-only:focus { position: static; width: auto; height: auto; clip: auto; margin: var(--espacio-3); }
+:focus-visible { outline: 2px solid var(--c-acento-fuerte); outline-offset: 2px; }
+@media print { [data-no-captura], .sr-only { display: none !important; } body { background: #fff; color: #000; } }

@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Graphify build output
+graphify-out/
+**/graphify-out/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.log
+
+# Python
+__pycache__/
+*.pyc

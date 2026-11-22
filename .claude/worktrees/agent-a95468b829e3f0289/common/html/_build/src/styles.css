@@ -1,0 +1,37 @@
+@import "tailwindcss";
+@source "./";
+
+/* El tema de Tailwind lee las variables CSS de los tokens (bloque de tokens de la plantilla). */
+@theme inline {
+  --color-background: var(--c-fondo);
+  --color-foreground: var(--c-texto);
+  --color-card: var(--c-superficie);
+  --color-card-foreground: var(--c-texto);
+  --color-muted-foreground: var(--c-texto-secundario);
+  --color-border: var(--c-borde);
+  --color-primary: var(--c-acento);
+  --color-primary-foreground: var(--c-acento-texto);
+  --color-primary-strong: var(--c-acento-fuerte);
+  --color-success: var(--c-exito);
+  --color-warning: var(--c-alerta);
+  --color-destructive: var(--c-error);
+  --font-sans: var(--fuente);
+  --font-serif: var(--fuente-titulos);
+  --font-mono: var(--fuente-mono);
+  --radius-sm: var(--radio-sm);
+  --radius-md: var(--radio-md);
+  --radius-lg: var(--radio-lg);
+  --radius-xl: calc(var(--radio-lg) + 4px);
+  --shadow-sm: var(--sombra-sm);
+  --shadow-md: var(--sombra-md);
+}
+
+@layer base {
+  html { background: var(--c-fondo); color: var(--c-texto); font-family: var(--fuente); -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--c-fondo); color: var(--c-texto); font-family: var(--fuente); font-size: var(--t-base); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  h1, h2, h3, h4 { font-family: var(--fuente-titulos); font-weight: 500; letter-spacing: -0.012em; line-height: 1.2; }
+  code, kbd { font-family: var(--fuente-mono); }
+  :focus-visible { outline: 2px solid var(--c-acento-fuerte); outline-offset: 2px; }
+}
+
+@media print { [data-no-captura] { display: none !important; } }

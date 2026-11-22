@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "proyecto": "Rentabilidad por canal de Pollería Don Tito",
+  "capas": [
+    {
+      "clave": "fuentes",
+      "nombre": "Fuentes",
+      "herramientas": [],
+      "componentes": [
+        {
+          "codigo": "CAP-01",
+          "nombre": "Sistema de caja de los locales (FUE-01)",
+          "funcion": "Aporta las ventas por ticket, canal y turno",
+          "entrada_salida": "Registro de caja → archivos de ventas"
+        },
+        {
+          "codigo": "CAP-02",
+          "nombre": "Reportes de las apps de delivery (FUE-02)",
+          "funcion": "Aporta los pedidos y las comisiones por aplicación",
+          "entrada_salida": "Reportes de las apps → archivos de pedidos"
+        },
+        {
+          "codigo": "CAP-03",
+          "nombre": "Precios del pollo vivo en Lima Metropolitana (FUE-03)",
+          "funcion": "Aporta el costo diario del insumo",
+          "entrada_salida": "Portal de precios → archivo de precios diarios"
+        }
+      ]
+    },
+    {
+      "clave": "etl",
+      "nombre": "ETL",
+      "herramientas": [
+        "Pendiente"
+      ],
+      "componentes": [
+        {
+          "codigo": "CAP-04",
+          "nombre": "Proceso ETL (herramienta pendiente)",
+          "funcion": "Extrae, depura, homologa y anexa las tres fuentes, y descarta duplicados",
+          "entrada_salida": "Archivos de las tres fuentes → tablas limpias"
+        }
+      ]
+    },
+    {
+      "clave": "almacenamiento",
+      "nombre": "Almacenamiento",
+      "herramientas": [
+        "Modelo semántico de Power BI"
+      ],
+      "componentes": [
+        {
+          "codigo": "CAP-05",
+          "nombre": "Modelo dimensional",
+          "funcion": "Guarda los hechos y las dimensiones que consume el dashboard",
+          "entrada_salida": "Tablas limpias → modelo en estrella"
+        }
+      ]
+    },
+    {
+      "clave": "visualizacion",
+      "nombre": "Visualización",
+      "herramientas": [
+        "Power BI Desktop",
+        "Power BI Service"
+      ],
+      "componentes": [
+        {
+          "codigo": "CAP-06",
+          "nombre": "Dashboard de rentabilidad y merma",
+          "funcion": "Muestra los KPI, el margen por canal y la merma por turno",
+          "entrada_salida": "Modelo en estrella → páginas e indicadores"
+        }
+      ]
+    }
+  ]
+}

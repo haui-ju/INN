@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "proyecto": "Rentabilidad por canal de Pollería Don Tito",
+  "cuadrantes": {
+    "fortalezas": [
+      {
+        "codigo": "FOR-01",
+        "texto": "Producto reconocido en el distrito por su sabor casero",
+        "evidencia": "Clientes frecuentes y reseñas en las aplicaciones, 2026"
+      },
+      {
+        "codigo": "FOR-02",
+        "texto": "Dos locales con hornos propios y reparto con motorizados propios",
+        "evidencia": "Recursos clave del Canvas"
+      },
+      {
+        "codigo": "FOR-03",
+        "texto": "Ventas en crecimiento: 18 % más en el último año",
+        "evidencia": "Registro de caja de 2025 y 2026"
+      }
+    ],
+    "debilidades": [
+      {
+        "codigo": "DEB-01",
+        "texto": "Precios iguales en todos los canales, sin considerar la comisión",
+        "evidencia": "Lista de precios única de la empresa, 2026"
+      },
+      {
+        "codigo": "DEB-02",
+        "texto": "Producción por turno decidida por experiencia, con una merma de 7 %",
+        "evidencia": "Control de producción de cocina, 2026"
+      },
+      {
+        "codigo": "DEB-03",
+        "texto": "Ventas de caja, aplicaciones y WhatsApp registradas en sistemas que no se cruzan",
+        "evidencia": "Revisión de las fuentes de datos de la empresa, 2026"
+      }
+    ],
+    "oportunidades": [
+      {
+        "codigo": "OPO-01",
+        "texto": "Herramientas de BI de bajo costo para integrar y analizar los datos",
+        "evidencia": "TEC-01"
+      },
+      {
+        "codigo": "OPO-02",
+        "texto": "Más pedidos de delivery en el distrito",
+        "evidencia": "SOC-01"
+      },
+      {
+        "codigo": "OPO-03",
+        "texto": "Inflación controlada que permite planificar precios y compras",
+        "evidencia": "ECO-02"
+      }
+    ],
+    "amenazas": [
+      {
+        "codigo": "AME-01",
+        "texto": "Precio del pollo vivo volátil",
+        "evidencia": "ECO-01"
+      },
+      {
+        "codigo": "AME-02",
+        "texto": "Comisiones de 25 % a 30 % de las aplicaciones de delivery",
+        "evidencia": "TEC-02"
+      },
+      {
+        "codigo": "AME-03",
+        "texto": "Normas de envases y de datos personales que elevan costos y exigencias",
+        "evidencia": "AMB-01, LEG-01"
+      },
+      {
+        "codigo": "AME-04",
+        "texto": "Cadenas de pollerías con promociones frecuentes en las aplicaciones",
+        "evidencia": "Revisión de las aplicaciones de delivery, 2026"
+      }
+    ]
+  },
+  "estrategias": [
+    {
+      "codigo": "FO-01",
+      "tipo": "FO",
+      "texto": "Usar un dashboard de BI para identificar los canales y productos que más dejan y reforzar en ellos la marca",
+      "combina": [
+        "FOR-01",
+        "OPO-01"
+      ]
+    },
+    {
+      "codigo": "FO-02",
+      "tipo": "FO",
+      "texto": "Impulsar el delivery propio por WhatsApp con los motorizados propios para captar la demanda que crece",
+      "combina": [
+        "FOR-02",
+        "OPO-02"
+      ]
+    },
+    {
+      "codigo": "FA-01",
+      "tipo": "FA",
+      "texto": "Fijar precios diferenciados en las aplicaciones apoyados en el reconocimiento de la marca",
+      "combina": [
+        "FOR-01",
+        "AME-02"
+      ]
+    },
+    {
+      "codigo": "DO-01",
+      "tipo": "DO",
+      "texto": "Integrar caja, aplicaciones y WhatsApp en un modelo de datos con herramientas de BI de bajo costo",
+      "combina": [
+        "DEB-03",
+        "OPO-01"
+      ]
+    },
+    {
+      "codigo": "DO-02",
+      "tipo": "DO",
+      "texto": "Planificar la producción por turno con la demanda histórica",
+      "combina": [
+        "DEB-02",
+        "OPO-01"
+      ]
+    },
+    {
+      "codigo": "DA-01",
+      "tipo": "DA",
+      "texto": "Monitorear el precio del pollo vivo y su efecto en el margen para ajustar precios y compras",
+      "combina": [
+        "DEB-01",
+        "AME-01"
+      ]
+    }
+  ]
+}

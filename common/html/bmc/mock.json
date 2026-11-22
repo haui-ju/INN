@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "proyecto": "Rentabilidad por canal de Pollería Don Tito",
+  "empresa": "Pollería Don Tito",
+  "bloques": [
+    {
+      "clave": "segmentos",
+      "nombre": "Segmentos de clientes",
+      "items": [
+        "Familias de San Juan de Lurigancho",
+        "Trabajadores que almuerzan cerca de los locales",
+        "Clientes de delivery del distrito"
+      ]
+    },
+    {
+      "clave": "propuesta",
+      "nombre": "Propuesta de valor",
+      "items": [
+        "Pollo a la brasa de sabor casero",
+        "Atención rápida",
+        "Precios justos",
+        "Pedido en el local, para llevar o a domicilio"
+      ]
+    },
+    {
+      "clave": "canales",
+      "nombre": "Canales",
+      "items": [
+        "Salón",
+        "Para llevar",
+        "Delivery propio por WhatsApp",
+        "Rappi",
+        "PedidosYa"
+      ]
+    },
+    {
+      "clave": "relaciones",
+      "nombre": "Relaciones con clientes",
+      "items": [
+        "Atención personal en el local",
+        "Pedidos por WhatsApp con clientes frecuentes",
+        "Reseñas en las aplicaciones"
+      ]
+    },
+    {
+      "clave": "ingresos",
+      "nombre": "Fuentes de ingresos",
+      "items": [
+        "Venta de pollos y combos",
+        "Bebidas y adicionales",
+        "Cargo por delivery propio"
+      ]
+    },
+    {
+      "clave": "recursos",
+      "nombre": "Recursos clave",
+      "items": [
+        "Hornos y cocina de los dos locales",
+        "Receta y marca conocida en el distrito",
+        "Equipo de cocina y cuatro motorizados"
+      ]
+    },
+    {
+      "clave": "actividades",
+      "nombre": "Actividades clave",
+      "items": [
+        "Compra y preparación del pollo",
+        "Producción por turno",
+        "Atención y despacho de pedidos"
+      ]
+    },
+    {
+      "clave": "socios",
+      "nombre": "Socios clave",
+      "items": [
+        "Proveedores de pollo vivo y de insumos",
+        "Rappi y PedidosYa",
+        "Proveedor del sistema de caja"
+      ]
+    },
+    {
+      "clave": "costos",
+      "nombre": "Estructura de costos",
+      "items": [
+        "Pollo y otros insumos",
+        "Comisiones de 25 % a 30 % de las aplicaciones",
+        "Planilla",
+        "Alquiler y servicios de los locales"
+      ]
+    }
+  ]
+}

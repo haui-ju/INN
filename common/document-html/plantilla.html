@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{titulo}}</title>
+<style id="tokens">
+/*tokens:inicio*/
+/*tokens:fin*/
+</style>
+<style id="estilos">
+{{estilos}}
+</style>
+<style id="documento">
+{{documento}}
+</style>
+</head>
+<body>
+<a class="sr-only" href="#captura">Saltar al contenido</a>
+<div class="mx-auto w-full p-3 sm:p-6 max-w-[1120px]">
+  <div data-no-captura class="mb-4 flex flex-wrap items-center gap-2">
+    <label class="inline-flex items-center gap-2 text-sm text-muted-foreground">
+      Escala
+      <span class="relative inline-flex items-center">
+        <select id="escala" class="h-9 cursor-pointer appearance-none rounded-md border border-border bg-card pl-3 pr-8 text-sm text-foreground shadow-sm" aria-label="Escala de la imagen">
+          <option value="2">×2</option><option value="3">×3</option><option value="4">×4</option>
+        </select>
+        <svg aria-hidden="true" class="pointer-events-none absolute right-2.5 size-4 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </span>
+    </label>
+    <button id="copiar" type="button" class="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[filter,background-color,box-shadow] h-9 px-4 bg-primary text-primary-foreground shadow-sm hover:brightness-95 active:brightness-90 [&_svg]:size-4 [&_svg]:shrink-0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>Copiar imagen</button>
+    <button id="descargar" type="button" class="inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[filter,background-color,box-shadow] h-9 px-4 border border-border bg-card text-foreground hover:bg-background [&_svg]:size-4 [&_svg]:shrink-0"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>Descargar imagen</button>
+    <button id="tema" type="button" class="inline-flex shrink-0 items-center justify-center rounded-md text-sm font-medium transition-[filter,background-color,box-shadow] size-9 text-foreground hover:bg-card [&_svg]:size-4 [&_svg]:shrink-0" aria-label="Alternar tema claro y oscuro" title="Tema"><svg id="icono-tema" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button>
+    <span id="aviso" role="status" aria-live="polite" class="text-sm text-muted-foreground"></span>
+  </div>
+
+  {{ruta}}
+
+  <main id="captura" data-captura class="rounded-xl bg-background p-4 sm:p-8">
+  {{contenido}}
+  </main>
+
+  {{vecinos}}
+  <footer data-no-captura class="mt-6 text-sm text-muted-foreground"><p>{{pie}}</p></footer>
+</div>
+<script>
+(function () {
+  var SOL = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+  var LUNA = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+  var ESCALAS = [2, 3, 4];
+  function leer(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function guardar(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* sin almacenamiento */ } }
+  var doc = document.documentElement;
+  var tema = leer('tema') === 'dark' ? 'dark' : 'light';
+  function aplicarTema() {
+    doc.setAttribute('data-theme', tema);
+    document.getElementById('icono-tema').outerHTML = tema === 'dark' ? SOL.replace('<svg', '<svg id="icono-tema"') : LUNA.replace('<svg', '<svg id="icono-tema"');
+  }
+  aplicarTema();
+  document.getElementById('tema').addEventListener('click', function () {
+    tema = tema === 'dark' ? 'light' : 'dark';
+    guardar('tema', tema);
+    aplicarTema();
+  });
+  var escala = parseInt(leer('escala-imagen'), 10);
+  if (ESCALAS.indexOf(escala) < 0) escala = 2;
+  var sel = document.getElementById('escala');
+  sel.value = String(escala);
+  sel.addEventListener('change', function () {
+    escala = parseInt(sel.value, 10);
+    guardar('escala-imagen', String(escala));
+  });
+  var FECHA = '{{fecha}}';
+  var VISUAL = '{{nombre_archivo}}';
+  var aviso = document.getElementById('aviso');
+  function nombre() { return VISUAL + (FECHA ? '-' + FECHA : '') + '.png'; }
+  function areaSvg() {
+    var area = document.getElementById('captura');
+    var clon = area.cloneNode(true);
+    clon.querySelectorAll('[data-no-captura]').forEach(function (n) { n.remove(); });
+    var ancho = area.offsetWidth;
+    var caja = document.createElement('div');
+    caja.style.cssText = 'position:absolute;left:-99999px;top:0;width:' + ancho + 'px';
+    caja.appendChild(clon);
+    document.body.appendChild(caja);
+    var alto = clon.scrollHeight;
+    document.body.removeChild(caja);
+    var css = document.getElementById('tokens').textContent + document.getElementById('estilos').textContent + document.getElementById('documento').textContent;
+    var html = new XMLSerializer().serializeToString(clon);
+    var w = Math.ceil(ancho), h = Math.ceil(alto);
+    var estilo = 'width:' + w + 'px;font-family:var(--fuente);color:var(--c-texto);background:var(--c-fondo);font-size:var(--t-base);line-height:1.55';
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" data-theme="' + tema + '">' +
+      '<foreignObject x="0" y="0" width="' + w + '" height="' + h + '"><div xmlns="http://www.w3.org/1999/xhtml" style="' + estilo + '">' +
+      '<style>' + css.replace(/&/g, '&amp;').replace(/</g, '&lt;') + '</style>' + html + '</div></foreignObject></svg>';
+  }
+  function crearPng() {
+    var svg = areaSvg();
+    return new Promise(function (ok, mal) {
+      var img = new Image();
+      img.onload = function () {
+        var c = document.createElement('canvas');
+        c.width = img.width * escala; c.height = img.height * escala;
+        var ctx = c.getContext('2d'); ctx.scale(escala, escala); ctx.drawImage(img, 0, 0);
+        c.toBlob(function (b) { b ? ok(b) : mal(new Error('sin imagen')); }, 'image/png');
+      };
+      img.onerror = function () { mal(new Error('no se pudo dibujar')); };
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    });
+  }
+  function descargar(blob) {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = nombre();
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    return a.download;
+  }
+  document.getElementById('descargar').addEventListener('click', function () {
+    aviso.textContent = 'Preparando imagen…';
+    crearPng().then(function (b) { aviso.textContent = 'Descargada: ' + descargar(b); })
+      .catch(function () { aviso.textContent = 'No se pudo crear la imagen en este navegador.'; });
+  });
+  document.getElementById('copiar').addEventListener('click', function () {
+    aviso.textContent = 'Preparando imagen…';
+    crearPng().then(function (b) {
+      if (!(navigator.clipboard && window.ClipboardItem)) throw new Error('sin portapapeles');
+      return navigator.clipboard.write([new ClipboardItem({ 'image/png': b })]).then(function () { aviso.textContent = 'Imagen copiada al portapapeles.'; });
+    }).catch(function () {
+      aviso.textContent = 'No se pudo copiar; se descargó la imagen.';
+      crearPng().then(function (b) { descargar(b); }).catch(function () { aviso.textContent = 'No se pudo crear la imagen en este navegador.'; });
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "proyecto": "Rentabilidad por canal de Pollería Don Tito",
+  "hechos": [
+    {
+      "codigo": "FCT-01",
+      "nombre": "fPedidos",
+      "granularidad": "Una fila por línea de pedido, canal y día",
+      "medidas": [
+        {
+          "nombre": "cantidad",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "venta_bruta",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "comision",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "costo_estimado",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "pollos_equivalentes",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "registro_valido",
+          "agregacion": "suma"
+        }
+      ],
+      "claves": [
+        "fecha_key",
+        "producto_key",
+        "canal_key",
+        "local_key",
+        "turno_key"
+      ]
+    },
+    {
+      "codigo": "FCT-02",
+      "nombre": "fProduccion",
+      "granularidad": "Una fila por local, turno y día",
+      "medidas": [
+        {
+          "nombre": "pollos_preparados",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "pollos_vendidos",
+          "agregacion": "suma"
+        },
+        {
+          "nombre": "pollos_merma",
+          "agregacion": "suma"
+        }
+      ],
+      "claves": [
+        "fecha_key",
+        "local_key",
+        "turno_key"
+      ]
+    },
+    {
+      "codigo": "FCT-03",
+      "nombre": "fPrecioInsumo",
+      "granularidad": "Una fila por día",
+      "medidas": [
+        {
+          "nombre": "precio_kg",
+          "agregacion": "promedio"
+        }
+      ],
+      "claves": [
+        "fecha_key"
+      ]
+    }
+  ],
+  "dimensiones": [
+    {
+      "codigo": "DIM-01",
+      "nombre": "dCalendario",
+      "clave": "fecha_key",
+      "atributos": [
+        "fecha",
+        "anio",
+        "mes",
+        "nombre_mes",
+        "dia_semana",
+        "es_feriado"
+      ],
+      "jerarquias": [
+        "Año > Mes > Fecha"
+      ]
+    },
+    {
+      "codigo": "DIM-02",
+      "nombre": "dProducto",
+      "clave": "producto_key",
+      "atributos": [
+        "producto",
+        "categoria"
+      ],
+      "jerarquias": [
+        "Categoría > Producto"
+      ]
+    },
+    {
+      "codigo": "DIM-03",
+      "nombre": "dCanal",
+      "clave": "canal_key",
+      "atributos": [
+        "canal",
+        "tipo_canal",
+        "comision_pct"
+      ],
+      "jerarquias": []
+    },
+    {
+      "codigo": "DIM-04",
+      "nombre": "dLocal",
+      "clave": "local_key",
+      "atributos": [
+        "local",
+        "zona"
+      ],
+      "jerarquias": []
+    },
+    {
+      "codigo": "DIM-05",
+      "nombre": "dTurno",
+      "clave": "turno_key",
+      "atributos": [
+        "turno",
+        "hora_inicio",
+        "hora_fin"
+      ],
+      "jerarquias": []
+    }
+  ],
+  "relaciones": [
+    {
+      "codigo": "REL-01",
+      "desde": "fPedidos",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-02",
+      "desde": "fPedidos",
+      "hacia": "dProducto",
+      "campos": "producto_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-03",
+      "desde": "fPedidos",
+      "hacia": "dCanal",
+      "campos": "canal_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-04",
+      "desde": "fPedidos",
+      "hacia": "dLocal",
+      "campos": "local_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-05",
+      "desde": "fPedidos",
+      "hacia": "dTurno",
+      "campos": "turno_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-06",
+      "desde": "fProduccion",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-07",
+      "desde": "fProduccion",
+      "hacia": "dLocal",
+      "campos": "local_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-08",
+      "desde": "fProduccion",
+      "hacia": "dTurno",
+      "campos": "turno_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    },
+    {
+      "codigo": "REL-09",
+      "desde": "fPrecioInsumo",
+      "hacia": "dCalendario",
+      "campos": "fecha_key",
+      "cardinalidad": "*:1",
+      "filtro": "Simple"
+    }
+  ]
+}

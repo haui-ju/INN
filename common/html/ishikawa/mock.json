@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "proyecto": "Rentabilidad por canal de Pollería Don Tito",
+  "efecto": "Las ventas crecieron 18 % en el último año, pero el margen neto cayó de 14 % a 8 %",
+  "categorias": [
+    {
+      "nombre": "Método",
+      "causas": [
+        {
+          "codigo": "CAU-01",
+          "texto": "Precios iguales en todos los canales, sin considerar la comisión"
+        },
+        {
+          "codigo": "CAU-02",
+          "texto": "Producción por turno sin pronóstico de demanda"
+        }
+      ]
+    },
+    {
+      "nombre": "Mano de obra",
+      "causas": [
+        {
+          "codigo": "CAU-03",
+          "texto": "Pedidos de WhatsApp registrados a mano por la cajera"
+        }
+      ]
+    },
+    {
+      "nombre": "Materiales",
+      "causas": [
+        {
+          "codigo": "CAU-04",
+          "texto": "Precio del pollo vivo volátil y no monitoreado"
+        }
+      ]
+    },
+    {
+      "nombre": "Maquinaria",
+      "causas": [
+        {
+          "codigo": "CAU-05",
+          "texto": "El sistema de caja no se integra con las aplicaciones de delivery"
+        }
+      ]
+    },
+    {
+      "nombre": "Medición",
+      "causas": [
+        {
+          "codigo": "CAU-06",
+          "texto": "Tres registros de ventas que no se cruzan: caja, aplicaciones y WhatsApp"
+        },
+        {
+          "codigo": "CAU-07",
+          "texto": "No se mide la merma por turno ni el margen por canal"
+        }
+      ]
+    },
+    {
+      "nombre": "Medio ambiente",
+      "causas": [
+        {
+          "codigo": "CAU-08",
+          "texto": "Competencia de cadenas y comisiones altas en las aplicaciones"
+        }
+      ]
+    }
+  ]
+}

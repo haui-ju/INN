@@ -1,0 +1,194 @@
+{
+ "schema": 2,
+ "descripcion": "Orden, carpeta numerada, prerrequisitos y secciones del informe que aporta cada skill. `secciones` son los puntos del índice (common/structure/model1.md); cada sección pertenece a una sola skill y alimenta informe.secciones del config.",
+ "skills": [
+  {
+   "orden": 0,
+   "nombre": "00-init",
+   "verbo": "init",
+   "carpeta": null,
+   "requiere": [],
+   "update": true,
+   "secciones": []
+  },
+  {
+   "orden": 1,
+   "nombre": "01-make-project-brief",
+   "verbo": "make",
+   "carpeta": "01-project-brief",
+   "requiere": [
+    "00-init"
+   ],
+   "update": true,
+   "secciones": []
+  },
+  {
+   "orden": 2,
+   "nombre": "02-design-system",
+   "verbo": "design",
+   "carpeta": "02-design-system",
+   "requiere": [
+    "00-init"
+   ],
+   "update": true,
+   "secciones": []
+  },
+  {
+   "orden": 3,
+   "nombre": "03-make-business-diagnosis",
+   "verbo": "make",
+   "carpeta": "03-business-diagnosis",
+   "requiere": [
+    "00-init",
+    "01-make-project-brief"
+   ],
+   "update": true,
+   "secciones": [
+    "1.1",
+    "1.2",
+    "1.3",
+    "1.4"
+   ]
+  },
+  {
+   "orden": 4,
+   "nombre": "04-make-strategic-analysis",
+   "verbo": "make",
+   "carpeta": "04-strategic-analysis",
+   "requiere": [
+    "01-make-project-brief",
+    "03-make-business-diagnosis"
+   ],
+   "update": true,
+   "secciones": [
+    "1.5",
+    "1.6",
+    "1.7"
+   ]
+  },
+  {
+   "orden": 5,
+   "nombre": "05-make-problem-objectives",
+   "verbo": "make",
+   "carpeta": "05-problem-objectives",
+   "requiere": [
+    "01-make-project-brief",
+    "04-make-strategic-analysis"
+   ],
+   "update": true,
+   "secciones": [
+    "1.8",
+    "1.9",
+    "1.10"
+   ]
+  },
+  {
+   "orden": 6,
+   "nombre": "06-make-bi-solution",
+   "verbo": "make",
+   "carpeta": "06-bi-solution",
+   "requiere": [
+    "05-make-problem-objectives"
+   ],
+   "update": true,
+   "secciones": [
+    "2.1",
+    "2.2",
+    "2.3"
+   ]
+  },
+  {
+   "orden": 7,
+   "nombre": "07-make-data-model-kpi",
+   "verbo": "make",
+   "carpeta": "07-data-model-kpi",
+   "requiere": [
+    "05-make-problem-objectives",
+    "06-make-bi-solution"
+   ],
+   "update": true,
+   "secciones": [
+    "2.4",
+    "2.5"
+   ]
+  },
+  {
+   "orden": 8,
+   "nombre": "08-make-etl",
+   "verbo": "make",
+   "carpeta": "08-etl",
+   "requiere": [
+    "07-make-data-model-kpi"
+   ],
+   "update": true,
+   "secciones": [
+    "3.1"
+   ]
+  },
+  {
+   "orden": 9,
+   "nombre": "09-make-dashboard",
+   "verbo": "make",
+   "carpeta": "09-dashboard",
+   "requiere": [
+    "07-make-data-model-kpi",
+    "08-make-etl"
+   ],
+   "update": true,
+   "secciones": [
+    "3.2"
+   ]
+  },
+  {
+   "orden": 10,
+   "nombre": "10-make-storytelling",
+   "verbo": "make",
+   "carpeta": "10-storytelling",
+   "requiere": [
+    "09-make-dashboard"
+   ],
+   "update": true,
+   "secciones": [
+    "4"
+   ]
+  },
+  {
+   "orden": 11,
+   "nombre": "11-make-conclusions",
+   "verbo": "make",
+   "carpeta": "11-conclusions",
+   "requiere": [
+    "05-make-problem-objectives",
+    "10-make-storytelling"
+   ],
+   "update": true,
+   "secciones": [
+    "5"
+   ]
+  },
+  {
+   "orden": 12,
+   "nombre": "12-make-report",
+   "verbo": "make",
+   "carpeta": "12-report",
+   "requiere": [
+    "01-make-project-brief"
+   ],
+   "update": false,
+   "secciones": [],
+   "nota": "arma el informe solo con las secciones disponibles en informe.secciones del config"
+  },
+  {
+   "orden": 13,
+   "nombre": "13-make-annex-html",
+   "verbo": "make",
+   "carpeta": null,
+   "requiere": [
+    "12-make-report"
+   ],
+   "update": false,
+   "secciones": [],
+   "nota": "convierte a HTML los anexos del informe vigente; no tiene corrida propia"
+  }
+ ]
+}

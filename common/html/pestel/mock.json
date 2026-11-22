@@ -1,0 +1,98 @@
+{
+  "schema": 1,
+  "proyecto": "Rentabilidad por canal de Pollería Don Tito",
+  "factores": [
+    {
+      "clave": "politico",
+      "nombre": "Político",
+      "items": [
+        {
+          "codigo": "POL-01",
+          "texto": "La Ley 30056 promueve a la micro y pequeña empresa con un régimen tributario y laboral simplificado",
+          "efecto": "La pollería mantiene costos laborales y tributarios acordes con su tamaño",
+          "tipo": "Oportunidad",
+          "fuente": "Congreso de la República del Perú (2013)"
+        }
+      ]
+    },
+    {
+      "clave": "economico",
+      "nombre": "Económico",
+      "items": [
+        {
+          "codigo": "ECO-01",
+          "texto": "El precio del pollo vivo en Lima Metropolitana varía de una semana a otra",
+          "efecto": "El costo del insumo principal cambia sin que la pollería ajuste sus precios",
+          "tipo": "Amenaza",
+          "fuente": "MIDAGRI (2026)"
+        },
+        {
+          "codigo": "ECO-02",
+          "texto": "La inflación de Lima Metropolitana se mantiene dentro del rango meta del banco central, de 1 % a 3 %",
+          "efecto": "Permite planificar precios y compras con menos incertidumbre",
+          "tipo": "Oportunidad",
+          "fuente": "BCRP (2026)"
+        }
+      ]
+    },
+    {
+      "clave": "social",
+      "nombre": "Social",
+      "items": [
+        {
+          "codigo": "SOC-01",
+          "texto": "Los clientes del distrito piden cada vez más comida por aplicaciones y por WhatsApp",
+          "efecto": "Crece la demanda de delivery, que ya es el 35 % de las ventas",
+          "tipo": "Oportunidad",
+          "fuente": "Registro de ventas por canal de la empresa, 2026"
+        }
+      ]
+    },
+    {
+      "clave": "tecnologico",
+      "nombre": "Tecnológico",
+      "items": [
+        {
+          "codigo": "TEC-01",
+          "texto": "Power BI Desktop es de uso gratuito y permite integrar y visualizar datos de varias fuentes",
+          "efecto": "La empresa puede construir su dashboard sin invertir en licencias de escritorio",
+          "tipo": "Oportunidad",
+          "fuente": "Microsoft (2026)"
+        },
+        {
+          "codigo": "TEC-02",
+          "texto": "Las aplicaciones de delivery concentran los pedidos en línea y cobran comisiones de 25 % a 30 %",
+          "efecto": "Cada venta por aplicación deja menos margen que una venta en salón",
+          "tipo": "Amenaza",
+          "fuente": "Contratos de la empresa con Rappi y PedidosYa, 2026"
+        }
+      ]
+    },
+    {
+      "clave": "ecologico",
+      "nombre": "Ecológico",
+      "items": [
+        {
+          "codigo": "AMB-01",
+          "texto": "La Ley 30884 regula el plástico de un solo uso y los envases descartables",
+          "efecto": "Sube el costo de los envases para llevar y delivery",
+          "tipo": "Amenaza",
+          "fuente": "Congreso de la República del Perú (2018)"
+        }
+      ]
+    },
+    {
+      "clave": "legal",
+      "nombre": "Legal",
+      "items": [
+        {
+          "codigo": "LEG-01",
+          "texto": "La Ley 29733 exige consentimiento para tratar datos personales de los clientes",
+          "efecto": "Los datos de clientes de WhatsApp deben anonimizarse en el modelo de datos",
+          "tipo": "Amenaza",
+          "fuente": "Congreso de la República del Perú (2011)"
+        }
+      ]
+    }
+  ]
+}
