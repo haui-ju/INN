@@ -522,12 +522,18 @@ def campo_eje_html(texto):
     return out
 
 
+MEDIDAS_CREADAS = set()  # nombres de medidas que el equipo ya creó: se muestran sin su DAX
+
+
 def medidas_html(plan, v, codigos):
     g = _Guia(plan, {}, {}, {})
     out = []
     for c in codigos:
         m = g.por_codigo.get(c)
         if not m:
+            continue
+        if m["nombre"] in MEDIDAS_CREADAS:
+            out.append(f'<div class="med"><b>[{esc(m["nombre"])}]</b> · ✔ ya la creaste (no hay que hacer nada)</div>')
             continue
         cols = g.columnas(g.recursivas([c]))
         orig = ", ".join(f"{t}[{k}]" for t, k in cols)

@@ -17,6 +17,11 @@ import dashboard_ref as R  # noqa: E402
 import html_tpl as H  # noqa: E402
 
 # (página original, id del visual, posición nueva [columna, fila, ancho, alto])
+# Medidas que el equipo ya creó en Power BI: no se repite su DAX. Agrega aquí el nombre de cada medida nueva que vayas creando.
+CREADAS = ["Venta bruta", "Comisión pagada", "Costo estimado", "Costo operativo", "Margen neto %", "Calidad de datos %", "Pollos de merma",
+           "Pollos preparados", "Merma %", "Meta del KPI", "Margen de contribución %", "Precio promedio del pollo vivo", "Pollos vendidos",
+           "Pronóstico de referencia", "Error del pronóstico %", "KPI con meta %", "Participación de ventas %"]
+
 PAGINAS = [
     {"codigo": "PAG-01", "nombre": "Resumen del negocio", "usuario": "Dueño",
      "pregunta": "¿Gana el negocio lo que debería y dónde se pierde: en margen o en merma?",
@@ -49,7 +54,9 @@ def seccion_medidas(plan, paginas):
         for v in p["visuales"]:
             pedidas += v["medidas"]
             anotar(v["medidas"], f"{p['codigo']} · gráfico {v['id']}")
-    orden = g.medidas_nuevas(list(dict.fromkeys(pedidas)))
+    orden = [m for m in g.medidas_nuevas(list(dict.fromkeys(pedidas))) if m["nombre"] not in CREADAS]
+    if not orden:
+        return ""
     filas = []
     for n, m in enumerate(orden, 1):
         cols = ", ".join(f"{t}[{c}]" for t, c in g.columnas([m]))
@@ -86,6 +93,7 @@ def main(argv=None):
             v["id"], v["pos"] = n, pos
             vis.append(v)
         nuevo["paginas"].append({**{k: p[k] for k in ("codigo", "nombre", "usuario", "pregunta", "kpis", "segmentadores")}, "visuales": vis})
+    R.MEDIDAS_CREADAS = set(CREADAS)
     resp, modelo = R.cargar_respuestas(a.raiz), R.cargar_modelo(a.raiz)
     metas = R.metas_kpi(modelo)
     try:
@@ -94,6 +102,8 @@ def main(argv=None):
         brief = {}
     html = R.html_referencia(nuevo, resp, modelo, metas, brief, H.tokens_del_proyecto(a.raiz))
     html = html.replace('<section class="final" id="medidas-tarjetas">', seccion_medidas(nuevo, nuevo["paginas"]) + '<section class="final" id="medidas-tarjetas">', 1)
+    html = html.replace("<h2>Medidas DAX de las tarjetas y chips</h2><p class=\"preg\">Son medidas de texto y de color. Créalas después de las medidas globales, en este orden, ",
+                        "<h2>Medidas DAX</h2><p class=\"preg\">Las medidas de las cifras ya las creaste; estas son las que faltan (meta, chip, color y mes de las tarjetas, y las de la tabla de KPI). Créalas en este orden, ", 1)
     html = (html.replace("Dashboard de referencia", "Dashboard final")
                 .replace("Así debería verse y estos son los valores esperados. Se construye en Power BI.", "Versión final de 2 páginas con los KPI y gráficos más importantes. Se construye en Power BI."))
     destino = run / "materiales" / "ds-final.html"
