@@ -806,7 +806,7 @@ main{padding:24px;max-width:1650px;margin:0 auto}.pagina{margin:0 0 56px}.pagina
 .lienzo{width:1600px;height:900px;padding:24px;background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:20px;display:flex;flex-direction:column;gap:16px;overflow:hidden}
 .enc{height:76px;display:flex;align-items:center;gap:20px;flex:none}.enc h3{margin:0;font-size:26px;font-weight:700}.enc .quien{color:var(--c-texto-secundario);font-size:16px}
 .seg{margin-left:auto;display:flex;gap:10px}.seg span{border:1px solid var(--c-borde);background:var(--c-fondo);border-radius:12px;padding:6px 14px;font-size:16px;color:var(--c-texto-secundario)}
-.tarjetas{height:120px;display:flex;gap:16px;flex:none}.tarjeta{flex:0 1 calc((100% - 64px) / 5);background:var(--c-fondo);border:1px solid var(--c-borde);border-radius:16px;padding:10px 18px;gap:4px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+.tarjetas.muchas .t-valor{font-size:28px;white-space:nowrap}.tarjetas.muchas .tarjeta{padding:10px 12px}.tarjetas.muchas .chip{font-size:13px;padding:2px 8px}.tarjetas.muchas .t-etq{font-size:14px}.tarjetas{height:120px;display:flex;gap:16px;flex:none}.tarjeta{flex:0 1 calc((100% - 64px) / 5);background:var(--c-fondo);border:1px solid var(--c-borde);border-radius:16px;padding:10px 18px;gap:4px;display:flex;flex-direction:column;justify-content:space-between;min-width:0}
 .t-etq{font-size:16px;color:var(--c-texto-secundario);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.t-valor{font-size:36px;font-weight:700;line-height:1}.t-fila{display:flex;justify-content:space-between;align-items:center;gap:8px}.t-meta{font-size:14px;color:var(--c-texto-secundario);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cod{font-family:var(--fuente-mono,ui-monospace,monospace);font-size:14px;color:var(--c-texto-secundario)}
 .chip{white-space:nowrap;display:inline-flex;gap:6px;align-items:center;border-radius:999px;padding:2px 12px;font-size:14px;font-weight:600;border:1px solid currentColor}.chip.ok{color:var(--c-exito)}.chip.mal{color:var(--c-error)}.chip.sin{color:var(--c-texto-secundario)}
@@ -867,7 +867,7 @@ def html_referencia(plan, resp, modelo, metas, brief, tokens):
             f'<section class="pagina" id="{esc(p["codigo"])}"><h2><span class="cod">{esc(p["codigo"])}</span> {esc(p["nombre"])}</h2>'
             f'<p class="preg">Para el {esc(p["usuario"].lower())}: {esc(p["pregunta"])}</p>'
             f'<div class="lienzo"><div class="enc"><h3>{esc(p["nombre"])}</h3><span class="quien">{esc(p["usuario"])}</span><div class="seg" data-caja="{esc(p["codigo"])}-seg" tabindex="0" role="button" title="Clic para ver cómo construir los filtros">{seg}</div></div>'
-            f'{f"<div class=tarjetas>{tarj}</div>" if tarj else ""}<div class="zona">{vis}</div></div>'
+            f'{f"<div class='tarjetas{' muchas' if len(p.get('kpis', [])) > 5 else ''}'>{tarj}</div>" if tarj else ""}<div class="zona">{vis}</div></div>'
             f'<div class="cajas">{cajas}</div></section>')
     kpis = sorted({r["kpi"] for r in resp["kpi-esperados"]})
     meses = sorted({r["mes"] for r in resp["kpi-esperados"]})

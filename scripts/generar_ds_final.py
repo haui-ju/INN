@@ -24,9 +24,9 @@ CREADAS = ["Venta bruta", "Comisión pagada", "Costo estimado", "Costo operativo
 
 PAGINAS = [
     {"codigo": "PAG-01", "nombre": "Resumen del negocio", "usuario": "Dueño",
-     "pregunta": "¿Gana el negocio lo que debería y dónde se pierde: en margen o en merma?",
-     "kpis": ["KPI-03", "KPI-01", "KPI-04"], "segmentadores": ["dCalendario[anio]", "dCalendario[nombre_mes]", "dCanal[canal]"],
-     "visuales": [("PAG-01", 1, [1, 1, 6, 1]), ("PAG-03", 1, [7, 1, 6, 1]), ("PAG-01", 3, [1, 2, 12, 1])]},
+     "pregunta": "¿Gana el negocio lo que debería, cómo se mueve el precio del pollo y dónde se pierde en merma?",
+     "kpis": ["KPI-03", "KPI-01", "KPI-04", "KPI-05", "KPI-06", "KPI-07"], "segmentadores": ["dCalendario[anio]", "dCalendario[nombre_mes]", "dCanal[canal]"],
+     "visuales": [("PAG-01", 1, [1, 1, 4, 1]), ("PAG-04", 3, [5, 1, 4, 1]), ("PAG-03", 1, [9, 1, 4, 1]), ("PAG-01", 3, [1, 2, 12, 1])]},
     {"codigo": "PAG-02", "nombre": "Rentabilidad por canal", "usuario": "Dueño",
      "pregunta": "¿Qué canales dejan margen después de la comisión y cuánto pesa cada uno en la venta?",
      "kpis": ["KPI-02"], "segmentadores": ["dCalendario[anio]", "dCalendario[nombre_mes]", "dProducto[categoria]"],

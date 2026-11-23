@@ -1,0 +1,32 @@
+PAG-01 · Resumen del negocio (Dueño)
+  Pregunta: ¿Gana el negocio lo que debería y dónde se pierde: en margen o en merma?
+  KPI: KPI-03, KPI-01, KPI-04
+  Segmentadores: dCalendario[anio], dCalendario[nombre_mes], dCanal[canal]
+  - Visual 1 [linea] Margen neto mensual contra la meta
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
+      Y: [Margen neto %]
+      Origen: fPedidos, dCalendario
+  - Visual 2 [columnas] Merma por turno contra la meta
+      X: dTurno[turno]
+      Y: [Merma %]
+      Origen: fProduccion, dTurno
+  - Visual 3 [tabla] KPI del dashboard contra su meta
+      X: dKpi[kpi]
+      Y: [Margen neto %], [Margen de contribución %], [Calidad de datos %], [Merma %], [Error del pronóstico %], [Precio promedio del pollo vivo], [KPI con meta %]
+      Origen: dKpi, fMetaKpi
+PAG-02 · Rentabilidad por canal (Dueño)
+  Pregunta: ¿Qué canales dejan margen después de la comisión y cuánto pesa cada uno en la venta?
+  KPI: KPI-02
+  Segmentadores: dCalendario[anio], dCalendario[nombre_mes], dProducto[categoria]
+  - Visual 1 [barras] Margen de contribución por canal
+      X: dCanal[canal]
+      Y: [Margen de contribución %]
+      Origen: fPedidos, dCanal
+  - Visual 2 [linea] Comisión pagada por mes
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
+      Y: [Comisión pagada]
+      Origen: fPedidos, dCalendario
+  - Visual 3 [apiladas100] Participación de las ventas por canal
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
+      Y: [Participación de ventas %]
+      Origen: fPedidos, dCalendario, dCanal
