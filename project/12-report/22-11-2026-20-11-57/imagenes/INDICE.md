@@ -1,6 +1,6 @@
 # Imágenes del informe
 
-Cada HTML de esta carpeta es una figura del informe. Ábrelo en el navegador, elige la escala y pulsa «Copiar imagen» (o «Descargar imagen»); luego pégala en el marcador «(INCLUIR IMAGEN: …)» de su figura.
+Cada HTML de esta carpeta es una figura del informe. Ábrelo en el navegador, elige la escala y pulsa «Copiar imagen» (o «Descargar imagen»); luego pégala en el marcador «(INCLUIR IMAGEN: …)» de su figura. Las capturas del dashboard son imágenes del equipo: el enlace apunta a su archivo en la corrida que las produjo.
 
 | Archivo | Figura | Dónde va | Skill de origen |
 |---|---|---|---|

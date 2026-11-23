@@ -307,7 +307,7 @@ Tabla 16: Herramientas de la solución de BI
 | Código | Herramienta | Capa | Función en el proyecto | Justificación | Alternativa descartada |
 |---|---|---|---|---|---|
 | HER-01 | Power Query | ETL | Extraer, depurar, homologar y anexar las seis fuentes y registrar cada paso | Viene integrada en Power BI Desktop, deja cada paso registrado y repetible y es la herramienta que prevé el objetivo OE-01 | Scripts de Python, que exigen más mantenimiento y no se integran con el modelo |
-| HER-02 | Modelo semántico de Power BI | Almacenamiento | Guardar el modelo en estrella y sus medidas | El volumen del proyecto, de enero a octubre de 2026 y un solo local, cabe en un modelo por importación y no exige un servidor ni costo adicional | SQL Server Express, que agrega administración sin necesidad para este volumen |
+| HER-02 | Modelo semántico de Power BI | Almacenamiento | Guardar el modelo en estrella y sus medidas | El volumen del proyecto, de agosto de 2025 a octubre de 2026 y un solo local, cabe en un modelo por importación y no exige un servidor ni costo adicional | SQL Server Express, que agrega administración sin necesidad para este volumen |
 | HER-03 | Power BI Desktop | Visualización | Modelar los datos, escribir las medidas y construir el dashboard con su pronóstico | Es la herramienta de visualización que pide la consigna del proyecto y reúne la preparación, el modelado, las medidas DAX y el pronóstico en un solo programa gratuito (Microsoft, s. f.) | Excel con tablas dinámicas, que limita la interacción entre páginas y los filtros |
 | HER-04 | Power BI Service | Visualización | Publicar el dashboard para que el dueño lo consulte desde el navegador | Permite que el dueño y el jefe de cocina vean el dashboard sin instalar el programa de escritorio | Compartir el archivo .pbix, que obliga a abrirlo en un equipo con Power BI Desktop |
 
@@ -346,7 +346,7 @@ Tabla 18: Dimensiones
 
 **Relaciones.** Todas las relaciones son de varios a uno, desde el hecho hacia la dimensión, y filtran en un solo sentido.
 
-**Lectura del modelo.** Con este modelo se calcula el margen de cada canal y producto por mes, con la comisión de 25 % a 30 % de las aplicaciones ya descontada (FCT-01). Se compara lo preparado con lo vendido en cada turno (FCT-02). También se contrasta el precio del pollo vivo (FCT-03) con el margen de enero a octubre de 2026 y cada KPI con su meta (FCT-04).
+**Lectura del modelo.** Con este modelo se calcula el margen de cada canal y producto por mes, con la comisión de 25 % a 30 % de las aplicaciones ya descontada (FCT-01). Se compara lo preparado con lo vendido en cada turno (FCT-02). También se contrasta el precio del pollo vivo (FCT-03) con el margen de agosto de 2025 a octubre de 2026 y cada KPI con su meta (FCT-04).
 
 ## 2.5. Indicadores clave de rendimiento (KPI)
 

@@ -154,40 +154,79 @@ class TestReferencia(unittest.TestCase):
         self.assertEqual(d["series"][0]["valores"][d["cats"].index("2026-07-14")], 6.9)
 
     # ---- guía
-    def test_la_guia_explica_cada_visual_con_sus_campos_y_tablas(self):
-        for p in self.plan["paginas"]:
-            self.assertIn(f"### {p['codigo']} · {p['nombre']}", self.guia)
-            for v in p["visuales"]:
-                self.assertIn(f"#### {p['codigo']} · Visual {v['id']}: {v['titulo']}", self.guia)
-                self.assertIn(v["x"], self.guia)
-                for t in v["origen"]:
-                    self.assertIn(f"`{t}`", self.guia)
-                for m in v["medidas"]:
-                    self.assertIn(m, self.guia)
+    def test_la_guia_tiene_una_seccion_por_pagina_y_ninguna_otra(self):
+        secciones = [l for l in self.guia.splitlines() if l.startswith("## ")]
+        self.assertEqual(secciones, [f"## {p['codigo']} · {p['nombre']}" for p in self.plan["paginas"]])
 
-    def test_la_guia_trae_cada_medida_con_su_dax_y_cada_kpi(self):
+    def test_cada_pagina_va_elemento_por_elemento_con_todo_lo_que_hace_falta(self):
+        elementos = 0
+        for p in self.plan["paginas"]:
+            bloque = self.guia.split(f"## {p['codigo']} ·", 1)[1].split("\n## ", 1)[0]
+            titulos = [l for l in bloque.splitlines() if l.startswith("### ")]
+            esperados = (1 if p.get("segmentadores") else 0) + len(p.get("kpis", [])) + len(p["visuales"])
+            self.assertEqual(len(titulos), esperados, p["codigo"])
+            self.assertEqual([t.split(" · ")[0] for t in titulos], [f"### Elemento {n}" for n in range(1, esperados + 1)], p["codigo"])
+            for k in p.get("kpis", []):
+                self.assertIn(f"Tarjeta {k} · ", bloque)
+            for v in p["visuales"]:
+                self.assertIn(v["titulo"], "\n".join(titulos))
+                self.assertIn(v["x"], bloque)
+                for t in v["origen"]:
+                    self.assertIn(t, bloque)
+            elementos += esperados
+        for rotulo in ("**Qué muestra.**", "**Cómo armarlo en Power BI.**", "**Valor esperado.**"):
+            self.assertEqual(self.guia.count(rotulo), elementos, rotulo)
+
+    def test_cada_medida_se_crea_una_sola_vez_con_su_dax_en_el_primer_elemento_que_la_usa(self):
         for m in self.plan["medidas"]:
-            self.assertIn(f"### {m['codigo']} · {m['nombre']}", self.guia)
-            self.assertIn(m["dax"], self.guia)
+            self.assertEqual(self.guia.count(f"**Medida `{m['nombre']}`"), 1 if self._usada(m) else 0, m["codigo"])
+            if self._usada(m):
+                self.assertIn(m["dax"], self.guia)
         for c, n, _ in KPIS:
             self.assertIn(c, self.guia)
         self.assertIn("Meta: 12 % o más", self.guia)
 
-    def test_la_guia_explica_cada_columna_calculada_con_sus_archivos(self):
+    def _usada(self, m):
+        """Una medida se explica si algún visual la usa o es la de una tarjeta, o la usan otras medidas que se explican."""
+        usadas = {c for p in self.plan["paginas"] for v in p["visuales"] for c in v["medidas"]}
+        usadas |= {x["codigo"] for p in self.plan["paginas"] for k in p.get("kpis", []) for x in self.plan["medidas"] if x["kpi"] == k}
+        cola, vistos = list(usadas), set(usadas)
+        por_nombre = {x["nombre"]: x for x in self.plan["medidas"]}
+        while cola:
+            codigo = cola.pop()
+            actual = next(x for x in self.plan["medidas"] if x["codigo"] == codigo)
+            for n in R.RE_MEDIDA.findall(actual["dax"]):
+                d = por_nombre.get(n)
+                if d and d["codigo"] not in vistos:
+                    vistos.add(d["codigo"])
+                    cola.append(d["codigo"])
+        return m["codigo"] in vistos
+
+    def test_cada_columna_calculada_que_se_usa_se_explica_con_sus_archivos(self):
+        usadas = {(t, c) for m in self.plan["medidas"] for t, c in R.RE_COLUMNA.findall(m["dax"])}
         for c in self.plan["columnas_calculadas"]:
-            self.assertIn(c["tabla"], self.guia)
-            self.assertIn(f"`{c['columna']}`", self.guia)
-            for a in c["archivos"]:
-                self.assertIn(f"`{a}`", self.guia)
+            if (c["tabla"], c["columna"]) in usadas or c["columna"] in ("anio_mes", "mes_anio"):
+                self.assertIn(f"`{c['tabla']}[{c['columna']}]`", self.guia)
+                self.assertIn(c["formula"], self.guia)
+                for a in c["archivos"]:
+                    self.assertIn(f"`{a}`", self.guia)
         self.assertIn("comision_pct ÷ 100", self.guia)
         self.assertIn("data/apoyo-costos-operativos.csv", self.guia)
         self.assertIn("data/apoyo-catalogo-productos.csv", self.guia)
 
-    def test_la_guia_cierra_con_los_valores_esperados_y_la_advertencia_del_pronostico(self):
-        self.assertIn("## 5. Valores esperados para comparar", self.guia)
-        self.assertIn("2026-10", self.guia)
+    def test_los_ejes_por_mes_usan_mes_anio_porque_el_periodo_repite_meses(self):
+        for p in self.plan["paginas"]:
+            for v in p["visuales"]:
+                self.assertNotIn("dCalendario[nombre_mes] (ordenada", v["x"])
+        self.assertIn("dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])", self.guia)
+        self.assertIn("dos agostos", self.guia)
+        self.assertIn("Ordenar por columna", self.guia)
+
+    def test_cada_elemento_trae_su_valor_esperado_y_el_pronostico_su_advertencia(self):
+        self.assertIn("oct 26", self.guia)
         self.assertIn("promedio de las cuatro jornadas anteriores del mismo día de la semana y del mismo turno", self.guia)
         self.assertIn("no coincidirá exactamente", self.guia)
+        self.assertNotIn("Valores esperados para comparar", self.guia)
 
     def test_la_guia_cumple_las_reglas_de_texto_limpio_de_las_corridas(self):
         f = self.mat / "guia-dashboard.md"

@@ -602,6 +602,9 @@ def pasos_visual(v, plan):
         p.append(f"Arrastra a **Columnas** {v['x']} y cada medida de la lista: {meds}.")
     else:
         p.append(f"Arrastra a **Eje X** {v['x']}.")
+        orden = re.match(r"(\w+\[\w+\]) \(ordenada por (\w+\[(\w+)\])\)", v["x"])
+        if orden:
+            p.append(f"Si los valores salen en orden alfabético, selecciona `{orden.group(1)}` en el panel Datos y ve a Herramientas de columna ▸ **Ordenar por columna** ▸ `{orden.group(3)}`.")
         p.append(f"Arrastra a **Eje Y** {v['y']}." if v["y"].count("[") == 1 else f"Arrastra a **Eje Y** las medidas: {v['y']}.")
         if v.get("serie") and v["serie"].startswith("dCanal"):
             p.append(f"Arrastra a **Leyenda** {v['serie']}.")
@@ -623,52 +626,200 @@ def filas_ventas(resp):
     return f"{n:,}".replace(",", ESPACIO)
 
 
+RE_MEDIDA = re.compile(r"(?<![\w\]])\[([^\]]+)\]")
+RE_COLUMNA = re.compile(r"\b([A-Za-z_]\w*)\[([^\]]+)\]")
+
+
+def _medida_de_kpi(plan, kpi):
+    return next((m for m in plan["medidas"] if m["kpi"] == kpi), None)
+
+
+class _Guia:
+    """Lleva la cuenta de lo ya explicado para que cada medida y cada columna calculada se explique en el primer elemento que la usa."""
+
+    def __init__(self, plan, resp, modelo, metas):
+        self.plan, self.resp, self.modelo, self.metas = plan, resp, modelo, metas
+        self.por_codigo = {m["codigo"]: m for m in plan["medidas"]}
+        self.por_nombre = {m["nombre"]: m for m in plan["medidas"]}
+        self.cols = {(c["tabla"], c["columna"]): c for c in plan["columnas_calculadas"]}
+        self.medidas_creadas, self.cols_creadas = {}, {}
+        self.donde = ""
+
+    def _orden(self, m, salida):
+        """La medida y las que usa, las usadas primero."""
+        if m["codigo"] in self.medidas_creadas or m["codigo"] in [x["codigo"] for x in salida]:
+            return
+        for n in RE_MEDIDA.findall(m["dax"]):
+            d = self.por_nombre.get(n)
+            if d and d["codigo"] != m["codigo"]:
+                self._orden(d, salida)
+        salida.append(m)
+
+    def recursivas(self, codigos):
+        """Las medidas pedidas y todas las que usan, ya estén creadas o no (para saber de qué columnas salen)."""
+        salida, vistos = [], set()
+
+        def ir(m):
+            if m["codigo"] in vistos:
+                return
+            vistos.add(m["codigo"])
+            for n in RE_MEDIDA.findall(m["dax"]):
+                d = self.por_nombre.get(n)
+                if d:
+                    ir(d)
+            salida.append(m)
+        for c in codigos:
+            if c in self.por_codigo:
+                ir(self.por_codigo[c])
+        return salida
+
+    def medidas_nuevas(self, codigos):
+        salida = []
+        for c in codigos:
+            if c in self.por_codigo:
+                self._orden(self.por_codigo[c], salida)
+        return salida
+
+    def columnas(self, medidas, extra_texto=()):
+        """[(tabla, columna)] que usan las medidas (y los ejes), en orden de aparición."""
+        vistos, out = set(), []
+        for t in [m["dax"] for m in medidas] + list(extra_texto):
+            for tabla, col in RE_COLUMNA.findall(t):
+                col = re.sub(r"\s*\(.*$", "", col)
+                if (tabla, col) not in vistos and (tabla.startswith(("f", "d"))):
+                    vistos.add((tabla, col))
+                    out.append((tabla, col))
+        return out
+
+    def tabla_columnas(self, cols, medidas_usadas):
+        filas = []
+        for tabla, col in cols:
+            c = self.cols.get((tabla, col))
+            if c and (tabla, col) not in self.cols_creadas:
+                self.cols_creadas[(tabla, col)] = self.donde
+                orig = "; ".join(f"`{x}`" for x in c["archivos"])
+                filas.append([f"`{tabla}[{col}]`", f"**Columna calculada** ({c['donde']}). {c['formula']}", f"Campos: {'; '.join(f'`{x}`' for x in c['campos'])}. Archivos: {orig}. {c['explicacion']}"])
+            elif c:
+                filas.append([f"`{tabla}[{col}]`", "Columna calculada", f"Ya la creaste en {self.cols_creadas[(tabla, col)]}"])
+            else:
+                filas.append([f"`{tabla}[{col}]`", "Columna del modelo", "Viene del ETL (guía de ETL, PAS-10 a PAS-14)"])
+        for m in medidas_usadas:
+            if m["codigo"] in self.medidas_creadas and self.medidas_creadas[m["codigo"]] != self.donde:
+                filas.append([f"[{m['nombre']}]", "Medida", f"Ya la creaste en {self.medidas_creadas[m['codigo']]}"])
+        return filas
+
+    def bloque_medidas(self, nuevas):
+        out = []
+        for m in nuevas:
+            self.medidas_creadas[m["codigo"]] = self.donde
+            kp = f" ({m['kpi']})" if m["kpi"] else ""
+            meta = f" Meta: {self.metas[m['kpi']]['meta_texto']}." if m["kpi"] and m["kpi"] in self.metas else ""
+            out += [f"- **{m['codigo']}** · **Medida `{m['nombre']}`**{kp}: {m['explicacion']}{meta} Tablas: {', '.join(f'`{t}`' for t in m['tablas'])}.", "",
+                    "```dax", f"{m['nombre']} =", m["dax"], "```", ""]
+        return out
+
+
+def _tarjeta(g, p, k, n):
+    """Elemento de una tarjeta de KPI."""
+    m = g.metas[k]
+    med = _medida_de_kpi(g.plan, k)
+    val = valor_kpi(g.resp, k, g.metas)
+    g.donde = f"{p['codigo']} · Elemento {n}"
+    nuevas = g.medidas_nuevas([med["codigo"]]) if med else []
+    cols = g.columnas(g.recursivas([med["codigo"]] if med else []))
+    L = [f"### Elemento {n} · Tarjeta {k} · {m['nombre']}", "",
+         f"**Qué muestra.** El valor del indicador {k} para el periodo que filtres, con su meta ({m['meta_texto']}) y un estado: Cumple, No cumple o Sin meta.", "",
+         f"**Cómo se calcula.** {med['explicacion'] if med else 'Se calcula con la medida del indicador.'}", ""]
+    usadas = []
+    for x in RE_MEDIDA.findall(med["dax"]) if med else []:
+        if x in g.por_nombre and g.por_nombre[x] not in usadas:
+            usadas.append(g.por_nombre[x])
+    filas = g.tabla_columnas(cols, usadas)
+    if filas:
+        L += ["**Tablas y columnas.**", ""] + _tabla(["Campo", "Qué es", "De dónde sale"], filas) + [""]
+    if nuevas:
+        L += ["**Fórmula.** Crea en la tabla `Medidas` (clic derecho ▸ Nueva medida):", ""] + g.bloque_medidas(nuevas)
+    elif med:
+        L += [f"**Fórmula.** Usa la medida `[{med['nombre']}]`, que ya creaste en {g.medidas_creadas.get(med['codigo'], 'un elemento anterior')}.", ""]
+    L += ["**Cómo armarlo en Power BI.**", "",
+          "1. En Visualizaciones elige **Tarjeta** y colócala en la fila superior de la página (mira su lugar en el HTML de referencia).",
+          f"2. Arrastra la medida `[{med['nombre'] if med else k}]` al campo **Campos**.",
+          "3. En Formato ▸ Etiqueta de datos ▸ **Color ▸ Formato condicional ▸ Reglas**: " + (
+              f"verde si el valor es {'mayor o igual' if m['cmp'] == '>=' else 'menor o igual'} a {m['meta']:g} y rojo en caso contrario." if m["meta"] is not None else
+              "deja un color neutro: este indicador no tiene meta todavía (aparece como «Sin meta»)."),
+          f"4. Agrega como subtítulo el texto «Meta: {m['meta_texto']}» y el nombre del indicador como título.", ""]
+    esp = f"último mes ({etiqueta_mes(val['mes'])}): **{fmt(val['valor'], val['unidad'])}** → {val['estado']} (meta {m['meta_texto']})."
+    meses, vals = kpi_serie(g.resp, k) if k != "KPI-07" else ([], [])
+    if vals:
+        esp += f" Primer mes ({etiqueta_mes(meses[0])}): {fmt(vals[0], val['unidad'])}."
+    L += [f"**Valor esperado.** {esp}"]
+    if k == "KPI-05":
+        L += ["", "> El pronóstico de referencia usa un método simple: el promedio de las cuatro jornadas anteriores del mismo día de la semana y del mismo turno. "
+              "El pronóstico de Power BI (Analytics ▸ Pronóstico) usa suavizado exponencial con estacionalidad y **no coincidirá exactamente**."]
+    L += [""]
+    return L
+
+
+def _visual(g, p, v, n):
+    """Elemento de un gráfico, matriz o tabla."""
+    g.donde = f"{p['codigo']} · Elemento {n}"
+    nuevas = g.medidas_nuevas(v["medidas"])
+    usadas = [g.por_codigo[c] for c in v["medidas"] if c in g.por_codigo]
+    cols = g.columnas(g.recursivas(v["medidas"]), [v["x"], v.get("serie", "")] + list(v["filtros"]))
+    L = [f"### Elemento {n} · {NOMBRE_TIPO[v['tipo']]}: {v['titulo']}", "",
+         f"**Qué muestra.** {v['lectura']}", ""]
+    expl = [f"- **{m['nombre']}:** {m['explicacion']}" for m in usadas]
+    L += ["**Cómo se calcula.**", ""] + (expl or ["- Se arma con los campos de abajo."]) + [""]
+    filas = g.tabla_columnas(cols, usadas)
+    if filas:
+        L += ["**Tablas y columnas.**", ""] + _tabla(["Campo", "Qué es", "De dónde sale"], filas) + [""]
+    eje = [["Eje X / filas", v["x"]], ["Valores (eje Y)", v["y"]]]
+    if v.get("serie"):
+        eje.append(["Leyenda" if v["tipo"] != "matriz" else "Columnas", v["serie"]])
+    L += _tabla(["Dónde va", "Campo"], eje) + [""]
+    if nuevas:
+        L += ["**Fórmulas.** Crea en la tabla `Medidas` las que todavía no tengas:", ""] + g.bloque_medidas(nuevas)
+    else:
+        L += ["**Fórmulas.** Todas las medidas de este elemento ya las creaste antes: " + ", ".join(f"`[{m['nombre']}]` ({g.medidas_creadas.get(m['codigo'], '')})" for m in usadas) + ".", ""]
+    L += ["**Cómo armarlo en Power BI.**", ""] + [f"{i}. {s}" for i, s in enumerate(pasos_visual(v, g.plan), 1)] + [""]
+    L += [f"**Valor esperado.** {esperado_resumen(v, g.resp, g.modelo, g.metas)}.", ""]
+    if "MED-13" in v["medidas"] or "MED-14" in v["medidas"]:
+        L += ["> El pronóstico de referencia es el promedio de las cuatro jornadas anteriores del mismo día de la semana y del mismo turno. "
+              "El pronóstico de Power BI **no coincidirá exactamente**; para comparar usa la medida «Pronóstico de referencia».", ""]
+    return L
+
+
 def guia_markdown(plan, resp, modelo, metas, brief):
-    nombre_m = {m["codigo"]: m for m in plan["medidas"]}
+    g = _Guia(plan, resp, modelo, metas)
     L = ["# Guía paso a paso del dashboard en Power BI", "",
-         "Esta guía la ejecuta el equipo en Power BI. Está escrita para los datos y el modelo de este proyecto. El código DAX es una propuesta: se prueba, se ajusta y lo que cuenta es el resultado. "
-         "Compara cada resultado con los valores esperados de la última sección y con el HTML `dashboard-referencia.html`.", "",
-         "## 1. Antes de empezar", "",
-         "1. Debes tener cargado el modelo en estrella que dejó el ETL: las tablas de hechos `fPedidos`, `fProduccion`, `fPrecioInsumo` y `fMetaKpi`, y las dimensiones `dCalendario`, `dProducto`, `dCanal`, `dTurno` y `dKpi`.",
-         "2. En la vista **Modelo** crea las relaciones de la tabla siguiente (de varios a uno, con el filtro en una sola dirección). Marca `dCalendario` como tabla de fechas.",
-         "3. Crea una tabla vacía para guardar las medidas: **Inicio → Especificar datos**, con una columna cualquiera, y nómbrala `Medidas`. Todas las medidas de esta guía van allí.",
-         f"4. Si `fPedidos` conserva todas las filas leídas ({filas_ventas(resp)} en este caso), recuerda que las filas descartadas tienen `registro_valido` = 0 y sus importes en 0: las sumas de venta, comisión y costo solo cuentan las filas válidas.", ""]
-    L += _tabla(["Código", "Desde", "Hacia", "Campos", "Cardinalidad", "Filtro"],
-                [[r["codigo"], r["desde"], r["hacia"], r["campos"], r["cardinalidad"], r["filtro"]] for r in modelo.get("relaciones", [])])
-    L += ["", "## 2. Columnas calculadas y de apoyo", "",
-          "Estas columnas no vienen en las fuentes tal cual: se crean en Power Query (la mayoría) o con DAX. Cada fila dice en qué tabla va, cómo se calcula y de qué campos y archivos sale.", ""]
-    L += _tabla(["Tabla", "Columna", "Dónde", "Cómo se calcula", "Campos y archivos de origen", "Para qué sirve"],
-                [[c["tabla"], f"`{c['columna']}`", c["donde"], c["formula"], "; ".join(f"`{x}`" for x in c["campos"]) + " · " + "; ".join(f"`{x}`" for x in c["archivos"]), c["explicacion"]]
-                 for c in plan["columnas_calculadas"]])
-    L += ["", "## 3. Medidas y KPI", "",
-          "Crea cada medida en la tabla `Medidas` (**clic derecho → Nueva medida**) y pega el DAX. Los nombres entre corchetes deben coincidir exactamente.", ""]
-    for m in plan["medidas"]:
-        kp = f" — {m['kpi']}" if m["kpi"] else ""
-        meta = ""
-        if m["kpi"] and m["kpi"] in metas:
-            meta = f" Meta: {metas[m['kpi']]['meta_texto']}."
-        L += [f"### {m['codigo']} · {m['nombre']}{kp}", "", f"**Cómo se calcula:** {m['explicacion']}{meta}", f"**Tablas de origen:** {', '.join(f'`{t}`' for t in m['tablas'])}.", "",
-              "```dax", f"{m['nombre']} =", m["dax"], "```", ""]
-    L += ["## 4. Páginas y visuales", "", "Crea una página por cada fila de la tabla y arma sus visuales en el orden indicado. Los números coinciden con los del HTML de referencia.", ""]
+         "Esta guía la ejecuta el equipo en Power BI y está escrita para los datos y el modelo de este proyecto. Hay una sección por página. En cada una vas elemento por elemento "
+         "(segmentadores, tarjetas y gráficos) y, en cada elemento, ves qué muestra, cómo se calcula, de qué tablas y columnas sale, su fórmula, cómo armarlo y el valor esperado. "
+         "Cada medida y cada columna calculada se explica **en el primer elemento que la usa**; después solo se la menciona. El DAX es una propuesta que se prueba y se ajusta. "
+         "Compara cada resultado con el valor esperado y con el HTML `dashboard-referencia.html`.", "",
+         f"Antes de la primera página, parte del modelo que dejó el ETL (nueve tablas y nueve relaciones, con `dCalendario` marcada como tabla de fechas) y crea una tabla vacía para guardar las medidas: "
+         f"**Inicio ▸ Especificar datos**, con una columna cualquiera, y nómbrala `Medidas`. `fPedidos` conserva todas las filas leídas ({filas_ventas(resp)} en este caso) y las descartadas tienen "
+         "`registro_valido` = 0 e importes en 0: por eso las sumas de venta, comisión y costo solo cuentan las filas válidas.", ""]
     for p in plan["paginas"]:
-        L += [f"### {p['codigo']} · {p['nombre']}", "", f"**Para quién:** {p['usuario']}. **Pregunta que responde:** {p['pregunta']}", ""]
-        if p.get("kpis"):
-            tarj = ", ".join(f"{k} ({metas[k]['nombre']})" for k in p["kpis"])
-            L += [f"**Tarjetas de KPI (fila superior):** {tarj}. Para cada una inserta una **Tarjeta**, arrastra su medida a **Campos** y aplica un formato condicional con la meta (verde si cumple, rojo si no, y agrega el texto del estado).", ""]
-        L += [f"**Segmentadores:** " + ", ".join(f"`{s}`" for s in p.get("segmentadores", [])) + ". Inserta un **Segmentador** por cada campo y sincronízalos con las demás páginas.", ""]
+        L += [f"## {p['codigo']} · {p['nombre']}", "", f"**Para quién:** {p['usuario']}. **Pregunta que responde:** {p['pregunta']}", ""]
+        n = 1
+        seg = p.get("segmentadores", [])
+        if seg:
+            g.donde = f"{p['codigo']} · Elemento {n}"
+            L += [f"### Elemento {n} · Segmentadores", "",
+                  "**Qué muestra.** Filtros para recortar toda la página por periodo, canal o turno.", "",
+                  "**Tablas y columnas.**", ""] + _tabla(["Campo", "Qué es", "De dónde sale"], g.tabla_columnas([tuple(re.match(r"(\w+)\[(\w+)\]", x).groups()) for x in seg], [])) + [""]
+            L += ["**Cómo armarlo en Power BI.**", "",
+                  "1. Inserta un **Segmentador** por cada campo de la tabla anterior (arrastra el campo a **Campo**).",
+                  "2. Para `dCalendario[nombre_mes]` ordena por `mes`: Herramientas de columna ▸ **Ordenar por columna** ▸ `mes`.",
+                  "3. En **Vista ▸ Sincronizar segmentadores** activa la sincronización con las demás páginas.", "",
+                  "**Valor esperado.** No tiene valor: al filtrar, todos los elementos de la página deben recalcularse.", ""]
+            n += 1
+        for k in p.get("kpis", []):
+            L += _tarjeta(g, p, k, n)
+            n += 1
         for v in p["visuales"]:
-            L += [f"#### {p['codigo']} · Visual {v['id']}: {v['titulo']}", ""]
-            L += [f"{i}. {s}" for i, s in enumerate(pasos_visual(v, plan), 1)]
-            L += ["", f"Tablas de origen: {', '.join(f'`{t}`' for t in v['origen'])}. Medidas: {', '.join(v['medidas'])}.", "", f"**Qué debes ver:** {v['lectura']}", ""]
-    L += ["## 5. Valores esperados para comparar", "",
-          "Son los de `data/respuestas/kpi-esperados.csv`. Con filtros por mes deben coincidir con tu dashboard, salvo el pronóstico.", ""]
-    kpis = sorted({r["kpi"] for r in resp["kpi-esperados"]})
-    meses = sorted({r["mes"] for r in resp["kpi-esperados"]})
-    por = {(r["kpi"], r["mes"]): r for r in resp["kpi-esperados"]}
-    L += _tabla(["Mes"] + [f"{k}" for k in kpis], [[m] + [(por[(k, m)]["valor"] if (k, m) in por and por[(k, m)]["valor"] != "" else "—") for k in kpis] for m in meses])
-    L += ["", "Unidades: KPI-01 a KPI-05 en porcentaje; KPI-06 en soles por kilogramo.", "",
-          "**Advertencia sobre el pronóstico (KPI-05).** El valor esperado usa un método simple: el promedio de las cuatro jornadas anteriores del mismo día de la semana y del mismo turno. "
-          "El pronóstico de Power BI (Analytics → Pronóstico) usa suavizado exponencial con estacionalidad y no coincidirá exactamente. Para comparar, usa la medida «Pronóstico de referencia» de esta guía.", ""]
+            L += _visual(g, p, v, n)
+            n += 1
     return "\n".join(L) + "\n"
 
 

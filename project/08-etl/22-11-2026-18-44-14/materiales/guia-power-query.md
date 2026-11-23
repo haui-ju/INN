@@ -480,12 +480,16 @@ let
     Mes = Table.AddColumn(Anio, "mes", each Date.Month([fecha]), Int64.Type),
     NombreMes = Table.AddColumn(Mes, "nombre_mes", each {"enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"}{Date.Month([fecha]) - 1}, type text),
     DiaSemana = Table.AddColumn(NombreMes, "dia_semana", each {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"}{Date.DayOfWeek([fecha], Day.Monday)}, type text),
-    Feriado = Table.AddColumn(DiaSemana, "es_feriado", each List.Contains(Feriados, [fecha]), type logical)
+    AnioMes = Table.AddColumn(DiaSemana, "anio_mes", each Date.Year([fecha]) * 100 + Date.Month([fecha]), Int64.Type),
+    MesAnio = Table.AddColumn(AnioMes, "mes_anio", each {"ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"}{Date.Month([fecha]) - 1} & " " & Text.End(Text.From(Date.Year([fecha])), 2), type text),
+    Feriado = Table.AddColumn(MesAnio, "es_feriado", each List.Contains(Feriados, [fecha]), type logical)
 in
     Feriado
 ```
 
 **Punto de control:** **457 filas**, de 2025-08-01 a 2026-10-31. `fecha_key` del 1 de agosto de 2025 = `20250801`.
+
+Además de las columnas de 2.4, el calendario lleva dos **columnas de apoyo** para el dashboard: `anio_mes` (`202508` = agosto de 2025, sirve para ordenar) y `mes_anio` (`ago 25`, es el eje de tiempo de los gráficos). Hacen falta porque el periodo tiene dos agostos, dos septiembres y dos octubres: con solo `nombre_mes` un gráfico por mes juntaría los dos años en un mismo punto.
 
 ### `dProducto`, `dCanal`, `dTurno` y `dKpi`
 

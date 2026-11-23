@@ -3,11 +3,11 @@ PAG-01 · Resumen del negocio (Dueño)
   KPI: KPI-03, KPI-02, KPI-01, KPI-04, KPI-06
   Segmentadores: dCalendario[anio], dCalendario[nombre_mes], dCanal[canal]
   - Visual 1 [linea] Margen neto mensual contra la meta
-      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
       Y: [Margen neto %]
       Origen: fPedidos, dCalendario
   - Visual 2 [apiladas] Ventas mensuales por canal
-      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
       Y: [Venta bruta]
       Origen: fPedidos, dCalendario, dCanal
   - Visual 3 [tabla] KPI del dashboard contra su meta
@@ -27,11 +27,11 @@ PAG-02 · Rentabilidad por canal y producto (Dueño)
       Y: [Margen de contribución %]
       Origen: fPedidos, dProducto, dCanal
   - Visual 3 [apiladas100] Participación de las ventas por canal
-      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
       Y: [Participación de ventas %]
       Origen: fPedidos, dCalendario, dCanal
   - Visual 4 [linea] Comisión pagada por mes
-      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
       Y: [Comisión pagada]
       Origen: fPedidos, dCalendario
 PAG-03 · Producción y merma por turno (Jefe de cocina)
@@ -63,10 +63,10 @@ PAG-04 · Precio del pollo vivo y margen (Dueño)
       Y: [Precio promedio del pollo vivo]
       Origen: fPrecioInsumo, dCalendario
   - Visual 2 [linea] Margen neto mensual
-      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
       Y: [Margen neto %]
       Origen: fPedidos, dCalendario
   - Visual 3 [linea] Precio promedio mensual del pollo vivo
-      X: dCalendario[nombre_mes] (ordenada por dCalendario[mes])
+      X: dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])
       Y: [Precio promedio del pollo vivo]
       Origen: fPrecioInsumo, dCalendario

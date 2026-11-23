@@ -293,15 +293,41 @@
   {
    "tabla": "dCalendario",
    "columna": "anio, mes, nombre_mes, dia_semana",
-   "donde": "DAX",
-   "formula": "anio = YEAR ( [fecha] ); mes = MONTH ( [fecha] ); nombre_mes = FORMAT ( [fecha], \"mmm yy\" ); dia_semana = FORMAT ( [fecha], \"dddd\" ). Ordena nombre_mes por mes y dia_semana por WEEKDAY ( [fecha], 2 ).",
+   "donde": "Power Query (guía de ETL, PAS-10)",
+   "formula": "anio = año de la fecha; mes = número del mes (1 a 12); nombre_mes = nombre del mes en español (enero a diciembre); dia_semana = Lunes a Domingo.",
    "campos": [
     "fecha"
    ],
    "archivos": [
-    "(calendario generado desde la fecha mínima y máxima)"
+    "(la lista de días se genera desde la fecha de inicio y la de fin del periodo)"
    ],
    "explicacion": "Los gráficos por mes y por día de la semana usan estas columnas."
+  },
+  {
+   "tabla": "dCalendario",
+   "columna": "anio_mes",
+   "donde": "Power Query (guía de ETL, PAS-10)",
+   "formula": "anio × 100 + mes: 202508 es agosto de 2025. Sirve para ordenar los meses cronológicamente.",
+   "campos": [
+    "fecha"
+   ],
+   "archivos": [
+    "(se calcula desde la fecha de dCalendario)"
+   ],
+   "explicacion": "El periodo tiene dos agostos, dos septiembres y dos octubres: sin esta columna el eje por mes juntaría los dos años en un solo punto."
+  },
+  {
+   "tabla": "dCalendario",
+   "columna": "mes_anio",
+   "donde": "Power Query (guía de ETL, PAS-10)",
+   "formula": "Abreviatura del mes y año de dos dígitos: «ago 25», «oct 26». Ordénala por anio_mes.",
+   "campos": [
+    "fecha"
+   ],
+   "archivos": [
+    "(se calcula desde la fecha de dCalendario)"
+   ],
+   "explicacion": "Es el eje de tiempo de los gráficos por mes: un punto por cada uno de los 15 meses."
   },
   {
    "tabla": "dCalendario",
@@ -319,7 +345,7 @@
   {
    "tabla": "dKpi",
    "columna": "tiene_meta",
-   "donde": "Especificar datos",
+   "donde": "Power Query (guía de ETL, PAS-10 y PAS-14)",
    "formula": "Verdadero si el KPI tiene una meta en la sección 2.5 y no verdadero si dice Pendiente.",
    "campos": [
     "kpi"
@@ -332,7 +358,7 @@
   {
    "tabla": "fMetaKpi",
    "columna": "meta",
-   "donde": "Especificar datos",
+   "donde": "Power Query (guía de ETL, PAS-10 y PAS-14)",
    "formula": "Meta de cada KPI y mes copiada de la sección 2.5.",
    "campos": [
     "kpi_key",
@@ -373,7 +399,7 @@
       6,
       1
      ],
-     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "x": "dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])",
      "y": "[Margen neto %]",
      "serie": "",
      "origen": [
@@ -408,7 +434,7 @@
       6,
       1
      ],
-     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "x": "dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])",
      "y": "[Venta bruta]",
      "serie": "dCanal[canal]",
      "origen": [
@@ -458,7 +484,7 @@
       "MED-17"
      ],
      "filtros": [
-      "dCalendario[nombre_mes] = último mes del periodo"
+      "dCalendario[mes_anio] = último mes del periodo"
      ],
      "datos": {
       "fuente": "tabla_kpi"
@@ -554,7 +580,7 @@
       7,
       1
      ],
-     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "x": "dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])",
      "y": "[Participación de ventas %]",
      "serie": "dCanal[canal]",
      "origen": [
@@ -586,7 +612,7 @@
       5,
       1
      ],
-     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "x": "dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])",
      "y": "[Comisión pagada]",
      "serie": "",
      "origen": [
@@ -807,7 +833,7 @@
       6,
       1
      ],
-     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "x": "dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])",
      "y": "[Margen neto %]",
      "serie": "",
      "origen": [
@@ -841,7 +867,7 @@
       6,
       1
      ],
-     "x": "dCalendario[nombre_mes] (ordenada por dCalendario[mes])",
+     "x": "dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])",
      "y": "[Precio promedio del pollo vivo]",
      "serie": "",
      "origen": [
