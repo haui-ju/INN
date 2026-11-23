@@ -495,13 +495,100 @@ def esperado_resumen(v, resp, modelo, metas):
     return f"{len(d['filas'])} filas, mes {etiqueta_mes(d['mes'])}"
 
 
+RE_REF = re.compile(r"\b([fd][A-Z]\w*)\[(\w+)\]")
+ORDEN_POR = {"nombre_mes": "mes", "dia_semana": "num_dia_semana", "mes_anio": "anio_mes"}
+
+
+def _ref_html(tabla, col):
+    return f"<b>{esc(col)}</b> de la tabla <b>{esc(tabla)}</b>"
+
+
+def _csv_de(tabla):
+    return f"data/limpio/{tabla}.csv"
+
+
+def campo_eje_html(texto):
+    """'dCalendario[mes_anio] (ordenada por dCalendario[anio_mes])' → de qué tabla y columna sale y cómo se ordena."""
+    m = RE_REF.search(texto)
+    if not m:
+        return esc(texto)
+    tabla, col = m.groups()
+    out = f"Columna {_ref_html(tabla, col)} (archivo <code>{esc(_csv_de(tabla))}</code>)."
+    o = re.search(r"ordenada por \w+\[(\w+)\]", texto)
+    if o:
+        out += f" Ordénala por <b>{esc(o.group(1))}</b>: selecciona la columna en el panel Datos ▸ Herramientas de columna ▸ Ordenar por columna."
+    elif "lunes a domingo" in texto:
+        out += f" Ordénala de lunes a domingo: Ordenar por columna ▸ <b>{ORDEN_POR.get(col, 'num_dia_semana')}</b>."
+    return out
+
+
+def medidas_html(plan, v, codigos):
+    g = _Guia(plan, {}, {}, {})
+    out = []
+    for c in codigos:
+        m = g.por_codigo.get(c)
+        if not m:
+            continue
+        cols = g.columnas(g.recursivas([c]))
+        orig = ", ".join(f"{t}[{k}]" for t, k in cols)
+        previas = [n for n in dict.fromkeys(RE_MEDIDA.findall(m["dax"])) if n in g.por_nombre and n != m["nombre"]]
+        previas_txt = f" Usa antes las medidas: {', '.join('[' + n + ']' for n in previas)} (créalas primero)." if previas else ""
+        out.append(f'<div class="med"><b>[{esc(m["nombre"])}]</b> · medida DAX, créala en la tabla <b>Medidas</b> (Nueva medida)<code>{esc(m["dax"])}</code>'
+                   f'<span>Sale de las columnas: {esc(orig) if orig else "otras medidas"}.{esc(previas_txt)}</span></div>')
+    return "".join(out)
+
+
 def caja_construir(v, plan, resp, modelo, metas):
-    meds = ", ".join(nombres_medidas(plan, v["medidas"]))
-    campos = [("Tipo de visual", NOMBRE_TIPO[v["tipo"]]), ("Eje X / filas", v["x"]), ("Valores (eje Y)", v["y"]), ("Columnas" if v["tipo"] == "matriz" else "Leyenda", v["serie"] or "—"),
-              ("Medidas", meds), ("Filtros", "; ".join(v["filtros"])), ("Tablas de origen", ", ".join(v["origen"])), ("Valor esperado", esperado_resumen(v, resp, modelo, metas))]
-    dl = "".join(f"<dt>{esc(a)}</dt><dd>{esc(b)}</dd>" for a, b in campos)
-    return (f'<div class="caja"><h4><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4><p class="cm">Cómo construirlo</p><dl>{dl}</dl>'
+    en_y = {n for n in re.findall(r"\[([^\]]+)\]", v["y"])}
+    por = {m["codigo"]: m for m in plan["medidas"]}
+    cod_y = [c for c in v["medidas"] if c in por and por[c]["nombre"] in en_y]
+    cod_otras = [c for c in v["medidas"] if c in por and c not in cod_y]
+    t = v["tipo"]
+    campos = [("Tipo de visual", esc(NOMBRE_TIPO[t]) + " (panel Visualizaciones)"),
+              ("Eje X / filas" if t != "matriz" else "Filas", campo_eje_html(v["x"]))]
+    if v["serie"]:
+        campos.append(("Columnas" if t == "matriz" else "Leyenda", campo_eje_html(v["serie"])))
+    campos.append(("Valores (eje Y)" if t != "matriz" else "Valores", medidas_html(plan, v, cod_y) or esc(v["y"])))
+    if cod_otras:
+        campos.append(("Otras medidas del visual", medidas_html(plan, v, cod_otras)))
+    campos.append(("Filtros del visual", esc("; ".join(v["filtros"]))))
+    campos.append(("Archivos CSV de origen", ", ".join(f"<code>{esc(_csv_de(o))}</code>" for o in v["origen"])))
+    campos.append(("Valor esperado", esc(esperado_resumen(v, resp, modelo, metas))))
+    dl = "".join(f"<dt>{esc(a)}</dt><dd>{b}</dd>" for a, b in campos)
+    return (f'<div class="caja"><h4><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4><p class="cm">Cómo construirlo en Power BI</p><dl>{dl}</dl>'
             f'<p class="fmt">{esc(v.get("formato", ""))}</p></div>')
+
+
+def caja_segmentadores(p):
+    filas = []
+    for s_ in p.get("segmentadores", []):
+        m = RE_REF.search(s_)
+        if not m:
+            continue
+        tabla, col = m.groups()
+        orden = f" Ordénala por <b>{ORDEN_POR[col]}</b>." if col in ORDEN_POR else ""
+        filas.append(f"<dt>{esc(s_)}</dt><dd>Segmentación de datos: arrastra la columna {_ref_html(tabla, col)} al campo <b>Campo</b> (archivo <code>{esc(_csv_de(tabla))}</code>).{orden}</dd>")
+    if not filas:
+        return ""
+    return ('<div class="caja"><h4>Segmentadores (filtros de la página)</h4><p class="cm">Cómo construirlos en Power BI</p><dl>' + "".join(filas) + "</dl>"
+            '<p class="fmt">Cada uno es un visual «Segmentación de datos» en la franja superior derecha. En Vista ▸ Sincronizar segmentadores activa la sincronización con las demás páginas.</p></div>')
+
+
+def caja_tarjeta(k, plan, metas):
+    m = metas[k]
+    med = next((x for x in plan["medidas"] if x["kpi"] == k), None)
+    g = _Guia(plan, {}, {}, {})
+    campos = [("Tipo de visual", "Tarjeta (panel Visualizaciones)")]
+    if med:
+        campos.append(("Campo (el valor grande)", medidas_html(plan, {}, [med["codigo"]])))
+    meta_med = next((x for x in plan["medidas"] if x["nombre"] == "Meta del KPI"), None)
+    campos.append(("Meta (texto pequeño)", esc(f"Meta: {m['meta_texto']}. " + ("Se toma de la medida [Meta del KPI] (fMetaKpi[meta]) con el filtro del visual dKpi[kpi] = «" + m["nombre"] + "»." if m["meta"] is not None else "Está pendiente en 2.5: se escribe «Meta: Pendiente» como subtítulo."))))
+    campos.append(("Estado (chip)", esc((f"Cumple si el valor es {'mayor o igual' if m['cmp'] == '>=' else 'menor o igual'} a {m['meta']:g} %" if m["meta"] is not None else "Sin meta")
+                                         + ". Se arma con Formato ▸ Etiqueta de datos ▸ Color ▸ Formato condicional ▸ Reglas ("
+                                         + ("verde si cumple, rojo si no" if m["meta"] is not None else "gris neutro") + "); el texto del estado va con el subtítulo.")))
+    campos.append(("Filtro del visual", "dCalendario[mes_anio] = último mes del periodo (oct 26), como en la referencia"))
+    dl = "".join(f"<dt>{esc(a)}</dt><dd>{b}</dd>" for a, b in campos)
+    return f'<div class="caja"><h4><span class="cod">{esc(k)}</span> {esc(m["nombre"])}</h4><p class="cm">Cómo construir la tarjeta en Power BI</p><dl>{dl}</dl></div>'
 
 
 # ------------------------------------------------------------------ HTML completo
@@ -528,7 +615,7 @@ main{padding:24px;max-width:1650px;margin:0 auto}.pagina{margin:0 0 56px}.pagina
 table{border-collapse:collapse;width:100%;font-size:16px;line-height:1.2}th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--c-borde)}th{color:var(--c-texto-secundario);font-weight:600}td.der,th.der{text-align:right}
 .matriz td,.matriz th{padding:3px 10px}.matriz td{text-align:center;font-weight:600}.matriz th:first-child{text-align:left}.tkpi td,.tkpi th{padding:3px 10px}
 .cajas{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;margin-top:20px;max-width:1600px}.caja{background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:14px 18px}.caja h4{margin:0;font-size:18px;display:flex;gap:8px;align-items:center}.cm{margin:2px 0 8px;color:var(--c-acento-fuerte);font-weight:700;font-size:14px;text-transform:none}
-dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:15px}dt{color:var(--c-texto-secundario)}dd{margin:0;word-break:break-word}.fmt{margin:8px 0 0;color:var(--c-texto-secundario);font-size:14px}
+dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:15px}.med{margin:0 0 8px}.med code{display:block;margin:3px 0;padding:6px 8px;border-radius:8px;background:var(--c-fondo);border:1px solid var(--c-borde);font-size:13px;white-space:pre-wrap}.med span{color:var(--c-texto-secundario);font-size:13px}dd code{font-size:13px}dt{color:var(--c-texto-secundario)}dd{margin:0;word-break:break-word}.fmt{margin:8px 0 0;color:var(--c-texto-secundario);font-size:14px}
 .final{max-width:1600px}.final h2{font-size:26px}.scroll{overflow-x:auto;background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:8px}.scroll td,.scroll th{white-space:nowrap;font-size:15px}
 #tip{position:fixed;display:none;pointer-events:none;z-index:9;background:var(--c-superficie);color:var(--c-texto);border:1px solid var(--c-borde);border-radius:10px;padding:8px 12px;font-size:15px;box-shadow:var(--sombra-md,0 6px 20px rgba(0,0,0,.25))}
 """
@@ -554,7 +641,7 @@ def html_referencia(plan, resp, modelo, metas, brief, tokens):
         tarj = "".join(html_tarjeta(valor_kpi(resp, k, metas)) for k in p.get("kpis", []))
         seg = "".join(f"<span>{esc(s)}</span>" for s in p.get("segmentadores", []))
         vis = "".join(render_visual(v, p, resp, modelo, metas) for v in p["visuales"])
-        cajas = "".join(caja_construir(v, plan, resp, modelo, metas) for v in p["visuales"])
+        cajas = caja_segmentadores(p) + "".join(caja_tarjeta(k, plan, metas) for k in p.get("kpis", [])) + "".join(caja_construir(v, plan, resp, modelo, metas) for v in p["visuales"])
         paginas.append(
             f'<section class="pagina" id="{esc(p["codigo"])}"><h2><span class="cod">{esc(p["codigo"])}</span> {esc(p["nombre"])}</h2>'
             f'<p class="preg">Para el {esc(p["usuario"].lower())}: {esc(p["pregunta"])}</p>'
