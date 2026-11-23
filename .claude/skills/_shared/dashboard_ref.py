@@ -459,7 +459,7 @@ def render_visual(v, pagina, resp, modelo, metas):
         raise ErrorReferencia(f"tipo de visual desconocido: {t}")
     c, f, w, h = v["pos"]
     leyenda_html = leyenda(datos["series"], meta if t == "columnas" else None, bool(datos.get("marcas"))) if "series" in datos else ""
-    return (f'<figure class="visual" style="grid-column:{c} / span {w};grid-row:{f} / span {h}">'
+    return (f'<figure class="visual" data-caja="{pagina["codigo"]}-{v["id"]}" tabindex="0" role="button" title="Clic para ver cómo construirlo" style="grid-column:{c} / span {w};grid-row:{f} / span {h}">'
             f'<figcaption><span class="num">{v["id"]}</span><span class="v-titulo">{esc(v["titulo"])}</span>{leyenda_html}</figcaption>'
             f'<div class="cuerpo">{cuerpo}</div></figure>')
 
@@ -635,14 +635,14 @@ def seccion_diseno(plan, resp, modelo, metas):
     for p_ in plan["paginas"]:
         for v in p_["visuales"]:
             pasos = pasos_diseno(v, datos_visual(v, resp, modelo, metas), v.get("unidad", ""))
-            cajas.append(f'<div class="caja"><h4><span class="cod">{esc(p_["codigo"])}</span><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4>'
+            cajas.append(f'<div class="caja" id="d-{p_["codigo"]}-{v["id"]}"><h4><span class="cod">{esc(p_["codigo"])}</span><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4>'
                          f'<p class="cm">Diseño: {esc(NOMBRE_TIPO[v["tipo"]])}</p><ol class="pasos">' + "".join(f"<li>{x}</li>" for x in pasos) + "</ol></div>")
     return ('<section class="final" id="diseno"><h2>Diseño de los gráficos</h2><p class="preg">Esto es presentación (colores, etiquetas, títulos y ejes). '
             'Hazlo al final, cuando los datos, el orden y los porcentajes ya salgan bien.</p>'
             f'<div class="cajas">{"".join(cajas)}</div></section>')
 
 
-def caja_construir(v, plan, resp, modelo, metas):
+def caja_construir(v, plan, resp, modelo, metas, pc=""):
     en_y = {n for n in re.findall(r"\[([^\]]+)\]", v["y"])}
     por = {m["codigo"]: m for m in plan["medidas"]}
     cod_y = [c for c in v["medidas"] if c in por and por[c]["nombre"] in en_y]
@@ -665,7 +665,7 @@ def caja_construir(v, plan, resp, modelo, metas):
     campos.append(("Archivos CSV de origen", ", ".join(f"<code>{esc(_csv_de(o))}</code>" for o in v["origen"])))
     campos.append(("Valor esperado", esc(esperado_resumen(v, resp, modelo, metas))))
     dl = "".join(f"<dt>{esc(a)}</dt><dd>{b}</dd>" for a, b in campos)
-    return (f'<div class="caja"><h4><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4><p class="cm">Cómo construirlo en Power BI</p><dl>{dl}</dl>'
+    return (f'<div class="caja" id="c-{pc}-{v["id"]}"><h4><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4><p class="cm">Cómo construirlo en Power BI</p><dl>{dl}</dl>'
             f'<p class="fmt">{esc(v.get("formato", ""))}</p></div>')
 
 
@@ -680,7 +680,7 @@ def caja_segmentadores(p):
         filas.append(f"<dt>{esc(s_)}</dt><dd>Segmentación de datos: arrastra la columna {_ref_html(tabla, col)} al campo <b>Campo</b> (archivo <code>{esc(_csv_de(tabla))}</code>).{orden}</dd>")
     if not filas:
         return ""
-    return ('<div class="caja"><h4>Segmentadores (filtros de la página)</h4><p class="cm">Cómo construirlos en Power BI</p><dl>' + "".join(filas) + "</dl>"
+    return (f'<div class="caja" id="c-{p["codigo"]}-seg"><h4>Segmentadores (filtros de la página)</h4><p class="cm">Cómo construirlos en Power BI</p><dl>' + "".join(filas) + "</dl>"
             '<p class="fmt">Cada uno es un visual «Segmentación de datos» en la franja superior derecha. En Vista ▸ Sincronizar segmentadores activa la sincronización con las demás páginas.</p></div>')
 
 
@@ -739,7 +739,7 @@ def dax_bloque(nombre, dax, nota=""):
             f'{"<span>" + esc(nota) + "</span>" if nota else ""}</div>')
 
 
-def caja_tarjeta(k, plan, metas):
+def caja_tarjeta(k, plan, metas, pc=""):
     m = metas[k]
     med = next((x for x in plan["medidas"] if x["kpi"] == k), None)
     campos = [("Tipo de visual", "Tarjeta (la nueva, no la «clásica»): panel Visualizaciones ▸ Tarjeta")]
@@ -764,7 +764,7 @@ def caja_tarjeta(k, plan, metas):
     campos.append(("Filtro del visual (clics)", "Panel Filtros ▸ arrastra <b>dCalendario[mes_anio]</b> a «Filtros en este objeto visual» ▸ Tipo de filtro: <b>N superior</b> ▸ Mostrar elementos: <b>Superior 1</b> ▸ Por valor: arrastra <b>dCalendario[anio_mes]</b> (Máximo) ▸ Aplicar filtro. "
                                               "Así la tarjeta siempre muestra el último mes sin escribir «oct 26»."))
     dl = "".join(f"<dt>{esc(a)}</dt><dd>{b}</dd>" for a, b in campos)
-    return f'<div class="caja"><h4><span class="cod">{esc(k)}</span> {esc(m["nombre"])}</h4><p class="cm">Cómo construir la tarjeta en Power BI</p><dl>{dl}</dl></div>'
+    return f'<div class="caja" id="c-{pc}-{k}"><h4><span class="cod">{esc(k)}</span> {esc(m["nombre"])}</h4><p class="cm">Cómo construir la tarjeta en Power BI</p><dl>{dl}</dl></div>'
 
 
 def seccion_medidas_tarjetas(plan, metas):
@@ -814,8 +814,12 @@ main{padding:24px;max-width:1650px;margin:0 auto}.pagina{margin:0 0 56px}.pagina
 .eje{fill:var(--c-texto-secundario)}.cat{fill:var(--c-texto)}.valor{fill:var(--c-texto);font-weight:600}.rejilla{stroke:var(--c-borde);stroke-width:1}.meta{stroke:var(--c-texto-secundario);stroke-width:1.5;stroke-dasharray:6 5}.etq-meta{fill:var(--c-texto-secundario);font-weight:600}.cruz{stroke:var(--c-texto-secundario);stroke-width:1;opacity:.6}
 table{border-collapse:collapse;width:100%;font-size:16px;line-height:1.2}th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--c-borde)}th{color:var(--c-texto-secundario);font-weight:600}td.der,th.der{text-align:right}
 .matriz td,.matriz th{padding:3px 10px}.matriz td{text-align:center;font-weight:600}.matriz th:first-child{text-align:left}.tkpi td,.tkpi th{padding:3px 10px}
-.cajas{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;margin-top:20px;max-width:1600px}.caja{background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:14px 18px}.caja h4{margin:0;font-size:18px;display:flex;gap:8px;align-items:center}.cm{margin:2px 0 8px;color:var(--c-acento-fuerte);font-weight:700;font-size:14px;text-transform:none}
-dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:15px}.med{margin:0 0 8px}.med code{display:block;margin:3px 0;padding:6px 8px;border-radius:8px;background:var(--c-fondo);border:1px solid var(--c-borde);font-size:13px;white-space:pre-wrap}.pasos{margin:0;padding-left:18px}.pasos li{margin:0 0 4px}.med span{color:var(--c-texto-secundario);font-size:13px}dd code{font-size:13px}dt{color:var(--c-texto-secundario);word-break:break-word;min-width:0}dd{margin:0;word-break:break-word;min-width:0}.fmt{margin:8px 0 0;color:var(--c-texto-secundario);font-size:14px}
+.pagina>.cajas{display:none}.cajas{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;margin-top:20px;max-width:1600px}.caja{background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:14px 18px}.caja h4{margin:0;font-size:18px;display:flex;gap:8px;align-items:center}.cm{margin:2px 0 8px;color:var(--c-acento-fuerte);font-weight:700;font-size:14px;text-transform:none}
+dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:15px}.med{margin:0 0 8px}.med code{display:block;margin:3px 0;padding:6px 8px;border-radius:8px;background:var(--c-fondo);border:1px solid var(--c-borde);font-size:13px;white-space:pre-wrap}.visual[data-caja],.tarjeta[data-caja],.seg[data-caja]{cursor:pointer;transition:box-shadow .15s,border-color .15s}.visual[data-caja]:hover,.tarjeta[data-caja]:hover,.seg[data-caja]:hover,.visual[data-caja]:focus-visible,.tarjeta[data-caja]:focus-visible,.seg[data-caja]:focus-visible{border-color:var(--c-acento);box-shadow:0 0 0 2px var(--c-acento);outline:none}
+dialog#det{width:min(920px,94vw);max-height:90vh;padding:0;border:1px solid var(--c-borde);border-radius:20px;background:var(--c-superficie);color:var(--c-texto);box-shadow:0 20px 60px rgba(0,0,0,.45);overflow:auto}dialog#det::backdrop{background:rgba(0,0,0,.6)}
+.det-cab{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:12px;padding:14px 22px;background:var(--c-superficie);border-bottom:1px solid var(--c-borde)}.det-cab h3{margin:0;font-size:20px}.det-cab button{margin-left:auto;font:inherit;font-size:15px;padding:6px 16px;border-radius:12px;border:1px solid var(--c-borde);background:var(--c-fondo);color:var(--c-texto);cursor:pointer}
+.det-cuerpo{padding:8px 22px 22px}.det-cuerpo .caja{border:0;padding:12px 0;border-bottom:1px solid var(--c-borde);border-radius:0}.det-cuerpo .caja:last-child{border-bottom:0}.det-cuerpo dl{grid-template-columns:190px 1fr;font-size:16px}.det-cuerpo .med code{font-size:14px}
+.pasos{margin:0;padding-left:18px}.pasos li{margin:0 0 4px}.med span{color:var(--c-texto-secundario);font-size:13px}dd code{font-size:13px}dt{color:var(--c-texto-secundario);word-break:break-word;min-width:0}dd{margin:0;word-break:break-word;min-width:0}.fmt{margin:8px 0 0;color:var(--c-texto-secundario);font-size:14px}
 .final{max-width:1600px}.final h2{font-size:26px}.scroll{overflow-x:auto;background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:8px}.scroll td,.scroll th{white-space:nowrap;font-size:15px}
 #tip{position:fixed;display:none;pointer-events:none;z-index:9;background:var(--c-superficie);color:var(--c-texto);border:1px solid var(--c-borde);border-radius:10px;padding:8px 12px;font-size:15px;box-shadow:var(--sombra-md,0 6px 20px rgba(0,0,0,.25))}
 """
@@ -830,6 +834,17 @@ document.querySelectorAll(".cruz").forEach(function(c){c.setAttribute("x1",-10);
 if(!el){t.style.display="none";return}
 t.innerHTML=el.getAttribute("data-tip");t.style.display="block";t.style.left=Math.min(e.clientX+14,window.innerWidth-260)+"px";t.style.top=(e.clientY+14)+"px";
 var x=el.getAttribute("data-x"),s=el.closest("svg"),c=s&&s.querySelector(".cruz");if(x&&c){c.setAttribute("x1",x);c.setAttribute("x2",x)}});
+var dlg=document.getElementById("det");
+function abrir(el){var id=el.getAttribute("data-caja"),a=document.getElementById("c-"+id),d=document.getElementById("d-"+id);if(!a)return;
+var tit=a.querySelector("h4").textContent.replace(/\\s+/g," ").trim(),h="";
+h+=a.outerHTML.replace(/ id="[^"]*"/,"");
+if(d)h+=d.outerHTML.replace(/ id="[^"]*"/,"");
+dlg.innerHTML='<div class="det-cab"><h3>'+tit+'</h3><button type="button" id="det-x">Cerrar</button></div><div class="det-cuerpo">'+h+'</div>';
+dlg.querySelector("h4").remove();
+if(d){var cs=dlg.querySelectorAll(".caja");if(cs[1]){var h4=cs[1].querySelector("h4");if(h4)h4.remove()}}
+dlg.querySelector("#det-x").addEventListener("click",function(){dlg.close()});dlg.showModal();dlg.scrollTop=0}
+document.addEventListener("click",function(e){var el=e.target.closest&&e.target.closest("[data-caja]");if(el){abrir(el);return}if(e.target===dlg)dlg.close()});
+document.addEventListener("keydown",function(e){if((e.key==="Enter"||e.key===" ")&&e.target.getAttribute&&e.target.getAttribute("data-caja")){e.preventDefault();abrir(e.target)}});
 document.getElementById("tema").addEventListener("click",function(){var h=document.documentElement,n=h.getAttribute("data-theme")==="dark"?"light":"dark";h.setAttribute("data-theme",n);try{localStorage.setItem("tema",n)}catch(e){}});
 });
 """
@@ -838,14 +853,14 @@ document.getElementById("tema").addEventListener("click",function(){var h=docume
 def html_referencia(plan, resp, modelo, metas, brief, tokens):
     paginas = []
     for p in plan["paginas"]:
-        tarj = "".join(html_tarjeta(valor_kpi(resp, k, metas)) for k in p.get("kpis", []))
+        tarj = "".join(html_tarjeta(valor_kpi(resp, k, metas)).replace('<div class="tarjeta">', f'<div class="tarjeta" data-caja="{p["codigo"]}-{k}" tabindex="0" role="button" title="Clic para ver cómo construirla">', 1) for k in p.get("kpis", []))
         seg = "".join(f"<span>{esc(s)}</span>" for s in p.get("segmentadores", []))
         vis = "".join(render_visual(v, p, resp, modelo, metas) for v in p["visuales"])
-        cajas = caja_segmentadores(p) + "".join(caja_tarjeta(k, plan, metas) for k in p.get("kpis", [])) + "".join(caja_construir(v, plan, resp, modelo, metas) for v in p["visuales"])
+        cajas = caja_segmentadores(p) + "".join(caja_tarjeta(k, plan, metas, p["codigo"]) for k in p.get("kpis", [])) + "".join(caja_construir(v, plan, resp, modelo, metas, p["codigo"]) for v in p["visuales"])
         paginas.append(
             f'<section class="pagina" id="{esc(p["codigo"])}"><h2><span class="cod">{esc(p["codigo"])}</span> {esc(p["nombre"])}</h2>'
             f'<p class="preg">Para el {esc(p["usuario"].lower())}: {esc(p["pregunta"])}</p>'
-            f'<div class="lienzo"><div class="enc"><h3>{esc(p["nombre"])}</h3><span class="quien">{esc(p["usuario"])}</span><div class="seg">{seg}</div></div>'
+            f'<div class="lienzo"><div class="enc"><h3>{esc(p["nombre"])}</h3><span class="quien">{esc(p["usuario"])}</span><div class="seg" data-caja="{esc(p["codigo"])}-seg" tabindex="0" role="button" title="Clic para ver cómo construir los filtros">{seg}</div></div>'
             f'{f"<div class=tarjetas>{tarj}</div>" if tarj else ""}<div class="zona">{vis}</div></div>'
             f'<div class="cajas">{cajas}</div></section>')
     kpis = sorted({r["kpi"] for r in resp["kpi-esperados"]})
@@ -865,8 +880,8 @@ def html_referencia(plan, resp, modelo, metas, brief, tokens):
     titulo = f"Dashboard de referencia · {brief.get('empresa') or brief.get('nombre') or 'proyecto'}"
     return (f'<!doctype html>\n<html lang="es" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
             f"<title>{esc(titulo)}</title><style>\n{H.INI}\n{css}\n{H.FIN}\n</style><style>{CSS}</style><script>{JS}</script></head><body>"
-            f'<div class="barra"><h1>Dashboard de referencia</h1><span class="sub">Así debería verse y estos son los valores esperados. Se construye en Power BI.</span>'
-            f'<button id="tema" type="button">Tema claro / oscuro</button></div><main>{"".join(paginas)}{final}</main><div id="tip"></div></body></html>\n')
+            f'<div class="barra"><h1>Dashboard de referencia</h1><span class="sub">Así debería verse y estos son los valores esperados. Se construye en Power BI. Haz clic en un gráfico, tarjeta o filtro para ver cómo construirlo.</span>'
+            f'<button id="tema" type="button">Tema claro / oscuro</button></div><main>{"".join(paginas)}{final}</main><div id="tip"></div><dialog id="det"></dialog></body></html>\n')
 
 
 # ------------------------------------------------------------------ guía en Markdown
