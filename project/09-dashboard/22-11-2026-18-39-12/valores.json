@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "kpis": [
+    {
+      "codigo": "KPI-01",
+      "valor": 98.3,
+      "unidad": "%",
+      "meta": 98,
+      "periodo": "2026-10"
+    },
+    {
+      "codigo": "KPI-02",
+      "valor": 54.4,
+      "unidad": "%",
+      "meta": null,
+      "periodo": "2026-10"
+    },
+    {
+      "codigo": "KPI-03",
+      "valor": 8.0,
+      "unidad": "%",
+      "meta": 12,
+      "periodo": "2026-10"
+    },
+    {
+      "codigo": "KPI-04",
+      "valor": 6.4,
+      "unidad": "%",
+      "meta": 3,
+      "periodo": "2026-10"
+    },
+    {
+      "codigo": "KPI-05",
+      "valor": 28.2,
+      "unidad": "%",
+      "meta": 15,
+      "periodo": "2026-10"
+    },
+    {
+      "codigo": "KPI-06",
+      "valor": 6.82,
+      "unidad": "S/ por kg",
+      "meta": null,
+      "periodo": "2026-10"
+    },
+    {
+      "codigo": "KPI-07",
+      "valor": 71.4,
+      "unidad": "%",
+      "meta": 100,
+      "periodo": "2026-10"
+    }
+  ]
+}

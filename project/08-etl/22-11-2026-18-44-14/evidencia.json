@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "reglas": [
+    {
+      "codigo": "REG-01",
+      "filas_antes": 91297,
+      "filas_despues": 91297
+    },
+    {
+      "codigo": "REG-02",
+      "filas_antes": 91297,
+      "filas_despues": 91297
+    },
+    {
+      "codigo": "REG-03",
+      "filas_antes": 91297,
+      "filas_despues": 90623
+    },
+    {
+      "codigo": "REG-04",
+      "filas_antes": 90623,
+      "filas_despues": 89888
+    },
+    {
+      "codigo": "REG-05",
+      "filas_antes": 89888,
+      "filas_despues": 89888
+    },
+    {
+      "codigo": "REG-06",
+      "filas_antes": 437,
+      "filas_despues": 457
+    }
+  ],
+  "tablas": [
+    {
+      "nombre": "FUE-01",
+      "filas": 59134
+    },
+    {
+      "nombre": "FUE-02",
+      "filas": 13448
+    },
+    {
+      "nombre": "FUE-03",
+      "filas": 9737
+    },
+    {
+      "nombre": "FUE-04",
+      "filas": 8978
+    },
+    {
+      "nombre": "FUE-05",
+      "filas": 1374
+    },
+    {
+      "nombre": "FUE-06",
+      "filas": 437
+    },
+    {
+      "nombre": "fPedidos",
+      "filas": 91297
+    },
+    {
+      "nombre": "fProduccion",
+      "filas": 1366
+    },
+    {
+      "nombre": "fPrecioInsumo",
+      "filas": 457
+    },
+    {
+      "nombre": "fMetaKpi",
+      "filas": 105
+    },
+    {
+      "nombre": "dCalendario",
+      "filas": 457
+    },
+    {
+      "nombre": "dProducto",
+      "filas": 8
+    },
+    {
+      "nombre": "dCanal",
+      "filas": 5
+    },
+    {
+      "nombre": "dTurno",
+      "filas": 3
+    },
+    {
+      "nombre": "dKpi",
+      "filas": 7
+    }
+  ],
+  "totales": {
+    "ventas_total": 2917426.1,
+    "comision_total": 206732.3,
+    "lineas_total": 89888
+  },
+  "verificacion": {
+    "estado": "coincide",
+    "diferencias": []
+  }
+}
