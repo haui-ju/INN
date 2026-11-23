@@ -13,13 +13,15 @@ import argparse
 import csv
 import datetime as dt
 import sys
+import zipfile
 from pathlib import Path
+from xml.sax.saxutils import escape
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import etl_referencia as ER  # noqa: E402
 
 PEDIDOS = ["pedido_id", "fuente", "fecha", "hora", "turno", "canal", "producto", "cantidad", "precio_unitario", "descuento",
-           "monto", "comision", "comision_pct", "estado", "cliente_id", "es_duplicado", "es_invalido"]
+           "monto_origen", "comision_origen", "comision_pct", "estado", "cliente_id", "es_duplicado", "es_invalido"]
 
 
 def _escribir(ruta, cols, filas):
@@ -27,6 +29,51 @@ def _escribir(ruta, cols, filas):
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         w.writerows(filas)
+
+
+NUMERICAS = {"cantidad", "precio_unitario", "descuento", "monto_origen", "comision_origen", "comision_pct", "es_duplicado", "es_invalido",
+             "pollos_preparados", "pollos_vendidos", "pollos_merma", "precio_kg", "valor_imputado", "precio_lista", "pollos_equivalentes",
+             "kg_pollo_vivo", "costo_otros", "planilla", "alquiler", "servicios", "otros", "total"}
+
+
+def _col(i):
+    s = ""
+    i += 1
+    while i:
+        i, r = divmod(i - 1, 26)
+        s = chr(65 + r) + s
+    return s
+
+
+def _xlsx(ruta, archivos):
+    """Excel con una hoja por CSV (solo biblioteca estándar)."""
+    hojas = []
+    for a in archivos:
+        with open(a, encoding="utf-8", newline="") as f:
+            filas = list(csv.reader(f))
+        enc = filas[0]
+        xml = ['<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><sheetData>']
+        for n, fila in enumerate(filas, 1):
+            celdas = []
+            for i, v in enumerate(fila):
+                ref = f"{_col(i)}{n}"
+                if v == "":
+                    continue
+                if n > 1 and enc[i] in NUMERICAS:
+                    celdas.append(f'<c r="{ref}"><v>{v}</v></c>')
+                else:
+                    celdas.append(f'<c r="{ref}" t="inlineStr"><is><t>{escape(v)}</t></is></c>')
+            xml.append(f'<row r="{n}">{"".join(celdas)}</row>')
+        xml.append("</sheetData></worksheet>")
+        hojas.append((Path(a).stem[:31], "".join(xml)))
+    ns = 'xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"'
+    with zipfile.ZipFile(ruta, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>' + "".join(f'<Override PartName="/xl/worksheets/sheet{i}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>' for i in range(1, len(hojas) + 1)) + "</Types>")
+        z.writestr("_rels/.rels", '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/></Relationships>')
+        z.writestr("xl/workbook.xml", f'<?xml version="1.0" encoding="UTF-8"?><workbook {ns}><sheets>' + "".join(f'<sheet name="{escape(n)}" sheetId="{i}" r:id="rId{i}"/>' for i, (n, _) in enumerate(hojas, 1)) + "</sheets></workbook>")
+        z.writestr("xl/_rels/workbook.xml.rels", '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' + "".join(f'<Relationship Id="rId{i}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet{i}.xml"/>' for i in range(1, len(hojas) + 1)) + "</Relationships>")
+        for i, (_, x) in enumerate(hojas, 1):
+            z.writestr(f"xl/worksheets/sheet{i}.xml", x)
 
 
 def _num(x):
@@ -61,7 +108,7 @@ def limpiar(raiz="."):
             cant = ER.numero(f[c_cant])
             r = {"pedido_id": f[c_id], "fuente": fu, "fecha": fecha.isoformat() if fecha else "", "hora": _hhmm(hora) if fu != "FUE-01" else (f["hora"] or ""),
                  "turno": "", "canal": canal_fijo or f["canal"], "producto": alias.get(f[c_prod], ""), "cantidad": _num(cant),
-                 "precio_unitario": "", "descuento": "", "monto": "", "comision": "", "comision_pct": "", "estado": f.get("estado", ""),
+                 "precio_unitario": "", "descuento": "", "monto_origen": "", "comision_origen": "", "comision_pct": "", "estado": f.get("estado", ""),
                  "cliente_id": "", "es_duplicado": int(dup), "es_invalido": 0}
             if fu == "FUE-01":
                 precio = ER.numero(f["precio_unitario"])
@@ -73,19 +120,21 @@ def limpiar(raiz="."):
                 r["turno"] = ER.HORAS.get(hora, "")
                 if fu == "FUE-02":
                     monto = ER.numero(f["monto"])
-                    r["monto"], r["comision"] = _num(monto), _num(ER.numero(f["comision"]))
+                    r["monto_origen"], r["comision_origen"] = _num(monto), _num(ER.numero(f["comision"]))
                     r["es_invalido"] = int(monto is None or f["estado"] == "CANCELADO")
                 elif fu == "FUE-03":
                     monto = ER.numero(f["total"])
-                    r["monto"], r["comision_pct"] = _num(monto), f["comision_pct"]
+                    r["monto_origen"], r["comision_pct"] = _num(monto), f["comision_pct"]
                     r["es_invalido"] = int(monto is None or f["estado"] == "CANCELADO")
                 else:
                     monto = ER.numero(f["monto"])
-                    r["monto"] = _num(monto)
+                    r["monto_origen"] = _num(monto)
                     r["es_invalido"] = int(cant is None or cant <= 0 or monto is None)
                     r["cliente_id"] = clientes.setdefault(f["telefono"], f"C-{len(clientes) + 1:04d}")
             pedidos.append(r)
     _escribir(out / "pedidos.csv", PEDIDOS, pedidos)
+    for fu, nombre in (("FUE-01", "caja"), ("FUE-02", "rappi"), ("FUE-03", "pedidosya"), ("FUE-04", "whatsapp")):
+        _escribir(out / f"{nombre}.csv", PEDIDOS, [r for r in pedidos if r["fuente"] == fu])
 
     # producción: sin jornadas repetidas ni imposibles
     brutas = ER.leer(data / "fue-05-produccion.csv")
@@ -113,6 +162,8 @@ def limpiar(raiz="."):
     # archivos de apoyo: ya vienen limpios
     for n in ("apoyo-catalogo-productos.csv", "apoyo-costos-operativos.csv"):
         (out / n.replace("apoyo-", "")).write_bytes((data / n).read_bytes())
+    orden = ["caja", "rappi", "pedidosya", "whatsapp", "pedidos", "produccion", "precios-pollo", "catalogo-productos", "costos-operativos"]
+    _xlsx(out / "limpio.xlsx", [out / f"{n}.csv" for n in orden])
     validos = sum(1 for r in pedidos if not r["es_duplicado"] and not r["es_invalido"])
     return {"pedidos": len(pedidos), "duplicados": sum(r["es_duplicado"] for r in pedidos), "validos": validos,
             "produccion": len(prod), "precios": len(filas), "imputados": sum(r["valor_imputado"] for r in filas), "clientes": len(clientes),
