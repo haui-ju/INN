@@ -496,7 +496,7 @@ def esperado_resumen(v, resp, modelo, metas):
 
 
 RE_REF = re.compile(r"\b([fd][A-Z]\w*)\[(\w+)\]")
-ORDEN_POR = {"nombre_mes": "mes", "dia_semana": "num_dia_semana", "mes_anio": "anio_mes"}
+ORDEN_POR = {"nombre_mes": "mes", "dia_semana": "num_dia_semana", "mes_anio": "anio_mes", "turno": "turno_key", "canal": "canal_key", "producto": "producto_key", "kpi": "kpi_key"}
 
 
 def _ref_html(tabla, col):
@@ -538,20 +538,130 @@ def medidas_html(plan, v, codigos):
     return "".join(out)
 
 
+HEX_SERIE = {1: ("verde azulado", "#009385"), 2: ("rojo", "#BF5354"), 3: ("azul", "#3A7BCB"), 4: ("ámbar", "#B36300"), 5: ("morado", "#8864C0"),
+             6: ("verde", "#319047"), 7: ("rosa", "#B55386")}
+
+
+def formato_medida(unidad):
+    """Cómo dar formato a la medida (si no, el eje sale como 0.0 a 0.7 en vez de 0 % a 70 %)."""
+    if unidad == "%":
+        return "Porcentaje, 1 decimal"
+    if unidad == "S/":
+        return "Moneda con símbolo S/, 0 decimales"
+    if unidad == "S/ por kg":
+        return "Moneda con símbolo S/, 2 decimales"
+    return "Número entero con separador de miles"
+
+
+def pasos_diseno(v, datos, unidad):
+    t = v["tipo"]
+    colores = []
+    for sr in datos.get("series", []):
+        nom, hx = HEX_SERIE.get(sr["color"], ("", ""))
+        colores.append(f"{sr['nombre']}: {hx} ({nom})")
+    p = ["Selecciona el visual y en Visualizaciones abre la pestaña <b>Formato</b> (icono del pincel) ▸ <b>Elementos visuales</b>."]
+    if t == "barras":
+        p += ["<b>Barras ▸ Colores ▸ Color predeterminado</b>: " + esc(colores[0] if colores else "#009385") + ". Si queda azul, es el color por defecto de Power BI y no lo cambiaste.",
+              "<b>Barras ▸ Diseño</b>: baja el espacio entre categorías (o sube el ancho de barra) hasta que las barras queden gruesas.",
+              "<b>Eje X (valores)</b>: apaga el interruptor (la referencia no lo muestra) y apaga la <b>Cuadrícula</b>. Así desaparece la escala 0.0 a 0.7.",
+              "<b>Eje Y (categorías)</b>: apaga el <b>Título</b> del eje y deja el texto en 14 pt.",
+              f"<b>General ▸ Título ▸ Texto</b>: escribe «{esc(v['titulo'])}» tú mismo (el automático sale como «medida por canal»). Apaga el <b>Subtítulo</b>."]
+    elif t in ("columnas", "apiladas", "apiladas100"):
+        p += ["<b>Columnas ▸ Colores</b>: " + esc("; ".join(colores)) + ". En las apiladas, uno por serie de la leyenda.",
+              "<b>Eje X</b>: deja los nombres y apaga el título. <b>Eje Y</b>: apaga el título; en 100 % apilado el eje ya va de 0 a 100 %.",
+              "<b>Leyenda</b>: actívala si hay más de una serie y ponla arriba a la derecha.",
+              f"<b>General ▸ Título ▸ Texto</b>: «{esc(v['titulo'])}». Apaga el <b>Subtítulo</b>."]
+    elif t == "linea":
+        p += ["<b>Líneas ▸ Colores</b>: " + esc("; ".join(colores)) + ". Ancho de línea: 2 a 3 px.",
+              "<b>Eje X</b>: apaga el título. <b>Eje Y</b>: apaga el título; fija mínimo y máximo si la línea queda aplastada.",
+              "<b>Etiquetas de datos</b>: si salen todas y estorban, apágalas; el último valor ya está en la tarjeta.",
+              f"<b>General ▸ Título ▸ Texto</b>: «{esc(v['titulo'])}». Apaga el <b>Subtítulo</b>."]
+    elif t == "matriz":
+        p += ["<b>Celdas ▸ Color de fondo ▸ fx</b> (formato condicional) ▸ Formato por: Valor del campo ▸ escala de un solo color, del claro al oscuro.",
+              "<b>Cuadrícula</b>: horizontal ligera; <b>Totales</b> de filas y columnas: apágalos.",
+              f"<b>General ▸ Título ▸ Texto</b>: «{esc(v['titulo'])}»."]
+    elif t == "tabla":
+        p += ["<b>Cuadrícula</b>: solo líneas horizontales finas. <b>Encabezados de columna</b>: texto en negrita.",
+              "<b>Celdas ▸ Valor</b>: tamaño 14 a 16 pt. Alinea las cifras a la derecha.",
+              f"<b>General ▸ Título ▸ Texto</b>: «{esc(v['titulo'])}»."]
+    return p
+
+
+def pasos_orden(v):
+    """Lo que hay que ordenar y formatear para que las categorías salgan en su posición y los valores como porcentaje o soles."""
+    t, u = v["tipo"], v.get("unidad", "")
+    p = []
+    vistos = set()
+    for campo in (v["x"], v.get("serie", "")):
+        m = RE_REF.search(campo or "")
+        if not m or m.group(2) not in ORDEN_POR or m.groups() in vistos:
+            continue
+        vistos.add(m.groups())
+        tabla, col = m.groups()
+        p.append(f"Ordena <b>{esc(tabla)}[{esc(col)}]</b> por la columna <b>{esc(ORDEN_POR[col])}</b>: en el panel Datos selecciona la columna ▸ Herramientas de columna ▸ <b>Ordenar por columna</b> ▸ {esc(ORDEN_POR[col])}. Se hace una vez y vale para todos los visuales.")
+    if t == "barras":
+        p.append("En el visual, menú «…» arriba a la derecha ▸ <b>Ordenar eje</b> ▸ elige la medida ▸ <b>Orden descendente</b>: la barra más larga queda arriba.")
+    elif t == "matriz":
+        p.append("En el visual, menú «…» ▸ Ordenar eje ▸ elige el campo de las filas ▸ Orden ascendente. Las columnas siguen el orden de la columna clave de arriba.")
+    elif t == "tabla":
+        p.append("En el visual, haz clic en el encabezado de la columna <b>kpi</b> para ordenar; con la columna clave KPI-01 a KPI-07 quedan en ese orden.")
+    elif any(x in v["x"] for x in ("mes_anio", "dia_semana", "turno")):
+        p.append("En el visual, menú «…» ▸ <b>Ordenar eje</b> ▸ elige el campo del eje X ▸ <b>Orden ascendente</b> (así sigue el orden de la columna clave y no el alfabético).")
+    elif "fecha" in v["x"]:
+        p.append("En el visual, menú «…» ▸ Ordenar eje ▸ fecha ▸ Orden ascendente.")
+    med = re.findall(r"\[([^\]]+)\]", v["y"])
+    nombre = med[0] if len(med) == 1 else "cada medida"
+    fm = formato_medida(u)
+    if t != "tabla":
+        p.append(f"<b>Formato de la medida</b> (una sola vez): en el panel Datos de la derecha haz clic en la medida <b>[{esc(nombre)}]</b> ▸ en la cinta superior se abre <b>Herramientas de medida</b> ▸ grupo <b>Formato</b> ▸ en la lista desplegable elige "
+                 f"<b>{esc(fm.split(',')[0])}</b> ▸ en el cuadro de decimales escribe <b>{'1' if u == '%' else '0' if u == 'S/' else '2' if u == 'S/ por kg' else '0'}</b>. "
+                 + ("La medida devuelve una fracción (0.653); el formato Porcentaje la muestra como 65.3 %. Sin este paso el eje sale de 0.0 a 0.7." if u == "%" else ""))
+    if t in ("barras", "columnas"):
+        pos = "Fuera del extremo (a la derecha de cada barra)" if t == "barras" else "Fuera del extremo (encima de cada columna)"
+        p.append(f"<b>Números junto a cada {'barra' if t == 'barras' else 'columna'}</b>: haz clic en el visual ▸ Visualizaciones ▸ pestaña <b>Formato</b> (pincel) ▸ <b>Elementos visuales</b> ▸ <b>Etiquetas de datos</b> ▸ enciende el interruptor ▸ despliega "
+                 f"<b>Opciones</b> ▸ <b>Posición</b>: {pos}. En <b>Valor</b>: Unidades de visualización = <b>Ninguna</b> y posiciones decimales = <b>Automático</b> (toma el formato de la medida; sale «65.3 %»).")
+        if t == "barras":
+            p.append("<b>Quitar la escala de abajo</b> (0 % a 70 %), que ya no hace falta con los números en las barras: Elementos visuales ▸ <b>Eje X</b> ▸ apaga el interruptor, y <b>Cuadrícula</b> ▸ apágala.")
+    elif t == "apiladas100":
+        p.append("El eje ya va de 0 a 100 %. Para ver el porcentaje dentro de cada tramo: Elementos visuales ▸ Etiquetas de datos ▸ enciende ▸ Posición: Centro.")
+    elif t == "linea":
+        p.append("Para ver el valor en los puntos: Elementos visuales ▸ <b>Etiquetas de datos</b> ▸ enciende el interruptor; toma el formato de la medida.")
+    return p
+
+
+def seccion_diseno(plan, resp, modelo, metas):
+    """Sección aparte con los pasos de diseño (colores, etiquetas, ejes, títulos) de cada visual."""
+    cajas = []
+    for p_ in plan["paginas"]:
+        for v in p_["visuales"]:
+            pasos = pasos_diseno(v, datos_visual(v, resp, modelo, metas), v.get("unidad", ""))
+            cajas.append(f'<div class="caja"><h4><span class="cod">{esc(p_["codigo"])}</span><span class="num">{v["id"]}</span> {esc(v["titulo"])}</h4>'
+                         f'<p class="cm">Diseño: {esc(NOMBRE_TIPO[v["tipo"]])}</p><ol class="pasos">' + "".join(f"<li>{x}</li>" for x in pasos) + "</ol></div>")
+    return ('<section class="final" id="diseno"><h2>Diseño de los gráficos</h2><p class="preg">Esto es presentación (colores, etiquetas, títulos y ejes). '
+            'Hazlo al final, cuando los datos, el orden y los porcentajes ya salgan bien.</p>'
+            f'<div class="cajas">{"".join(cajas)}</div></section>')
+
+
 def caja_construir(v, plan, resp, modelo, metas):
     en_y = {n for n in re.findall(r"\[([^\]]+)\]", v["y"])}
     por = {m["codigo"]: m for m in plan["medidas"]}
     cod_y = [c for c in v["medidas"] if c in por and por[c]["nombre"] in en_y]
     cod_otras = [c for c in v["medidas"] if c in por and c not in cod_y]
     t = v["tipo"]
+    barras = t == "barras"  # en barras horizontales los ejes van al revés: categorías en Eje Y y la medida en Eje X
     campos = [("Tipo de visual", esc(NOMBRE_TIPO[t]) + " (panel Visualizaciones)"),
-              ("Eje X / filas" if t != "matriz" else "Filas", campo_eje_html(v["x"]))]
+              (("Eje Y (categorías)" if barras else "Eje X / filas") if t != "matriz" else "Filas", campo_eje_html(v["x"]))]
     if v["serie"]:
         campos.append(("Columnas" if t == "matriz" else "Leyenda", campo_eje_html(v["serie"])))
-    campos.append(("Valores (eje Y)" if t != "matriz" else "Valores", medidas_html(plan, v, cod_y) or esc(v["y"])))
+    campos.append((("Eje X (valores)" if barras else "Valores (eje Y)") if t != "matriz" else "Valores", medidas_html(plan, v, cod_y) or esc(v["y"])))
     if cod_otras:
         campos.append(("Otras medidas del visual", medidas_html(plan, v, cod_otras)))
+    if t == "tabla":
+        campos = [c for c in campos if not c[0].startswith("Valores")]
+        campos.append(("Columnas de la tabla (DAX)", "<span class='med'><span>No arrastres las 7 medidas: cada una repetiría su valor en las 7 filas. Usa estas 4 (la primera es solo de apoyo y no se arrastra; vienen en la sección «Medidas DAX de las tarjetas y chips»):</span></span>"
+                       + "".join(dax_bloque(*x) for x in DAX_TABLA[0:4]) + "<span class='med'><span>El campo <b>dKpi[kpi]</b> va en Columnas; después arrastra, en este orden: [Valor del KPI], [Meta del KPI (texto)], [Estado del KPI]. Para el color del chip: [Estado del KPI] ▸ Formato condicional ▸ Color de fuente ▸ Valor del campo ▸ [Color del estado].</span></span>"))
     campos.append(("Filtros del visual", esc("; ".join(v["filtros"]))))
+    campos.append(("Orden, porcentajes y etiquetas (para que salga en su posición)", "<ol class='pasos'>" + "".join(f"<li>{x}</li>" for x in pasos_orden(v)) + "</ol>"))
     campos.append(("Archivos CSV de origen", ", ".join(f"<code>{esc(_csv_de(o))}</code>" for o in v["origen"])))
     campos.append(("Valor esperado", esc(esperado_resumen(v, resp, modelo, metas))))
     dl = "".join(f"<dt>{esc(a)}</dt><dd>{b}</dd>" for a, b in campos)
@@ -574,21 +684,111 @@ def caja_segmentadores(p):
             '<p class="fmt">Cada uno es un visual «Segmentación de datos» en la franja superior derecha. En Vista ▸ Sincronizar segmentadores activa la sincronización con las demás páginas.</p></div>')
 
 
+COLOR_OK, COLOR_MAL, COLOR_SIN = "#0F7B3F", "#B3261E", "#6B7280"
+MES_REF = ("Mes de referencia",
+           "LOOKUPVALUE ( dCalendario[mes_anio], dCalendario[fecha], MAX ( dCalendario[fecha] ) )",
+           "Texto del último mes que deja pasar el filtro («oct 26»). Va en el subtítulo de cada tarjeta.")
+
+
+def _num_kpi(k):
+    return int(k[-2:])
+
+
+def dax_tarjeta(k, plan, metas):
+    """[(nombre, dax, explicación)] de las tres medidas de texto de una tarjeta: meta, estado (chip) y color del chip."""
+    m = metas[k]
+    n = _num_kpi(k)
+    med = next(x for x in plan["medidas"] if x["kpi"] == k)
+    op = "<=" if m["cmp"] == "<=" else ">="
+    sent = "o menos" if m["cmp"] == "<=" else "o más"
+    meta = f"CALCULATE ( AVERAGE ( fMetaKpi[meta] ), dKpi[kpi_key] = {n} )"
+    return [
+        (f"Meta texto {k}",
+         f"VAR meta = {meta}\nRETURN\n    \"Meta: \" & IF ( ISBLANK ( meta ), \"Pendiente\", FORMAT ( meta, \"0\" ) & \" % {sent}\" ) & \" · \" & [Mes de referencia]",
+         f"Subtítulo de la tarjeta de {k}: «Meta: {m['meta_texto']} · mes». La meta sale de fMetaKpi[meta], no está escrita a mano."),
+        (f"Estado {k}",
+         f"VAR valor = [{med['nombre']}]\nVAR meta = {meta} / 100\nRETURN\n    IF ( ISBLANK ( meta ), \"– Sin meta\", IF ( valor {op} meta, \"✔ Cumple\", \"✖ No cumple\" ) )",
+         f"Texto del chip de {k}. Cumple si el valor es {'menor o igual' if op == '<=' else 'mayor o igual'} a la meta; sin meta muestra «– Sin meta». Se divide entre 100 porque la meta se guarda como 12 y la medida devuelve 0.12."),
+        (f"Color estado {k}",
+         f"SWITCH ( LEFT ( [Estado {k}], 1 ), \"✔\", \"{COLOR_OK}\", \"✖\", \"{COLOR_MAL}\", \"{COLOR_SIN}\" )",
+         f"Color del chip de {k} (verde, rojo o gris). Se usa en Formato condicional ▸ Valor del campo."),
+    ]
+
+
+DAX_TABLA = [
+    ("Valor numérico del KPI",
+     "SWITCH (\n    SELECTEDVALUE ( dKpi[kpi_key] ),\n    1, [Calidad de datos %],\n    2, [Margen de contribución %],\n    3, [Margen neto %],\n    4, [Merma %],\n    5, [Error del pronóstico %],\n    6, [Precio promedio del pollo vivo],\n    7, CALCULATE ( [KPI con meta %], ALL ( dKpi ) )\n)",
+     "Devuelve el valor del KPI de cada fila. El KPI-07 usa ALL(dKpi) porque cuenta todos los KPI y no solo el de la fila."),
+    ("Valor del KPI",
+     "VAR v = [Valor numérico del KPI]\nRETURN\n    IF ( SELECTEDVALUE ( dKpi[kpi_key] ) = 6, \"S/ \" & FORMAT ( v, \"0.00\" ), FORMAT ( v, \"0.0 %\" ) )",
+     "El mismo valor, ya como texto con su unidad (% o S/)."),
+    ("Meta del KPI (texto)",
+     "VAR k = SELECTEDVALUE ( dKpi[kpi_key] )\nVAR meta = AVERAGE ( fMetaKpi[meta] )\nRETURN\n    IF ( ISBLANK ( meta ), \"Pendiente\", FORMAT ( meta, \"0\" ) & \" % \" & IF ( k IN { 4, 5 }, \"o menos\", \"o más\" ) )",
+     "Meta de la fila, con el sentido (o más / o menos). KPI-04 y KPI-05 son «o menos»."),
+    ("Estado del KPI",
+     "VAR k = SELECTEDVALUE ( dKpi[kpi_key] )\nVAR valor = [Valor numérico del KPI]\nVAR meta = AVERAGE ( fMetaKpi[meta] ) / 100\nRETURN\n    IF (\n        ISBLANK ( meta ), \"– Sin meta\",\n        IF ( IF ( k IN { 4, 5 }, valor <= meta, valor >= meta ), \"✔ Cumple\", \"✖ No cumple\" )\n    )",
+     "Chip de cada fila de la tabla."),
+    ("Color del estado",
+     f"SWITCH ( LEFT ( [Estado del KPI], 1 ), \"✔\", \"{COLOR_OK}\", \"✖\", \"{COLOR_MAL}\", \"{COLOR_SIN}\" )",
+     "Color del chip de la tabla."),
+]
+
+
+def dax_bloque(nombre, dax, nota=""):
+    return (f'<div class="med"><b>[{esc(nombre)}]</b> · medida DAX, créala en la tabla <b>Medidas</b><code>{esc(nombre)} =\n{esc(dax)}</code>'
+            f'{"<span>" + esc(nota) + "</span>" if nota else ""}</div>')
+
+
 def caja_tarjeta(k, plan, metas):
     m = metas[k]
     med = next((x for x in plan["medidas"] if x["kpi"] == k), None)
-    g = _Guia(plan, {}, {}, {})
-    campos = [("Tipo de visual", "Tarjeta (panel Visualizaciones)")]
+    campos = [("Tipo de visual", "Tarjeta (la nueva, no la «clásica»): panel Visualizaciones ▸ Tarjeta")]
     if med:
-        campos.append(("Campo (el valor grande)", medidas_html(plan, {}, [med["codigo"]])))
-    meta_med = next((x for x in plan["medidas"] if x["nombre"] == "Meta del KPI"), None)
-    campos.append(("Meta (texto pequeño)", esc(f"Meta: {m['meta_texto']}. " + ("Se toma de la medida [Meta del KPI] (fMetaKpi[meta]) con el filtro del visual dKpi[kpi] = «" + m["nombre"] + "»." if m["meta"] is not None else "Está pendiente en 2.5: se escribe «Meta: Pendiente» como subtítulo."))))
-    campos.append(("Estado (chip)", esc((f"Cumple si el valor es {'mayor o igual' if m['cmp'] == '>=' else 'menor o igual'} a {m['meta']:g} %" if m["meta"] is not None else "Sin meta")
-                                         + ". Se arma con Formato ▸ Etiqueta de datos ▸ Color ▸ Formato condicional ▸ Reglas ("
-                                         + ("verde si cumple, rojo si no" if m["meta"] is not None else "gris neutro") + "); el texto del estado va con el subtítulo.")))
-    campos.append(("Filtro del visual", "dCalendario[mes_anio] = último mes del periodo (oct 26), como en la referencia"))
+        campos.append(("Valor grande (DAX)", medidas_html(plan, {}, [med["codigo"]])))
+    if med:
+        mt, est, col = dax_tarjeta(k, plan, metas)
+        campos.append(("Texto de meta (DAX)", dax_bloque(*mt)))
+        campos.append(("Chip de estado (DAX)", dax_bloque(*est)))
+        campos.append(("Color del chip (DAX)", dax_bloque(*col)))
+        campos.append(("Mes de referencia (DAX)", dax_bloque(*MES_REF) + "<span>Es la misma para todas las tarjetas: créala una vez.</span>"))
+    pasos = [
+        f"Arrastra <b>[{esc(med['nombre'] if med else k)}]</b> al campo <b>Campo</b> de la tarjeta: es el número grande.",
+        f"Formato de la medida: Herramientas de medida ▸ Formato ▸ {'Moneda, 2 decimales' if k == 'KPI-06' else 'Porcentaje, 1 decimal'} (si no, sale 0.08 en vez de 8.0 %).",
+        f"<b>Chip:</b> en Visualizaciones ▸ Formato ▸ Elementos visuales ▸ <b>Etiquetas de referencia</b> ▸ enciéndelas ▸ <b>Valor</b>: arrastra <b>[Estado {k}]</b>. "
+        "Si tu versión no tiene Etiquetas de referencia, pon una segunda tarjeta pequeña con esa medida pegada a la primera.",
+        f"<b>Color del chip:</b> en esa misma etiqueta, color del texto ▸ <b>fx</b> ▸ Formato por: <b>Valor del campo</b> ▸ campo: <b>[Color estado {k}]</b>.",
+        f"<b>Subtítulo de meta:</b> en la etiqueta de referencia ▸ <b>Detalle</b>: arrastra <b>[Meta texto {k}]</b>; sale «Meta: {esc(m['meta_texto'])} · oct 26».",
+        "<b>Título:</b> General ▸ Título ▸ Texto: el nombre del KPI.",
+    ]
+    campos.append(("Cómo armarla (clics)", "<ol class='pasos'>" + "".join(f"<li>{x}</li>" for x in pasos) + "</ol>"))
+    campos.append(("Filtro del visual (clics)", "Panel Filtros ▸ arrastra <b>dCalendario[mes_anio]</b> a «Filtros en este objeto visual» ▸ Tipo de filtro: <b>N superior</b> ▸ Mostrar elementos: <b>Superior 1</b> ▸ Por valor: arrastra <b>dCalendario[anio_mes]</b> (Máximo) ▸ Aplicar filtro. "
+                                              "Así la tarjeta siempre muestra el último mes sin escribir «oct 26»."))
     dl = "".join(f"<dt>{esc(a)}</dt><dd>{b}</dd>" for a, b in campos)
     return f'<div class="caja"><h4><span class="cod">{esc(k)}</span> {esc(m["nombre"])}</h4><p class="cm">Cómo construir la tarjeta en Power BI</p><dl>{dl}</dl></div>'
+
+
+def seccion_medidas_tarjetas(plan, metas):
+    """Las medidas de texto (meta, chip y color) de las tarjetas y de la tabla de KPI, en el orden de creación."""
+    cajas = [dax_bloque(*MES_REF)]
+    out = [("Mes de referencia", "tarjetas", MES_REF)]
+    for p in plan["paginas"]:
+        for k in p.get("kpis", []):
+            if any(x["kpi"] == k for x in plan["medidas"]):
+                for t in dax_tarjeta(k, plan, metas):
+                    out.append((t[0], f"{p['codigo']} · tarjeta {k}", t))
+    if any(v["tipo"] == "tabla" for p in plan["paginas"] for v in p["visuales"]):
+        for t in DAX_TABLA:
+            out.append((t[0], "tabla de KPI", t))
+    vistos, filas = set(), []
+    for n, (nombre, uso, (nom, dax, expl)) in enumerate(out, 1):
+        if nombre in vistos:
+            continue
+        vistos.add(nombre)
+        filas.append(f'<div class="caja"><h4><span class="num">{len(filas) + 1}</span> [{esc(nom)}]</h4><p class="cm">Texto o color · medida DAX</p>'
+                     f'<p class="fmt" style="margin:0 0 6px">{esc(expl)}</p>{dax_bloque(nom, dax)}<p class="fmt">Se usa en: {esc(uso)}.</p></div>')
+    return ('<section class="final" id="medidas-tarjetas"><h2>Medidas DAX de las tarjetas y chips</h2><p class="preg">Son medidas de texto y de color. Créalas después de las medidas globales, en este orden, '
+            'en la misma tabla <b>Medidas</b>. Lo que no es DAX (arrastrar, filtros y formato) está en la caja de cada tarjeta.</p>'
+            f'<div class="cajas">{"".join(filas)}</div></section>')
 
 
 # ------------------------------------------------------------------ HTML completo
@@ -615,7 +815,7 @@ main{padding:24px;max-width:1650px;margin:0 auto}.pagina{margin:0 0 56px}.pagina
 table{border-collapse:collapse;width:100%;font-size:16px;line-height:1.2}th,td{padding:6px 10px;text-align:left;border-bottom:1px solid var(--c-borde)}th{color:var(--c-texto-secundario);font-weight:600}td.der,th.der{text-align:right}
 .matriz td,.matriz th{padding:3px 10px}.matriz td{text-align:center;font-weight:600}.matriz th:first-child{text-align:left}.tkpi td,.tkpi th{padding:3px 10px}
 .cajas{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:16px;margin-top:20px;max-width:1600px}.caja{background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:14px 18px}.caja h4{margin:0;font-size:18px;display:flex;gap:8px;align-items:center}.cm{margin:2px 0 8px;color:var(--c-acento-fuerte);font-weight:700;font-size:14px;text-transform:none}
-dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:15px}.med{margin:0 0 8px}.med code{display:block;margin:3px 0;padding:6px 8px;border-radius:8px;background:var(--c-fondo);border:1px solid var(--c-borde);font-size:13px;white-space:pre-wrap}.med span{color:var(--c-texto-secundario);font-size:13px}dd code{font-size:13px}dt{color:var(--c-texto-secundario);word-break:break-word;min-width:0}dd{margin:0;word-break:break-word;min-width:0}.fmt{margin:8px 0 0;color:var(--c-texto-secundario);font-size:14px}
+dl{margin:0;display:grid;grid-template-columns:130px 1fr;gap:4px 12px;font-size:15px}.med{margin:0 0 8px}.med code{display:block;margin:3px 0;padding:6px 8px;border-radius:8px;background:var(--c-fondo);border:1px solid var(--c-borde);font-size:13px;white-space:pre-wrap}.pasos{margin:0;padding-left:18px}.pasos li{margin:0 0 4px}.med span{color:var(--c-texto-secundario);font-size:13px}dd code{font-size:13px}dt{color:var(--c-texto-secundario);word-break:break-word;min-width:0}dd{margin:0;word-break:break-word;min-width:0}.fmt{margin:8px 0 0;color:var(--c-texto-secundario);font-size:14px}
 .final{max-width:1600px}.final h2{font-size:26px}.scroll{overflow-x:auto;background:var(--c-superficie);border:1px solid var(--c-borde);border-radius:16px;padding:8px}.scroll td,.scroll th{white-space:nowrap;font-size:15px}
 #tip{position:fixed;display:none;pointer-events:none;z-index:9;background:var(--c-superficie);color:var(--c-texto);border:1px solid var(--c-borde);border-radius:10px;padding:8px 12px;font-size:15px;box-shadow:var(--sombra-md,0 6px 20px rgba(0,0,0,.25))}
 """
@@ -657,7 +857,8 @@ def html_referencia(plan, resp, modelo, metas, brief, tokens):
         u = "S/ por kg" if k == "KPI-06" else "%"
         celdas = "".join(f"<td class='der'>{fmt(float(por[(k, m)]['valor']), u) if (k, m) in por and por[(k, m)]['valor'] != '' else '—'}</td>" for m in meses)
         filas.append(f"<tr><td class='cod'>{k}</td><td>{esc(metas[k]['nombre'])}</td><td>{esc(metas[k]['meta_texto'])}</td>{celdas}</tr>")
-    final = (f'<section class="final" id="valores"><h2>Valores esperados por mes</h2><p class="preg">Son los de la hoja de respuestas (data/respuestas/kpi-esperados.csv). '
+    diseno = seccion_medidas_tarjetas(plan, metas) + seccion_diseno(plan, resp, modelo, metas)
+    final = (diseno + f'<section class="final" id="valores"><h2>Valores esperados por mes</h2><p class="preg">Son los de la hoja de respuestas (data/respuestas/kpi-esperados.csv). '
              f'Tu dashboard debería dar valores muy cercanos; el pronóstico (KPI-05) usa un método simple y el de Power BI no coincidirá exactamente.</p>'
              f'<div class="scroll"><table><thead><tr><th>Código</th><th>KPI</th><th>Meta</th>{cab}</tr></thead><tbody>{"".join(filas)}</tbody></table></div></section>')
     css = H.tokens_css(tokens)
@@ -688,11 +889,15 @@ def pasos_visual(v, plan):
     elif t == "tabla":
         p.append(f"Arrastra a **Columnas** {v['x']} y cada medida de la lista: {meds}.")
     else:
-        p.append(f"Arrastra a **Eje X** {v['x']}.")
+        if t == "barras":
+            p.append(f"Arrastra a **Eje Y** {v['x']} (en las barras horizontales las categorías van en el eje Y y la medida en el eje X; si lo pones al revés, Power BI dice que el campo no es una medida).")
+        else:
+            p.append(f"Arrastra a **Eje X** {v['x']}.")
         orden = re.match(r"(\w+\[\w+\]) \(ordenada por (\w+\[(\w+)\])\)", v["x"])
         if orden:
             p.append(f"Si los valores salen en orden alfabético, selecciona `{orden.group(1)}` en el panel Datos y ve a Herramientas de columna ▸ **Ordenar por columna** ▸ `{orden.group(3)}`.")
-        p.append(f"Arrastra a **Eje Y** {v['y']}." if v["y"].count("[") == 1 else f"Arrastra a **Eje Y** las medidas: {v['y']}.")
+        eje_medida = "Eje X" if t == "barras" else "Eje Y"
+        p.append(f"Arrastra a **{eje_medida}** {v['y']}." if v["y"].count("[") == 1 else f"Arrastra a **{eje_medida}** las medidas: {v['y']}.")
         if v.get("serie") and v["serie"].startswith("dCanal"):
             p.append(f"Arrastra a **Leyenda** {v['serie']}.")
     for f in v["filtros"]:
@@ -860,7 +1065,7 @@ def _visual(g, p, v, n):
     filas = g.tabla_columnas(cols, usadas)
     if filas:
         L += ["**Tablas y columnas.**", ""] + _tabla(["Campo", "Qué es", "De dónde sale"], filas) + [""]
-    eje = [["Eje X / filas", v["x"]], ["Valores (eje Y)", v["y"]]]
+    eje = [["Eje Y (categorías)", v["x"]], ["Eje X (valores)", v["y"]]] if v["tipo"] == "barras" else [["Eje X / filas", v["x"]], ["Valores (eje Y)", v["y"]]]
     if v.get("serie"):
         eje.append(["Leyenda" if v["tipo"] != "matriz" else "Columnas", v["serie"]])
     L += _tabla(["Dónde va", "Campo"], eje) + [""]

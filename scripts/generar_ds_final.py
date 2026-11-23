@@ -93,7 +93,7 @@ def main(argv=None):
     except Exception:
         brief = {}
     html = R.html_referencia(nuevo, resp, modelo, metas, brief, H.tokens_del_proyecto(a.raiz))
-    html = html.replace('<section class="final" id="valores">', seccion_medidas(nuevo, nuevo["paginas"]) + '<section class="final" id="valores">', 1)
+    html = html.replace('<section class="final" id="medidas-tarjetas">', seccion_medidas(nuevo, nuevo["paginas"]) + '<section class="final" id="medidas-tarjetas">', 1)
     html = (html.replace("Dashboard de referencia", "Dashboard final")
                 .replace("Así debería verse y estos son los valores esperados. Se construye en Power BI.", "Versión final de 2 páginas con los KPI y gráficos más importantes. Se construye en Power BI."))
     destino = run / "materiales" / "ds-final.html"

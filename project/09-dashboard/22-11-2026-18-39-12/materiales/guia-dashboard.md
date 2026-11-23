@@ -489,16 +489,16 @@ DIVIDE ( CALCULATE ( COUNTROWS ( dKpi ), dKpi[tiene_meta] = TRUE () ), COUNTROWS
 
 | Dónde va | Campo |
 |---|---|
-| Eje X / filas | dCanal[canal] |
-| Valores (eje Y) | [Margen de contribución %] |
+| Eje Y (categorías) | dCanal[canal] |
+| Eje X (valores) | [Margen de contribución %] |
 
 **Fórmulas.** Todas las medidas de este elemento ya las creaste antes: `[Margen de contribución %]` (PAG-01 · Elemento 3).
 
 **Cómo armarlo en Power BI.**
 
 1. En el panel Visualizaciones elige **Gráfico de barras agrupadas** y colócalo en la posición indicada en el HTML de referencia (visual 1).
-2. Arrastra a **Eje X** dCanal[canal].
-3. Arrastra a **Eje Y** [Margen de contribución %].
+2. Arrastra a **Eje Y** dCanal[canal] (en las barras horizontales las categorías van en el eje Y y la medida en el eje X; si lo pones al revés, Power BI dice que el campo no es una medida).
+3. Arrastra a **Eje X** [Margen de contribución %].
 4. Barras horizontales ordenadas de mayor a menor margen.
 
 **Valor esperado.** Para llevar: 65.3 %; WhatsApp: 65.1 %; Salón: 64.7 %; PedidosYa: 40.5 %; Rappi: 35.5 %.

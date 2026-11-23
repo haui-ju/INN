@@ -77,8 +77,9 @@ Usuario: Dueño · Filtros de la página: dCalendario[anio], dCalendario[nombre_
 
 ### 1. Margen de contribución por canal (barras)
 
-- **X:** `dCanal[canal]`
-- **Y:** [Margen de contribución %]
+- **Eje Y (categorías):** `dCanal[canal]`
+- **Eje X (valores):** [Margen de contribución %]
+- **Ojo:** en barras horizontales los ejes van al revés que en columnas; la medida va en Eje X, no en Eje Y.
 - **Filtro del cuadro:** Todo el periodo
 - **Formato:** Barras horizontales ordenadas de mayor a menor margen.
 - **Para qué sirve:** Compara qué canal deja más margen por cada sol vendido, ya descontada la comisión.
